@@ -1,0 +1,5 @@
+defaults:
+  - base_decoder_config
+
+name: Baseline
+method: baseline

@@ -1,0 +1,10 @@
+defaults:
+  - base_model_config
+
+name: LLaMA3-70b
+model_type: hf
+configs:
+  model_name_or_path: meta-llama/Meta-Llama-3-70B
+  max_seq_len: 4096
+  system_prompt:
+  max_new_tokens: 32
