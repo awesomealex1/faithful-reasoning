@@ -17,8 +17,7 @@ from tqdm import tqdm
 
 import wandb
 from src.configs import RunnerConfigs
-from src.factories import get_dataset, get_decoder
-from src.model import HFModel
+from src.factories import get_dataset, get_model, get_metrics
 
 
 class Run:
@@ -48,33 +47,18 @@ class Run:
         )
 
     def _load_pipeline(self) -> None:
-        self.model = HFModel(
-            self.configs.model, self.configs.prompt
+        self.model = get_model(
+            self.configs.model, self.configs.decoder, self.configs.prompt
         )
-        self.decoder = get_decoder(self.model, self.configs.decoder)
 
     def _load_accelerator(self) -> None:
         self.accelerator = Accelerator(log_with="wandb")
-        (
-            self.model,
-            self.dataloaders
-        ) = self.accelerator.prepare(
-            self.model,
-            self.dataloaders
+        (self.model, self.dataloaders) = self.accelerator.prepare(
+            self.model, self.dataloaders
         )
 
-    @staticmethod
-    def compute_metrics(predictions: pd.DataFrame, split: str):
-        groundtruth_answers = predictions["groundtruth_answers"]
-        predicted_answers = predictions["predicted_answers"]
-
-        total_em = 0
-        for predicted_answer, groundtruth_answer in zip(
-            predicted_answers, groundtruth_answers
-        ):
-            total_em += best_subspan_em(predicted_answer, groundtruth_answer)
-
-        return {f"{split}/em": total_em / len(predicted_answers)}
+    def _load_metrics(self):
+        self.metrics = get_metrics(self.configs.data)
 
     def _setup_run(self):
 
@@ -105,52 +89,59 @@ class Run:
     def train(self):
         pass
 
-    def test(self, log_metrics: bool = True):
-        predictions_df = pd.DataFrame(
-            columns=[
-                "contexts",
-                "question",
-                "groundtruth_answers",
-                "predicted_answers",
-            ]
+    def test(self):
+        predictions = []
+
+        prediction_filepath = os.path.join(
+            self.output_dir, f"pred_{self.configs.data.name}.csv"
         )
 
         for step, batch in enumerate(tqdm(self.dataloaders)):
             # Predict
-            prediction = self.pipeline.generate(batch)
+            prediction = self.model.generate(batch)
 
-            batch_df = pd.DataFrame(
-                {
-                    "contexts": [batch["contexts"]],
-                    "question": [batch["question"]],
-                    "groundtruth_answers": [[answer[0] for answer in batch["answers"]]],
-                    "predicted_answers": [prediction],
-                }
-            )
+            if self.configs.data.name == "TruthfulQA":
+                scores_true = []
+                scores_false = []
+                for temp_ans in batch["prompted_ref_true"]:
+                    # append the current answer choice to the prompt
+                    log_probs, c_dist = self.model.lm_score(
+                        batch["prompted_question"], temp_ans, **generate_kwargs
+                    )
+                    scores_true.append(log_probs)
 
-            # Append the batch DataFrame to the overall predictions DataFrame
-            predictions_df = pd.concat([predictions_df, batch_df], ignore_index=True)
+                for temp_ans in batch["prompted_ref_false"]:
+                    # append the current answer choice to the prompt
+                    log_probs, c_dist = self.model.lm_score(
+                        batch["prompted_question"], temp_ans, **generate_kwargs
+                    )
+                    scores_false.append(log_probs)
 
-            # Save the updated DataFrame to a CSV file after each batch
-            predictions_df.to_csv(
-                os.path.join(self.output_dir, f"predictions_{split}.csv"), index=False
-            )
+            batch["predicted_answer"] = prediction
+            batch["scores_true"] = scores_true
+            batch["scores_false"] = scores_false
+
+            predictions.append(batch)
+
+            # Save the predictions to a JSONL file after each batch
+            with open(prediction_filepath, "a") as f:
+                f.write(json.dumps(batch) + "\n")
 
             # if step >= 10:
             #     break
 
         # Evaluate
-        metrics = self.compute_metrics(predictions_df, split=split)
+        metrics = self.metrics(predictions)
 
         # Log
         print(metrics)
         if self.accelerator:
-            self.accelerator.log(
-                metrics
-                | {f"{split}_prediction_df": wandb.Table(dataframe=predictions_df)}
-            )
+            self.accelerator.log(metrics)
         else:
-            wandb.log(
-                metrics
-                | {f"{split}_prediction_df": wandb.Table(dataframe=predictions_df)}
-            )
+            wandb.log(metrics)
+
+        # Save predictions as artifacts
+        if self.accelerator:
+            self.accelerator.save_artifacts(prediction_filepath)
+        else:
+            wandb.save(prediction_filepath)
