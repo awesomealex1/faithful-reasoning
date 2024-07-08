@@ -3,3 +3,4 @@ defaults:
 
 name: Baseline
 method: baseline
+configs: null
