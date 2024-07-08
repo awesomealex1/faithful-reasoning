@@ -85,9 +85,6 @@ class Run:
                 name=self.wandb_run_name,
             )
 
-    def train(self):
-        pass
-
     def test(self):
         predictions = []
 
@@ -128,9 +125,6 @@ class Run:
             with open(prediction_filepath, "a") as f:
                 f.write(json.dumps(batch) + "\n")
 
-            if step >= 10:
-                break
-
         # Evaluate
         metrics = self.metrics(predictions)
 
@@ -141,8 +135,6 @@ class Run:
         else:
             wandb.log(metrics)
 
-        # Save predictions as artifacts
-        if self.accelerator:
-            self.accelerator.save_artifacts(prediction_filepath)
-        else:
-            wandb.save(prediction_filepath)
+        artifact = wandb.Artifact(f"pred_{self.configs.data.name}", type="prediction")
+        artifact.add_file(prediction_filepath)
+        wandb.log_artifact(artifact)
