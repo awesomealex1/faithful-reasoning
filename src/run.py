@@ -125,6 +125,7 @@ class Run:
 
             predictions.append(batch)
 
+            batch["idx"] = batch["idx"].cpu().numpy()[0]
             print(batch)
             for key, value in batch.items():
                 print(key, ":", value, type(value))
