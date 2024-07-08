@@ -30,7 +30,7 @@ class ModelConfigs:
 class DecoderConfigs:
     name: str = MISSING
     method: str = MISSING
-    configs: dict = MISSING
+    configs: Optional[dict] = None
 
 
 @dataclass
