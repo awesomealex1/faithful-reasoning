@@ -121,13 +121,18 @@ class TruthfulQA(BaseDataset):
     ):
         sample = self.data[idx]
         sample["prompted_question"] = self.build_prompt(sample["question"])
+
         sample["prompted_ref_best"] = self.format_best(sample["answer_best"])
-        sample["prompted_ref_true"] = [
-            " " + ans for ans in self.split_multi_answer(sample["answer_true"])
+
+        sample["ref_true"] = [
+            ans for ans in self.split_multi_answer(sample["answer_true"])
         ]
-        sample["prompted_ref_false"] = [
-            " " + ans for ans in self.split_multi_answer(sample["answer_false"])
+        sample["prompted_ref_true"] = [" " + ans for ans in sample["ref_true"]]
+
+        sample["ref_false"] = [
+            ans for ans in self.split_multi_answer(sample["answer_false"])
         ]
+        sample["prompted_ref_false"] = [" " + ans for ans in sample["ref_false"]]
         return sample
 
     def __len__(self):
