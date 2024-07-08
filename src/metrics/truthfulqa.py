@@ -62,6 +62,9 @@ class TruthfulQA:
             scores_false = sample["scores_false"]
             ref_true = sample["ref_true"]
             ref_best = sample["ref_best"]
+            print(sample)
+            print(ref_true)
+            print(ref_best)
             scores = self.compute_metrics(scores_true, scores_false, ref_true, ref_best)
 
             mc1_scores += [scores["MC1"]]
