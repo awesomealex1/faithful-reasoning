@@ -60,6 +60,7 @@ class Run:
         self.metrics = get_metrics(self.configs.data)
 
     def _setup_run(self):
+        self.wandb_group_name = self.configs.data.name
 
         # Naming by model name
         self.wandb_run_name = self.configs.model.name
@@ -73,6 +74,7 @@ class Run:
                         "wandb": {
                             "entity": self.configs.wandb_entity,
                             "name": self.wandb_run_name,
+                            "group": self.wandb_group_name,
                         }
                     },
                 )
