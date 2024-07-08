@@ -59,7 +59,6 @@ class BaseModel(ABC):
         elif self.model_configs.model_type == "base":
             inputs = tokenizer(
                 inputs,
-                add_generation_prompt=True,
                 return_tensors="pt",
                 max_length=self.max_seq_len,
             ).input_ids
