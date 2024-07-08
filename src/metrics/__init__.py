@@ -1,0 +1,1 @@
+from .truthfulqa import TruthfulQA
