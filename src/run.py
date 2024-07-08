@@ -30,6 +30,7 @@ class Run:
         self._load_dataloaders()
         self._load_pipeline()
         self._load_accelerator()
+        self._load_metrics()
 
         if not configs.debug:
             self._setup_run()
