@@ -5,6 +5,7 @@ from src.configs import (
     DataConfigs,
     DecoderConfigs,
 )
+from src.model import HFModel
 
 
 def get_dataset(
@@ -16,8 +17,10 @@ def get_dataset(
 
 
 def get_decoder(
+    model: HFModel,
     decoder_configs: DecoderConfigs,
 ):
     return getattr(decoders, decoder_configs.name)(
+        model=model,
         decoder_configs=decoder_configs,
     )

@@ -18,19 +18,19 @@ class HFModel:
         self.model_configs = model_configs
         self.prompt_configs = prompt_configs
 
-        # self.model = AutoModelForCausalLM.from_pretrained(
-        #     model_configs.configs.model_name_or_path,
-        #     torch_dtype=torch.bfloat16,
-        #     device_map="auto",
-        #     low_cpu_mem_usage=True,
-        # )
-        # self.tokenizer = AutoTokenizer.from_pretrained(
-        #     model_configs.configs.model_name_or_path
-        # )
+        self.model = AutoModelForCausalLM.from_pretrained(
+            model_configs.configs.model_name_or_path,
+            torch_dtype=torch.bfloat16,
+            device_map="auto",
+            low_cpu_mem_usage=True,
+        )
+        self.tokenizer = AutoTokenizer.from_pretrained(
+            model_configs.configs.model_name_or_path
+        )
 
-        # if self.tokenizer.pad_token_id is None:
-        #     self.tokenizer.pad_token = self.tokenizer.eos_token
-        #     self.tokenizer.pad_token_id = self.tokenizer.eos_token_id
+        if self.tokenizer.pad_token_id is None:
+            self.tokenizer.pad_token = self.tokenizer.eos_token
+            self.tokenizer.pad_token_id = self.tokenizer.eos_token_id
 
         self.max_seq_len = model_configs.configs.max_seq_len
         self.max_new_tokens = model_configs.configs.max_new_tokens

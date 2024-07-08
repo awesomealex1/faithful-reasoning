@@ -1,0 +1,6 @@
+# @package _global_
+defaults:
+  - override /model: llama3_8b
+  - override /data: truthfulqa
+  - override /prompt: truthfulqa
+  - override /decoder: baseline
