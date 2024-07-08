@@ -3,7 +3,7 @@ from typing import List, Optional, Tuple
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from src.configs import DecoderConfigs, ModelConfigs, PromptConfigs
+from src.configs import DecoderConfigs, ModelConfigs
 
 from src.models.base_model import BaseModel
 
@@ -13,9 +13,8 @@ class ContrastiveDecoding(BaseModel):
         self,
         model_configs: ModelConfigs,
         decoder_configs: DecoderConfigs,
-        prompt_configs: PromptConfigs,
     ):
-        super().__init__(model_configs, decoder_configs, prompt_configs)
+        super().__init__(model_configs, decoder_configs)
 
         self.teacher_model = AutoModelForCausalLM.from_pretrained(
             decoder_configs.configs.teacher_model_name_or_path,

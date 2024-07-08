@@ -2,5 +2,4 @@
 defaults:
   - override /model: llama3_8b_instruct
   - override /data: truthfulqa
-  - override /prompt: truthfulqa
   - override /decoder: baseline

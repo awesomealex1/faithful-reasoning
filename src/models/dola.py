@@ -6,7 +6,7 @@ import torch
 import numpy as np
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from src.configs import DecoderConfigs, ModelConfigs, PromptConfigs
+from src.configs import DecoderConfigs, ModelConfigs
 
 from src.models.base_model import BaseModel
 

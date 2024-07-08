@@ -6,7 +6,7 @@ import torch
 import numpy as np
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from src.configs import DecoderConfigs, ModelConfigs, PromptConfigs
+from src.configs import DecoderConfigs, ModelConfigs
 
 from src.models.base_model import BaseModel
 
@@ -16,9 +16,8 @@ class DeCoRe(BaseModel):
         self,
         model_configs: ModelConfigs,
         decoder_configs: DecoderConfigs,
-        prompt_configs: PromptConfigs,
     ):
-        super().__init__(model_configs, decoder_configs, prompt_configs)
+        super().__init__(model_configs, decoder_configs)
 
         model_base_name = model_configs.configs.model_name_or_path.split("/")[1]
 

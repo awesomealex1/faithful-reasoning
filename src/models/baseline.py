@@ -2,7 +2,7 @@ from typing import List, Optional, Tuple
 
 import torch
 
-from src.configs import DecoderConfigs, ModelConfigs, PromptConfigs
+from src.configs import DecoderConfigs, ModelConfigs
 
 from src.models.base_model import BaseModel
 
@@ -12,9 +12,8 @@ class Baseline(BaseModel):
         self,
         model_configs: ModelConfigs,
         decoder_configs: DecoderConfigs,
-        prompt_configs: PromptConfigs,
     ):
-        super().__init__(model_configs, decoder_configs, prompt_configs)
+        super().__init__(model_configs, decoder_configs)
 
     def generate(
         self,
@@ -22,7 +21,7 @@ class Baseline(BaseModel):
     ) -> str:
         self.model.eval()
 
-        inputs = inputs.to(self.model.device)
+        inputs = self._verbalise_input(inputs).to(self.model.device)
 
         # Predict
         with torch.inference_mode():
@@ -46,12 +45,8 @@ class Baseline(BaseModel):
         # import ipdb; ipdb.set_trace()
         with torch.no_grad():
             input_text = prompt + answer
-            input_ids = self.tokenizer(input_text, return_tensors="pt").input_ids.to(
-                self.model.device
-            )
-            prefix_ids = self.tokenizer(prompt, return_tensors="pt").input_ids.to(
-                self.model.device
-            )
+            input_ids = self._verbalise_input(input_text).to(self.model.device)
+            prefix_ids = self._verbalise_input(prompt).to(self.model.device)
             continue_ids = input_ids[0, prefix_ids.shape[-1] :]
 
             outputs = self.model(input_ids)[0].squeeze(0)

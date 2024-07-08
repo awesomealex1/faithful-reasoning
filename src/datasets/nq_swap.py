@@ -9,7 +9,7 @@ import pandas as pd
 import torch
 from transformers import PreTrainedTokenizer
 
-from src.configs import DataConfigs, DecoderConfigs, PromptConfigs
+from src.configs import DataConfigs, DecoderConfigs
 from src.datasets.base_dataset import BaseDataset
 
 

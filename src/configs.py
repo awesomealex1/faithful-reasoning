@@ -34,19 +34,11 @@ class DecoderConfigs:
 
 
 @dataclass
-class PromptConfigs:
-    instruction: str = MISSING
-    input_prompt: str = MISSING
-    target_prompt: str = MISSING
-
-
-@dataclass
 class RunnerConfigs:
     data: DataConfigs = MISSING
     data_loader: DataLoaderConfigs = MISSING
     decoder: DecoderConfigs = MISSING
     model: ModelConfigs = MISSING
-    prompt: PromptConfigs = MISSING
     wandb_project: str = MISSING
     wandb_entity: str = MISSING
     debug: bool = False
@@ -61,7 +53,6 @@ def register_base_configs() -> None:
         group="data_loader", name="base_data_loader_config", node=DataLoaderConfigs
     )
     configs_store.store(group="model", name="base_model_config", node=ModelConfigs)
-    configs_store.store(group="prompt", name="base_prompt_config", node=PromptConfigs)
     configs_store.store(
         group="decoder", name="base_decoder_config", node=DecoderConfigs
     )

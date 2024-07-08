@@ -98,7 +98,7 @@ class Run:
 
         for step, batch in enumerate(tqdm(self.dataloaders)):
             # Predict
-            prediction = self.model.generate(batch)
+            prediction = self.model.generate(batch["prompted_question"])
 
             if self.configs.data.name == "TruthfulQA":
                 scores_true = []

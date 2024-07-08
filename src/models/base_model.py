@@ -9,7 +9,7 @@ from transformers import (
     PreTrainedTokenizerFast,
 )
 
-from src.configs import DecoderConfigs, ModelConfigs, PromptConfigs
+from src.configs import DecoderConfigs, ModelConfigs
 
 
 class BaseModel(ABC):
@@ -17,7 +17,6 @@ class BaseModel(ABC):
         self,
         model_configs: ModelConfigs,
         decoder_configs: DecoderConfigs,
-        prompt_configs: PromptConfigs,
     ):
         self.model = AutoModelForCausalLM.from_pretrained(
             model_configs.configs.model_name_or_path,
@@ -38,28 +37,19 @@ class BaseModel(ABC):
 
         self.model_configs = model_configs
         self.decoder_configs = decoder_configs
-        self.prompt_configs = prompt_configs
 
-    def _verbalise_task_input(
+    def _verbalise_input(
         self,
-        inputs: Dict[str, str],
+        inputs: str,
         tokenizer: Union[PreTrainedTokenizer, PreTrainedTokenizerFast, None] = None,
     ) -> torch.Tensor:
         if tokenizer is None:
             tokenizer = self.tokenizer
 
-        instruction = self.prompt_configs.instruction
-        input = (
-            instruction
-            + self.prompt_configs.input_prompt.format(
-                question=inputs["question"][0],
-            ).strip()
-        )
-
         if self.model_configs.model_type == "base":
             # TODO: Consider adding system message, but now follow lm eval harness setup
             input = [
-                {"role": "user", "content": input},
+                {"role": "user", "content": inputs},
             ]
 
             input = tokenizer.apply_chat_template(
@@ -70,7 +60,7 @@ class BaseModel(ABC):
             )
         elif self.model_configs.model_type == "instruct":
             input = tokenizer(
-                input,
+                inputs,
                 add_generation_prompt=True,
                 return_tensors="pt",
                 max_length=self.max_seq_len,

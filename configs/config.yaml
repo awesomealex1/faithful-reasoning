@@ -4,7 +4,6 @@ defaults:
   - data_loader: default
   - model: llama2_7b_chat
   - decoder: baseline
-  - prompt: truthfulqa
   - experiment: null
   - _self_
 
