@@ -30,7 +30,7 @@ def main(configs: RunnerConfigs) -> None:
     huggingface_hub.login(token=os.getenv("HF_TOKEN", ""))
 
     runner = Run(configs)
-    _ = runner.test(log_metrics=True)
+    _ = runner.test()
 
 
 if __name__ == "__main__":
