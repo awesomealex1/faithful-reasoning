@@ -106,14 +106,14 @@ class Run:
                 for temp_ans in batch["prompted_ref_true"]:
                     # append the current answer choice to the prompt
                     log_probs, c_dist = self.model.lm_score(
-                        batch["prompted_question"], temp_ans, **generate_kwargs
+                        batch["prompted_question"], temp_ans
                     )
                     scores_true.append(log_probs)
 
                 for temp_ans in batch["prompted_ref_false"]:
                     # append the current answer choice to the prompt
                     log_probs, c_dist = self.model.lm_score(
-                        batch["prompted_question"], temp_ans, **generate_kwargs
+                        batch["prompted_question"], temp_ans
                     )
                     scores_false.append(log_probs)
 
