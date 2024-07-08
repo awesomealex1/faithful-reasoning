@@ -47,9 +47,7 @@ class Run:
         )
 
     def _load_pipeline(self) -> None:
-        self.model = get_model(
-            self.configs.model, self.configs.decoder, self.configs.prompt
-        )
+        self.model = get_model(self.configs.model, self.configs.decoder)
 
     def _load_accelerator(self) -> None:
         self.accelerator = Accelerator(log_with="wandb")
