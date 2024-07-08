@@ -46,20 +46,18 @@ class BaseModel(ABC):
         if tokenizer is None:
             tokenizer = self.tokenizer
 
-        if self.model_configs.model_type == "base":
+        if self.model_configs.model_type == "instruct":
             # TODO: Consider adding system message, but now follow lm eval harness setup
-            input = [
-                {"role": "user", "content": inputs},
-            ]
+            chat_inputs = [{"role": "user", "content": inputs}]
 
-            input = tokenizer.apply_chat_template(
-                input,
+            inputs = tokenizer.apply_chat_template(
+                chat_inputs,
                 add_generation_prompt=True,
                 return_tensors="pt",
                 max_length=self.max_seq_len,
             )
-        elif self.model_configs.model_type == "instruct":
-            input = tokenizer(
+        elif self.model_configs.model_type == "base":
+            inputs = tokenizer(
                 inputs,
                 add_generation_prompt=True,
                 return_tensors="pt",
@@ -71,7 +69,7 @@ class BaseModel(ABC):
                 "Terminate tokenisation process."
             )
 
-        return input
+        return inputs
 
     @abstractmethod
     def generate(self, logits):
