@@ -42,9 +42,6 @@ class Baseline(BaseModel):
         prompt,
         answer,
     ):
-        print(prompt)
-        print(answer)
-        # import ipdb; ipdb.set_trace()
         with torch.no_grad():
             input_text = prompt + answer
             input_ids = self._verbalise_input(input_text).to(self.model.device)

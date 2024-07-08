@@ -96,7 +96,7 @@ class Run:
 
         for step, batch in enumerate(tqdm(self.dataloaders)):
             # Predict
-            prediction = self.model.generate(batch["prompted_question"])
+            prediction = self.model.generate(batch["prompted_question"][0])
 
             if self.configs.data.name == "TruthfulQA":
                 scores_true = []
@@ -104,14 +104,14 @@ class Run:
                 for temp_ans in batch["prompted_ref_true"]:
                     # append the current answer choice to the prompt
                     log_probs, c_dist = self.model.lm_score(
-                        batch["prompted_question"], temp_ans
+                        batch["prompted_question"][0], temp_ans[0]
                     )
                     scores_true.append(log_probs)
 
                 for temp_ans in batch["prompted_ref_false"]:
                     # append the current answer choice to the prompt
                     log_probs, c_dist = self.model.lm_score(
-                        batch["prompted_question"], temp_ans
+                        batch["prompted_question"][0], temp_ans[0]
                     )
                     scores_false.append(log_probs)
 
