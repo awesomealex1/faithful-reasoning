@@ -3,3 +3,7 @@ defaults:
 
 name: Baseline
 method: baseline
+configs:
+  retrieval_heads_dir: ./retrieval_heads/
+  k_retrieval_heads: 50
+  alpha: 0.5
