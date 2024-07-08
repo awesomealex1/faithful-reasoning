@@ -106,6 +106,7 @@ class Run:
                     log_probs = self.model.lm_score(
                         batch["prompted_question"][0], temp_ans[0]
                     )
+                    print("prompted_ref_true")
                     print(log_probs)
                     scores_true.append(log_probs)
 
@@ -114,6 +115,8 @@ class Run:
                     log_probs = self.model.lm_score(
                         batch["prompted_question"][0], temp_ans[0]
                     )
+                    print("prompted_ref_false")
+                    print(log_probs)
                     scores_false.append(log_probs)
 
             batch["predicted_answer"] = prediction
@@ -121,6 +124,10 @@ class Run:
             batch["scores_false"] = scores_false
 
             predictions.append(batch)
+
+            print(batch)
+            for key, value in batch.items():
+                print(key, ":", value, type(value))
 
             # Save the predictions to a JSONL file after each batch
             with open(prediction_filepath, "a") as f:
