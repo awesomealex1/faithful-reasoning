@@ -97,6 +97,7 @@ class Run:
         for step, batch in enumerate(tqdm(self.dataloaders)):
             # Predict
             prediction = self.model.generate(batch["prompted_question"][0])
+            batch["predicted_answer"] = prediction
 
             if self.configs.data.name == "TruthfulQA":
                 scores_true = []
@@ -115,9 +116,8 @@ class Run:
                     )
                     scores_false.append(log_probs)
 
-            batch["predicted_answer"] = prediction
-            batch["scores_true"] = scores_true
-            batch["scores_false"] = scores_false
+                batch["scores_true"] = scores_true
+                batch["scores_false"] = scores_false
 
             predictions.append(batch)
 
