@@ -91,7 +91,7 @@ class Run:
         predictions = []
 
         prediction_filepath = os.path.join(
-            self.output_dir, f"pred_{self.configs.data.name}.csv"
+            self.output_dir, f"pred_{self.configs.data.name}.json"
         )
 
         for step, batch in enumerate(tqdm(self.dataloaders)):

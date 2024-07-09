@@ -3,7 +3,7 @@ from typing import Dict
 import string
 from typing import List
 
-import regex
+import regex as re
 import numpy as np
 
 
@@ -14,7 +14,7 @@ def normalize_answer(s: str) -> str:
     """
 
     def remove_articles(text):
-        return regex.sub(r"\b(a|an|the)\b", " ", text)
+        return re.sub(r"\b(a|an|the)\b", " ", text)
 
     def white_space_fix(text):
         return " ".join(text.split())
@@ -55,12 +55,15 @@ class NQSwap:
         em_scores = []
         subspan_em_scores = []
         for sample in predictions:
-            ref = (
+            ref = normalize_answer(
                 sample["sub_answer"][0]
                 if type(sample["sub_answer"]) == list
                 else sample["sub_answer"]
-            )
-            pred = sample["predicted_answer"]
+            ).lower()
+
+            # Only consider until \n, ., or ,
+            predicted_answer = re.split("\n|\.|\,", sample["predicted_answer"])[0]
+            pred = normalize_answer(predicted_answer).lower()
 
             scores = self.compute_metrics(ref, pred)
 
