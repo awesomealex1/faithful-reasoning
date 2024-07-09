@@ -46,7 +46,10 @@ class NQSwap(BaseDataset):
         return data
 
     def build_prompt(self, sub_context, question):
-        input_text_prompt = f"Context: {sub_context}\nQuestion: {question}\nAnswer:"
+        input_text_prompt = (
+            "Answer the following question based on the provided context:\n\n"
+            f"Context: {sub_context}\nQuestion: {question}\nAnswer:"
+        )
         return input_text_prompt
 
     def __getitem__(self, idx):
