@@ -44,7 +44,6 @@ class NQSwap(BaseDataset):
                     "sub_answer": ds["validation"][i]["sub_answer"],
                 }
             ]
-            break
 
         return data
 
