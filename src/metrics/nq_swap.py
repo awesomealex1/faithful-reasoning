@@ -55,11 +55,12 @@ class NQSwap:
         em_scores = []
         subspan_em_scores = []
         for sample in predictions:
-            ref = sample["sub_answer"]
+            ref = (
+                sample["sub_answer"][0]
+                if type(sample["sub_answer"]) == list
+                else sample["sub_answer"]
+            )
             pred = sample["predicted_answer"]
-
-            print("ref: ", ref)
-            print("pred: ", pred)
 
             scores = self.compute_metrics(ref, pred)
 
