@@ -2,12 +2,4 @@ defaults:
   - base_data_config
 
 name: NQSwap
-data_dir: data/NQSwap
-evaluation_configs:
-  metric: exact_match
-  aggregation: mean
-  higher_is_better: true
-  ignore_case: true
-  ignore_punctuation: true
-  regexes_to_ignore:
-  - "\\b(?:The |the |An |A |The |a |an )"
+data_dir: data/NQ-Swap/data

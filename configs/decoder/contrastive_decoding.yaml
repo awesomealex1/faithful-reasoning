@@ -4,5 +4,5 @@ defaults:
 name: ContrastiveDecoding
 method: contrastive_decoding
 configs:
-  teacher_model_name_or_path: meta-llama/Meta-LLaMA-3-70B-Instruct
+  teacher_model_name_or_path: meta-llama/Meta-LLaMA-3-8B
   alpha: 0.5
