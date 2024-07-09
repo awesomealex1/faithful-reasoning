@@ -58,6 +58,9 @@ class NQSwap:
             ref = sample["sub_answer"]
             pred = sample["predicted_answer"]
 
+            print("ref: ", ref)
+            print("pred: ", pred)
+
             scores = self.compute_metrics(ref, pred)
 
             em_scores += [scores["EM"]]
