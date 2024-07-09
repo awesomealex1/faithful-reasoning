@@ -30,10 +30,8 @@ class NQSwap(BaseDataset):
         # Open the gz file, and read the jsonl file
         data = []
         ds = load_dataset(self.data_dir)
-        print(ds)
 
         for i in range(len(ds["validation"])):
-            print(ds["validation"][i])
             data += [
                 {
                     "idx": i,
