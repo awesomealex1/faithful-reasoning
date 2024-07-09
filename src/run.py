@@ -119,8 +119,6 @@ class Run:
                 batch["scores_true"] = scores_true
                 batch["scores_false"] = scores_false
 
-            print(batch)
-
             predictions.append(batch)
 
             batch["idx"] = int(batch["idx"].cpu().numpy()[0])
