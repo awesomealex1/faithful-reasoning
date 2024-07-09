@@ -63,7 +63,7 @@ class Run:
         self.wandb_group_name = self.configs.data.name
 
         # Naming by model name
-        self.wandb_run_name = self.configs.model.name
+        self.wandb_run_name = f"{self.configs.model.name}__{self.configs.decoder.name}"
 
         self.wandb_tracker = None
         if self.accelerator:
