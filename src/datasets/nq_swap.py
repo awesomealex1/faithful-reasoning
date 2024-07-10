@@ -14,7 +14,6 @@ from src.configs import DataConfigs, DecoderConfigs
 from src.datasets.base_dataset import BaseDataset
 
 
-# FIXME: Still copy pasted from TruthfulQA
 class NQSwap(BaseDataset):
     def __init__(
         self,

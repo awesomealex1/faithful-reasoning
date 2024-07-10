@@ -99,18 +99,16 @@ class Run:
             prediction = self.model.generate(batch["prompted_question"][0])
             batch["predicted_answer"] = prediction
 
-            if self.configs.data.name == "TruthfulQA":
+            if self.configs.data.name in ["TruthfulQA", "MemoTrap"]:
                 scores_true = []
                 scores_false = []
                 for temp_ans in batch["prompted_ref_true"]:
-                    # append the current answer choice to the prompt
                     log_probs = self.model.lm_score(
                         batch["prompted_question"][0], temp_ans[0]
                     )
                     scores_true.append(log_probs)
 
                 for temp_ans in batch["prompted_ref_false"]:
-                    # append the current answer choice to the prompt
                     log_probs = self.model.lm_score(
                         batch["prompted_question"][0], temp_ans[0]
                     )
@@ -121,11 +119,17 @@ class Run:
 
             predictions.append(batch)
 
-            batch["idx"] = int(batch["idx"].cpu().numpy()[0])
+            try:
+                batch["idx"] = int(batch["idx"].cpu().numpy()[0])
+            except:
+                batch["idx"] = str(batch["idx"][0])
 
             # Save the predictions to a JSONL file after each batch
             with open(prediction_filepath, "a") as f:
                 f.write(json.dumps(batch) + "\n")
+
+            print(batch)
+            break
 
         # Evaluate
         metrics = self.metrics(predictions)
