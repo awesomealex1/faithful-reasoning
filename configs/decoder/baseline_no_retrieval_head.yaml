@@ -1,5 +1,0 @@
-defaults:
-  - base_decoder_config
-
-name: BaselineNoRetrievalHead
-method: baseline_no_retrieval_head
