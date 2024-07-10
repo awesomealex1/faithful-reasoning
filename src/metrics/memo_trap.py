@@ -25,5 +25,6 @@ class MemoTrap:
 
         metrics = {f"{split}_acc": np.mean(scores[split]) for split in scores.keys()}
         metrics["macro_avg_acc"] = np.mean(list(metrics.values()))
-        metrics["micro_avg_acc"] = np.mean([metrics[split] for split in scores.keys()])
+        metrics["micro_avg_acc"] = np.mean([scores[split] for split in scores.keys()])
+
         return metrics
