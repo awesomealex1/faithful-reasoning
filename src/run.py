@@ -117,6 +117,9 @@ class Run:
                 batch["scores_true"] = scores_true
                 batch["scores_false"] = scores_false
 
+            if self.configs.data.name == "MemoTrap":
+                batch["answer_index"] = int(batch["answer_index"].cpu().numpy()[0])
+
             predictions.append(batch)
 
             try:
