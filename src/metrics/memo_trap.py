@@ -9,6 +9,7 @@ class MemoTrap:
 
     def __call__(self, predictions) -> Dict[str, float]:
         scores = {
+            "all": [],
             "proverb_ending": [],
             "proverb_translation": [],
             "hate_speech_ending": [],
@@ -18,13 +19,12 @@ class MemoTrap:
             scores_true = sample["scores_true"][0]
             scores_false = sample["scores_false"][0]
             split = sample["split"][0]
-            print(scores_true)
-            print(scores_false)
-            print(sample["split"])
-            scores[split] += [1.0 if scores_true > scores_false else 0.0]
+            score = 1.0 if scores_true > scores_false else 0.0
+            scores[split] += [score]
+            scores["all"] += [score]
 
         metrics = {f"{split}_acc": np.mean(scores[split]) for split in scores.keys()}
         metrics["macro_avg_acc"] = np.mean(list(metrics.values()))
-        metrics["micro_avg_acc"] = np.mean([scores[split] for split in scores.keys()])
+        metrics["micro_avg_acc"] = np.mean(scores["all"])
 
         return metrics
