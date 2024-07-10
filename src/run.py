@@ -103,15 +103,13 @@ class Run:
                 scores_true = []
                 scores_false = []
                 for temp_ans in batch["prompted_ref_true"]:
-                    log_probs = self.model.lm_score(
-                        batch["prompted_question"][0], temp_ans[0]
-                    )
+                    ans = temp_ans[0] if type(temp_ans) in [list, tuple] else temp_ans
+                    log_probs = self.model.lm_score(batch["prompted_question"][0], ans)
                     scores_true.append(log_probs)
 
                 for temp_ans in batch["prompted_ref_false"]:
-                    log_probs = self.model.lm_score(
-                        batch["prompted_question"][0], temp_ans[0]
-                    )
+                    ans = temp_ans[0] if type(temp_ans) in [list, tuple] else temp_ans
+                    log_probs = self.model.lm_score(batch["prompted_question"][0], ans)
                     scores_false.append(log_probs)
 
                 batch["scores_true"] = scores_true
