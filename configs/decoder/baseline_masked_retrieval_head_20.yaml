@@ -1,8 +1,0 @@
-defaults:
-  - base_decoder_config
-
-name: BaselineMaskedRetrievalHead
-method: baseline_masked_retrieval_head
-configs:
-  retrieval_heads_dir: ./retrieval_heads/
-  num_retrieval_heads: 20
