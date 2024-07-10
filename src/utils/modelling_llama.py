@@ -1631,6 +1631,8 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         # decoder outputs consists of (dec_features, layer_state, dec_hidden, dec_attn)
         print("kwargs in llamaforcausallm")
         print(kwargs)
+        print("block_list in llamaforcausallm")
+        print(block_list)
         outputs = self.model(
             input_ids=input_ids,
             attention_mask=attention_mask,
