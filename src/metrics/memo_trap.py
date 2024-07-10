@@ -8,7 +8,12 @@ class MemoTrap:
         pass
 
     def __call__(self, predictions) -> Dict[str, float]:
-        scores = {}
+        scores = {
+            "proverb_ending": [],
+            "proverb_translation": [],
+            "hate_speech_ending": [],
+            "history_of_science_qa": [],
+        }
         for sample in predictions:
             scores_true = sample["scores_true"][0]
             scores_false = sample["scores_false"][0]
