@@ -1380,6 +1380,7 @@ class LlamaModel(LlamaPreTrainedModel):
         output_hidden_states: Optional[bool] = None,
         return_dict: Optional[bool] = None,
         block_list: list = None,
+        **kwargs,
     ) -> Union[Tuple, HeterogeneousMemoryOutput]:
         output_attentions = (
             output_attentions
@@ -1475,7 +1476,7 @@ class LlamaModel(LlamaPreTrainedModel):
         if block_list:
             kwargs = {"block_list": block_list}
         else:
-            kwargs = {}
+            kwargs = kwargs
 
         for decoder_layer in self.layers:
             if output_hidden_states:
