@@ -602,6 +602,8 @@ class LlamaFlashAttention2(LlamaAttention):
         # Beware that with flash_attn<2.1, using q_seqlen != k_seqlen (except for the case q_seqlen == 1) produces a wrong mask (top-left).
         self._flash_attn_uses_top_left_mask = not is_flash_attn_greater_or_equal_2_10()
 
+        self.block_list = None
+
     def forward(
         self,
         hidden_states: torch.Tensor,
@@ -671,12 +673,14 @@ class LlamaFlashAttention2(LlamaAttention):
         # TODO: These transpose are quite inefficient but Flash Attention requires the layout [batch_size, sequence_length, num_heads, head_dim]. We would need to refactor the KV cache
         # to be able to avoid many of these transpose/reshape/view.
         #### mask head in flash attention
-        print("HEYYYYYYYYYY")
-        print(kwargs)
         print("block_list" in kwargs)
-        if "block_list" in kwargs:
-            print(len(kwargs["block_list"]))
-            for h in kwargs["block_list"]:
+        print(kwargs)
+        if "block_list" in kwargs or self.block_list is not None:
+            if "block_list" in kwargs:
+                block_list = kwargs["block_list"]
+            else:
+                block_list = self.block_list
+            for h in block_list:
                 if self.layer_idx == h[0]:
                     query_states[:, h[1], :, :] = 0
                     # attn_weights[:, h[1], :, :] = 0
@@ -837,8 +841,12 @@ class LlamaFlashAttention2(LlamaAttention):
                 )
             attn_weights = attn_weights + attention_mask
         ## masking head in normal attention
-        if "block_list" in kwargs:
-            for h in kwargs["block_list"]:
+        if "block_list" in kwargs or self.block_list is not None:
+            if "block_list" in kwargs:
+                block_list = kwargs["block_list"]
+            else:
+                block_list = self.block_list
+            for h in block_list:
                 if self.layer_idx == h[0]:
                     attn_weights[:, h[1], :, :] = 0
         # upcast attention to fp32
@@ -1577,6 +1585,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         output_hidden_states: Optional[bool] = None,
         return_dict: Optional[bool] = None,
         block_list: list = None,
+        **kwargs,
     ) -> Union[Tuple, CausalLMOutputWithPast]:
         r"""
         Args:
@@ -1631,6 +1640,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             output_hidden_states=output_hidden_states,
             return_dict=return_dict,
             block_list=block_list,
+            **kwargs,
         )
 
         hidden_states = outputs[0]
