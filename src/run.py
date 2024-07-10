@@ -7,17 +7,15 @@ import huggingface_hub
 import hydra
 import pandas as pd
 import torch
-from accelerate import Accelerator
-from accelerate.tracking import WandBTracker
+import wandb
 from huggingface_hub import HfApi
 from omegaconf import OmegaConf
 from torch.nn import functional as F
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-import wandb
 from src.configs import RunnerConfigs
-from src.factories import get_dataset, get_model, get_metrics
+from src.factories import get_dataset, get_metrics, get_model
 
 
 class Run:
@@ -29,7 +27,6 @@ class Run:
 
         self._load_dataloaders()
         self._load_pipeline()
-        self._load_accelerator()
         self._load_metrics()
 
         if not configs.debug:
@@ -50,12 +47,6 @@ class Run:
     def _load_pipeline(self) -> None:
         self.model = get_model(self.configs.model, self.configs.decoder)
 
-    def _load_accelerator(self) -> None:
-        self.accelerator = Accelerator(log_with="wandb")
-        (self.model, self.dataloaders) = self.accelerator.prepare(
-            self.model, self.dataloaders
-        )
-
     def _load_metrics(self):
         self.metrics = get_metrics(self.configs.data)
 
@@ -65,27 +56,13 @@ class Run:
         # Naming by model name
         self.wandb_run_name = f"{self.configs.model.name}__{self.configs.decoder.name}"
 
-        self.wandb_tracker = None
-        if self.accelerator:
-            if self.accelerator.is_main_process:
-                self.accelerator.init_trackers(
-                    project_name=self.configs.wandb_project,
-                    init_kwargs={
-                        "wandb": {
-                            "entity": self.configs.wandb_entity,
-                            "name": self.wandb_run_name,
-                            "group": self.wandb_group_name,
-                        }
-                    },
-                )
-                self.wandb_tracker: WandBTracker = self.accelerator.get_tracker("wandb")
-                self.accelerator.wait_for_everyone()
-        else:
-            wandb.init(
-                project=self.configs.wandb_project,
-                entity=self.configs.wandb_entity,
-                name=self.wandb_run_name,
-            )
+        wandb.init(
+            project=self.configs.wandb_project,
+            entity=self.configs.wandb_entity,
+            name=self.wandb_run_name,
+            group=self.wandb_group_name,
+            config=OmegaConf.to_container(self.configs),
+        )
 
     def test(self):
         predictions = []
@@ -133,11 +110,7 @@ class Run:
         metrics = self.metrics(predictions)
 
         # Log
-        print(metrics)
-        if self.accelerator:
-            self.accelerator.log(metrics)
-        else:
-            wandb.log(metrics)
+        wandb.log(metrics)
 
         artifact = wandb.Artifact(f"pred_{self.configs.data.name}", type="prediction")
         artifact.add_file(prediction_filepath)
