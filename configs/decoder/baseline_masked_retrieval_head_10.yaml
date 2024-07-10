@@ -5,5 +5,4 @@ name: BaselineMaskedRetrievalHead
 method: baseline_masked_retrieval_head
 configs:
   retrieval_heads_dir: ./retrieval_heads/
-  num_retrieval_heads: 50
-  alpha: 0.5
+  num_retrieval_heads: 10
