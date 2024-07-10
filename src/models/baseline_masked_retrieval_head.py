@@ -55,7 +55,7 @@ class BaselineMaskedRetrievalHead(BaseModel):
                 max_new_tokens=self.max_new_tokens,
                 do_sample=False,
                 pad_token_id=self.tokenizer.eos_token_id,
-                block_list=self.retrieval_heads,
+                **{"block_list": self.retrieval_heads},
             )
             decoded_text = self.tokenizer.decode(
                 output[0, inputs.size(1) :], skip_special_tokens=False

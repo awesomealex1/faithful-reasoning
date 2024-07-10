@@ -672,6 +672,7 @@ class LlamaFlashAttention2(LlamaAttention):
         # to be able to avoid many of these transpose/reshape/view.
         #### mask head in flash attention
         print("HEYYYYYYYYYY")
+        print(kwargs)
         print("block_list" in kwargs)
         if "block_list" in kwargs:
             print(len(kwargs["block_list"]))
