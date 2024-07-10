@@ -4,7 +4,7 @@ defaults:
 name: LLaMA2-7b
 model_type: base
 configs:
-  model_name_or_path: meta-llama/Llama-2-7b
+  model_name_or_path: meta-llama/Llama-2-7b-hf
   max_seq_len: 4096
   system_prompt:
   max_new_tokens: 32
