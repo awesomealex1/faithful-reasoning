@@ -1748,6 +1748,8 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
                 "past_key_values": past_key_values,
                 "use_cache": kwargs.get("use_cache"),
                 "attention_mask": attention_mask,
+                "block_list": kwargs.get("block_list"),
+                "attn_mode": kwargs.get("attn_mode", "flash"),
             }
         )
         return model_inputs
