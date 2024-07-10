@@ -124,11 +124,12 @@ class Run:
             except:
                 batch["idx"] = str(batch["idx"][0])
 
+            print(batch)
+
             # Save the predictions to a JSONL file after each batch
             with open(prediction_filepath, "a") as f:
                 f.write(json.dumps(batch) + "\n")
 
-            print(batch)
             break
 
         # Evaluate
