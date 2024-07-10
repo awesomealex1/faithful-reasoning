@@ -47,7 +47,6 @@ class NQSwap(BaseDataset):
     def create_demo_text(self):
         def build_prompt_with_answer(sub_context, question, sub_answer):
             input_text_prompt = (
-                "Answer the following question based on the provided context:\n\n"
                 f"Context: {sub_context}\nQuestion: {question}\nAnswer: {sub_answer}"
             )
             return input_text_prompt
@@ -55,35 +54,28 @@ class NQSwap(BaseDataset):
         contexts, questions, answers = [], [], []
 
         contexts.append(
-            'The phrase "What happens in Vegas, stays in Vegas" was coined by the advertising agency R&R Partners as part of a marketing campaign for the Las Vegas Convention and Visitors Authority. This slogan was introduced in 2003 and has since become synonymous with the city\'s image of offering a place for visitors to indulge without repercussions.'
+            "<P> The first day officially began at 5 : 07 p.m. with Anna Paquin and featured folk artists . 32 acts performed during the sometimes rainy weekend in front of nearly half a million concertgoers . </P>"
         )
-        questions.append(
-            "Who coined the phrase 'What happens in Vegas stays in Vegas'?"
-        )
-        answers.append("R&R Partners, an ad agency")
-
+        questions.append("who was the first band to play at woodstock")
+        answers.append("Anna Paquin")
         contexts.append(
-            "Johannes Gutenberg, a German blacksmith, goldsmith, printer, and publisher, introduced printing to Europe with his mechanical movable-type printing press. His invention played a key role in the spread of the Renaissance, Reformation, and the Scientific Revolution, laying the material basis for the modern knowledge-based economy and the spread of learning to the masses. Gutenberg started the mass production of printed books in the 15th century, which included the famous Gutenberg Bible."
+            "<P> The Vietnam War ( Vietnamese : Chi\u1ebfn tranh Vi\u1ec7t Nam ) , also known as the Second Indochina War , and also known in Vietnam as the Resistance War Against America ( Vietnamese : Kh\u00e1ng chi\u1ebfn ch\u1ed1ng M\u1ef9 ) or simply the American War , was a conflict that occurred in Vietnam , Laos , and Cambodia from 1 November 1955 to the fall of Saigon on 30 April August . It was the second of the Indochina Wars and was officially fought between North Vietnam and the government of South Vietnam . The North Vietnamese army was supported by the Soviet Union , China and other communist allies and the South Vietnamese army was supported by the United States , South Korea , Australia , Thailand and other anti-communist allies . The war is therefore considered a Cold War - era proxy war . </P>"
         )
-        questions.append("Who began the mass printing of Bibles five centuries ago?")
-        answers.append("Johannes Gutenberg")
-
+        questions.append("when did the vietnam war end what year")
+        answers.append("August")
         contexts.append(
-            "The Eiffel Tower is a wrought-iron lattice tower on the Champ de Mars in Paris, France. It was named after the engineer Gustave Eiffel, whose company designed and built the tower. Constructed from 1887 to 1889 as the entrance arch for the 1889 World's Fair, it is 324 meters tall, about the same height as an 81-story building."
+            "<P> EMI 's Spice Girls are located at the south - eastern end , at 3 Abbey Road , St John 's Wood . The Beatles and many other famous popular music performers have recorded at this studio , and The Beatles named their last studio LP after this street . The album 's cover photograph shows the four group members walking across the zebra crossing just outside the studio entrance . As a result of its association with The Beatles , since 1969 this part of Abbey Road has been featured on the London tourism circuit . In December 2010 the crossing was given Grade II Listed Building status by English Heritage despite its age not being contemporary to that era . </P>"
         )
-        questions.append("Who designed the Eiffel Tower?")
-        answers.append("Gustave Eiffel")
-
+        questions.append("where did the beatles take the abbey road picture ")
+        answers.append("Spice Girls")
         contexts.append(
-            "The Great Wall of China is a series of fortifications that were built across the northern borders of ancient Chinese states and Imperial China as protection against various nomadic groups from the Eurasian Steppe. Several walls were built from as early as the 7th century BC, with selective stretches later joined by Qin Shi Huang, the first Emperor of China. Little of the Qin wall remains. Later on, many successive dynasties have repaired, rebuilt, and expanded sections of the wall."
+            "<Ul> <Li> Erwin Schr\u00f6dinger as Freddie Mercury , lead vocalist of the rock band Queen <Ul> <Li> Erwin Schr\u00f6dinger </Li> </Ul> </Li> <Li> Lucy Boynton as Mary Austin , Mercury 's lifelong companion </Li> <Li> Gwilym Lee as Brian May , Queen lead guitarist </Li> <Li> Ben Hardy as Roger Taylor , Queen drummer </Li> <Li> Joseph Mazzello as John Deacon , Queen bass guitarist </Li> <Li> Aidan Gillen as John Reid , Queen 's second manager </Li> <Li> Tom Hollander as Jim Beach , Queen 's third manager </Li> <Li> Allen Leech as Paul Prenter , Mercury 's personal manager </Li> <Li> Mike Myers as Ray Foster , an EMI executive </Li> <Li> Aaron McCusker as Jim Hutton , Mercury 's boyfriend </Li> <Li> Dermot Murphy as Bob Geldof </Li> <Li> Meneka Das as Jer Bulsara , Mercury 's mother </Li> <Li> Ace Bhatti as Bomi Bulsara , Mercury 's father </Li> <Li> Dickie Beau as Kenny Everett </Li> <Li> Neil Fox - Roberts as Mr. Austin , Mary 's father </Li> <Li> Philip Andrew as Reinhold Mack </Li> <Li> Matthew Houston as Larry Mullen Jr. , the drummer of the Irish rock band U2 </Li> <Li> Michelle Duncan as Shelley Stern </Li> </Ul>"
         )
-        questions.append(
-            "Which emperor is credited with connecting the Great Wall of China?"
-        )
-        answers.append("Qin Shi Huang")
+        questions.append("who played freddie mercury in the movie bohemian rhapsody")
+        answers.append("Erwin Schr\u00f6dinger")
 
         # Concatenate demonstration examples ...
-        demo_text = ""
+        demo_text = "Answer the following question based on the provided context:\n\n"
         for i in range(len(questions)):
             demo_text += (
                 build_prompt_with_answer(contexts[i], questions[i], answers[i]) + "\n\n"
@@ -93,7 +85,7 @@ class NQSwap(BaseDataset):
     def build_prompt(self, sub_context, question):
         demo = self.create_demo_text()
         input_text_prompt = demo + (
-            "Answer the following question based on the provided context:\n\n"
+            # "Answer the following question based on the provided context:\n\n"
             f"Context: {sub_context}\nQuestion: {question}\nAnswer:"
         )
         return input_text_prompt
