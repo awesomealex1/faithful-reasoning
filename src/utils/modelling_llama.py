@@ -673,8 +673,6 @@ class LlamaFlashAttention2(LlamaAttention):
         # TODO: These transpose are quite inefficient but Flash Attention requires the layout [batch_size, sequence_length, num_heads, head_dim]. We would need to refactor the KV cache
         # to be able to avoid many of these transpose/reshape/view.
         #### mask head in flash attention
-        print("block_list" in kwargs)
-        print(kwargs)
         if "block_list" in kwargs or self.block_list is not None:
             if "block_list" in kwargs:
                 block_list = kwargs["block_list"]
@@ -1629,10 +1627,6 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         )
 
         # decoder outputs consists of (dec_features, layer_state, dec_hidden, dec_attn)
-        print("kwargs in llamaforcausallm")
-        print(kwargs)
-        print("block_list in llamaforcausallm")
-        print(block_list)
         outputs = self.model(
             input_ids=input_ids,
             attention_mask=attention_mask,
