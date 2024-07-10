@@ -10,6 +10,7 @@ from transformers import (
 )
 
 from src.configs import DecoderConfigs, ModelConfigs
+from src.utils.modelling_llama import LlamaForCausalLM, LlamaConfig
 
 
 class BaseModel(ABC):
@@ -18,12 +19,12 @@ class BaseModel(ABC):
         model_configs: ModelConfigs,
         decoder_configs: DecoderConfigs,
     ):
-        self.model = AutoModelForCausalLM.from_pretrained(
+        self.model = LlamaForCausalLM.from_pretrained(
             model_configs.configs.model_name_or_path,
+            use_flash_attention_2="flash_attention_2",
             torch_dtype=torch.bfloat16,
             device_map="auto",
-            low_cpu_mem_usage=True,
-        )
+        ).eval()
         self.tokenizer = AutoTokenizer.from_pretrained(
             model_configs.configs.model_name_or_path
         )
