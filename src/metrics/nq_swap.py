@@ -55,6 +55,8 @@ class NQSwap:
 
     @staticmethod
     def compute_metrics(prediction: str, sub_ref: List[str], org_ref: List[str]):
+        print("sub_ref: ", sub_ref)
+        print("org_ref: ", org_ref)
         scores = {}
         scores["sub_EM"] = best_em(prediction, sub_ref)
         scores["sub_Subspan_EM"] = best_subspan_em(prediction, sub_ref)
