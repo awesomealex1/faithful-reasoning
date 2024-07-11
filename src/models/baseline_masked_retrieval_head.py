@@ -74,8 +74,8 @@ class BaselineMaskedRetrievalHead(BaseModel):
             prefix_ids = self._verbalise_input(prompt).to(self.model.device)
             continue_ids = input_ids[0, prefix_ids.shape[-1] :]
 
-            outputs = self.model(input_ids)[0].squeeze(0)
-            outputs = outputs.log_softmax(-1)  # logits to log probs
+            outputs = self.model(input_ids, block_list=self.retrieval_heads)[0]
+            outputs = outputs.squeeze(0).log_softmax(-1)  # logits to log probs
 
             # skip tokens in the prompt -- we only care about the answer
             outputs = outputs[prefix_ids.shape[-1] - 1 : -1, :]
