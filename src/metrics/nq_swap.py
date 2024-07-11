@@ -55,8 +55,6 @@ class NQSwap:
 
     @staticmethod
     def compute_metrics(prediction: str, sub_ref: List[str], org_ref: List[str]):
-        print("sub_ref: ", sub_ref)
-        print("org_ref: ", org_ref)
         scores = {}
         scores["sub_EM"] = best_em(prediction, sub_ref)
         scores["sub_Subspan_EM"] = best_subspan_em(prediction, sub_ref)
@@ -72,8 +70,14 @@ class NQSwap:
         org_em_scores = []
         org_subspan_em_scores = []
         for sample in predictions:
-            org_ref = sample["org_answer"]
-            sub_ref = sample["sub_answer"]
+            org_ref = [
+                ans[0] if type(ans) in [list, tuple] else ans
+                for ans in sample["org_answer"]
+            ]
+            sub_ref = [
+                ans[0] if type(ans) in [list, tuple] else ans
+                for ans in sample["sub_answer"]
+            ]
 
             # Only consider until \n, ., or ,
             prediction = re.split("\n|\.|\,", sample["predicted_answer"])[0]
