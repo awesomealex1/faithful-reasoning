@@ -96,11 +96,6 @@ class NQSwap(BaseDataset):
         sample["prompted_question"] = self.build_prompt(
             sample["sub_context"], sample["question"]
         )
-        sample["sub_answer"] = (
-            sample["sub_answer"][0]
-            if type(sample["sub_answer"]) == list
-            else sample["sub_answer"]
-        )
 
         return sample
 

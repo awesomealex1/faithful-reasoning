@@ -54,29 +54,40 @@ class NQSwap:
         pass
 
     @staticmethod
-    def compute_metrics(prediction: str, ground_truths: List[str]):
+    def compute_metrics(prediction: str, sub_ref: List[str], org_ref: List[str]):
         scores = {}
-        scores["EM"] = best_em(prediction, ground_truths)
-        scores["Subspan_EM"] = best_subspan_em(prediction, ground_truths)
+        scores["sub_EM"] = best_em(prediction, sub_ref)
+        scores["sub_Subspan_EM"] = best_subspan_em(prediction, sub_ref)
+
+        scores["org_EM"] = best_em(prediction, org_ref)
+        scores["org_Subspan_EM"] = best_subspan_em(prediction, org_ref)
 
         return scores
 
     def __call__(self, predictions) -> Dict[str, float]:
-        em_scores = []
-        subspan_em_scores = []
+        sub_em_scores = []
+        sub_subspan_em_scores = []
+        org_em_scores = []
+        org_subspan_em_scores = []
         for sample in predictions:
-            ground_truths = sample["sub_answer"]
+            org_ref = sample["org_answer"]
+            sub_ref = sample["sub_answer"]
 
             # Only consider until \n, ., or ,
             prediction = re.split("\n|\.|\,", sample["predicted_answer"])[0]
 
-            scores = self.compute_metrics(prediction, ground_truths)
+            scores = self.compute_metrics(prediction, sub_ref, org_ref)
 
-            em_scores += [scores["EM"]]
-            subspan_em_scores += [scores["Subspan_EM"]]
+            sub_em_scores += [scores["sub_EM"]]
+            sub_subspan_em_scores += [scores["sub_Subspan_EM"]]
+
+            org_em_scores += [scores["org_EM"]]
+            org_subspan_em_scores += [scores["org_Subspan_EM"]]
 
         metrics = {
-            "EM": np.mean(em_scores),
-            "Subspan_EM": np.mean(subspan_em_scores),
+            "sub_EM": np.mean(sub_em_scores),
+            "sub_Subspan_EM": np.mean(sub_subspan_em_scores),
+            "org_EM": np.mean(org_em_scores),
+            "org_Subspan_EM": np.mean(org_subspan_em_scores),
         }
         return metrics
