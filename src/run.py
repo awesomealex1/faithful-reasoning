@@ -106,8 +106,6 @@ class Run:
             with open(prediction_filepath, "a") as f:
                 f.write(json.dumps(batch) + "\n")
 
-            break
-
         # Evaluate
         metrics = self.metrics(predictions)
 
