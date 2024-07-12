@@ -1,7 +1,7 @@
+from abc import ABC, abstractmethod
 from typing import Dict, Optional, Union
 
 import torch
-from abc import ABC, abstractmethod
 from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,
@@ -10,7 +10,7 @@ from transformers import (
 )
 
 from src.configs import DecoderConfigs, ModelConfigs
-from src.utils.modelling_llama import LlamaForCausalLM, LlamaConfig
+from src.utils.modelling_llama import LlamaConfig, LlamaForCausalLM
 
 
 class BaseModel(ABC):
@@ -49,7 +49,16 @@ class BaseModel(ABC):
 
         if self.model_configs.model_type == "instruct":
             # TODO: Consider adding system message, but now follow lm eval harness setup
-            chat_inputs = [{"role": "user", "content": inputs}]
+            print(inputs)
+            for idx, input in enumerate(inputs):
+                if idx == 0:
+                    chat_inputs = [{"role": "system", "content": input}]
+                else:
+                    if idx % 2 != 0:
+                        chat_inputs.append({"role": "user", "content": input})
+                    else:
+                        chat_inputs.append({"role": "system", "content": input})
+            print(inputs)
 
             inputs = tokenizer.apply_chat_template(
                 chat_inputs,

@@ -1,18 +1,13 @@
 from typing import Optional
 
-from src import datasets, models, metrics
-from src.configs import (
-    DataConfigs,
-    ModelConfigs,
-    DecoderConfigs,
-)
+from src import datasets, metrics, models
+from src.configs import DataConfigs, DecoderConfigs, ModelConfigs
 
 
-def get_dataset(
-    data_configs: DataConfigs,
-):
+def get_dataset(data_configs: DataConfigs, **kwargs):
     return getattr(datasets, data_configs.name)(
         data_configs=data_configs,
+        **kwargs,
     )
 
 

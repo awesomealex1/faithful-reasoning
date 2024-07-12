@@ -37,10 +37,11 @@ class Run:
 
         dataset = get_dataset(
             self.configs.data,
+            use_chat_template=self.configs.model.model_type == "instruct",
         )
         self.dataloaders = DataLoader(
             dataset,
-            shuffle=True,
+            shuffle=False,
             **self.configs.data_loader,
         )
 
@@ -105,6 +106,8 @@ class Run:
             # Save the predictions to a JSONL file after each batch
             with open(prediction_filepath, "a") as f:
                 f.write(json.dumps(batch) + "\n")
+
+            break
 
         # Evaluate
         metrics = self.metrics(predictions)

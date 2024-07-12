@@ -14,6 +14,8 @@ class BaseDataset(torch.utils.data.Dataset, ABC):
         self.data_configs = data_configs
         self.data_dir = data_configs.data_dir
 
+        self.kwargs = kwargs
+
     @abstractmethod
     def parse_data(self):
         pass

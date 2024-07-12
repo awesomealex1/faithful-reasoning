@@ -8,8 +8,8 @@ import numpy as np
 import pandas as pd
 import torch
 from transformers import PreTrainedTokenizer
-from datasets import load_dataset, load_from_disk
 
+from datasets import load_dataset, load_from_disk
 from src.configs import DataConfigs, DecoderConfigs
 from src.datasets.base_dataset import BaseDataset
 
@@ -74,21 +74,48 @@ class NQSwap(BaseDataset):
         questions.append("who played freddie mercury in the movie bohemian rhapsody")
         answers.append("Erwin Schr\u00f6dinger")
 
-        # Concatenate demonstration examples ...
-        demo_text = "Answer the following question based on the provided context:\n\n"
-        for i in range(len(questions)):
-            demo_text += (
-                build_prompt_with_answer(contexts[i], questions[i], answers[i]) + "\n\n"
-            )
-        return demo_text
+        if self.kwargs["use_chat_template"]:
+            demo_texts = [
+                "Answer the following question based on the provided context:"
+            ]
+            for i in range(len(questions)):
+                demo_texts += [
+                    (
+                        f"Context: {contexts[i]}\nQuestion: {questions[i]}\nAnswer:",
+                        answers[i],
+                    )
+                ]
+            return demo_texts
+        else:
+            # Concatenate demonstration examples ...
+            demo_texts = [
+                "Answer the following question based on the provided context:"
+            ]
+            for i in range(len(questions)):
+                demo_texts += [
+                    f"Context: {contexts[i]}\nQuestion: {questions[i]}\nAnswer: {answers[i]}"
+                ]
+        return demo_texts
 
     def build_prompt(self, sub_context, question):
-        demo = self.create_demo_text()
-        input_text_prompt = demo + (
-            # "Answer the following question based on the provided context:\n\n"
-            f"Context: {sub_context}\nQuestion: {question}\nAnswer:"
-        )
-        return input_text_prompt
+        if self.kwargs["use_chat_template"]:
+            demo = self.create_demo_text()
+            input_text_prompt = demo + [
+                f"Context: {sub_context}\nQuestion: {question}\nAnswer:"
+            ]
+            return input_text_prompt
+        else:
+            demo = self.create_demo_text()
+            demo = "\n\n".join(demo)
+            input_text_prompt = (
+                demo
+                + "\n\n"
+                + (
+                    # "Answer the following question based on the provided context:\n\n"
+                    f"Context: {sub_context}\nQuestion: {question}\nAnswer:"
+                )
+            )
+            return input_text_prompt
 
     def __getitem__(self, idx):
         sample = self.data[idx]
