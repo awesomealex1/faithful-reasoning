@@ -32,7 +32,7 @@ class Baseline(BaseModel):
                 pad_token_id=self.tokenizer.eos_token_id,
             )
             decoded_text = self.tokenizer.decode(
-                output[0, inputs.size(1) :], skip_special_tokens=False
+                output[0, inputs.size(1) :], skip_special_tokens=True
             )
 
         return decoded_text

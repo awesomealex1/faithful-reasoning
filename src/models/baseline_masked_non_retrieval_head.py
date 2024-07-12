@@ -1,6 +1,7 @@
 from typing import List, Optional, Tuple
 
 import os
+import random
 import json
 import numpy as np
 import torch
@@ -10,7 +11,7 @@ from src.configs import DecoderConfigs, ModelConfigs
 from src.models.base_model import BaseModel
 
 
-class BaselineMaskedRetrievalHead(BaseModel):
+class BaselineMaskedNonRetrievalHead(BaseModel):
     def __init__(
         self,
         model_configs: ModelConfigs,
@@ -19,11 +20,15 @@ class BaselineMaskedRetrievalHead(BaseModel):
         super().__init__(model_configs, decoder_configs)
 
         self._load_retrieval_heads()
-        print(self.retrieval_heads)
+        self.num_retrieval_heads = self.decoder_configs.configs.num_retrieval_heads
+        assert (
+            self.num_retrieval_heads < 0,
+            "Number of retrieval heads should be negative",
+        )  # negative number of retrieval heads to signify selecting random heads
+        self.random_heads = self._construct_random_head(-self.num_retrieval_heads)
+        print(self.random_heads)
 
     def _load_retrieval_heads(self):
-        self.num_retrieval_heads = self.decoder_configs.configs.num_retrieval_heads
-
         model_base_name = self.model_configs.configs.model_name_or_path.split("/")[1]
 
         with open(
@@ -38,7 +43,21 @@ class BaselineMaskedRetrievalHead(BaseModel):
         stable_block_list = sorted(stable_block_list, key=lambda x: x[1], reverse=True)
         self.retrieval_heads = [
             [int(ll) for ll in l[0].split("-")] for l in stable_block_list
-        ][: self.num_retrieval_heads]
+        ][:100]
+
+    def _construct_random_head(self, n):
+        results = []
+        seed_list = [
+            i for i in range(32)
+        ]  # FIXME: 32 is hardcoded, copied from Retrieval_Head repo
+        random.shuffle(seed_list)
+        while len(results) < n:
+            l, h = random.choices(seed_list, k=2)
+            if (l, h) in results or (l, h) in self.retrieval_heads:
+                continue
+            else:
+                results.append((l, h))
+        return results
 
     def generate(
         self,
@@ -55,7 +74,7 @@ class BaselineMaskedRetrievalHead(BaseModel):
                 max_new_tokens=self.max_new_tokens,
                 do_sample=False,
                 pad_token_id=self.tokenizer.eos_token_id,
-                block_list=self.retrieval_heads,
+                block_list=self.random_heads,
             )
             decoded_text = self.tokenizer.decode(
                 output[0, inputs.size(1) :], skip_special_tokens=True
@@ -74,7 +93,7 @@ class BaselineMaskedRetrievalHead(BaseModel):
             prefix_ids = self._verbalise_input(prompt).to(self.model.device)
             continue_ids = input_ids[0, prefix_ids.shape[-1] :]
 
-            outputs = self.model(input_ids, block_list=self.retrieval_heads)[0]
+            outputs = self.model(input_ids, block_list=self.random_heads)[0]
             outputs = outputs.squeeze(0).log_softmax(-1)  # logits to log probs
 
             # skip tokens in the prompt -- we only care about the answer

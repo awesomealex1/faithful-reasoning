@@ -673,12 +673,8 @@ class LlamaFlashAttention2(LlamaAttention):
         # TODO: These transpose are quite inefficient but Flash Attention requires the layout [batch_size, sequence_length, num_heads, head_dim]. We would need to refactor the KV cache
         # to be able to avoid many of these transpose/reshape/view.
         #### mask head in flash attention
-        if "block_list" in kwargs or self.block_list is not None:
-            if "block_list" in kwargs:
-                block_list = kwargs["block_list"]
-            else:
-                block_list = self.block_list
-            for h in block_list:
+        if "block_list" in kwargs:
+            for h in kwargs["block_list"]:
                 if self.layer_idx == h[0]:
                     query_states[:, h[1], :, :] = 0
                     # attn_weights[:, h[1], :, :] = 0
@@ -839,12 +835,8 @@ class LlamaFlashAttention2(LlamaAttention):
                 )
             attn_weights = attn_weights + attention_mask
         ## masking head in normal attention
-        if "block_list" in kwargs or self.block_list is not None:
-            if "block_list" in kwargs:
-                block_list = kwargs["block_list"]
-            else:
-                block_list = self.block_list
-            for h in block_list:
+        if "block_list" in kwargs:
+            for h in kwargs["block_list"]:
                 if self.layer_idx == h[0]:
                     attn_weights[:, h[1], :, :] = 0
         # upcast attention to fp32

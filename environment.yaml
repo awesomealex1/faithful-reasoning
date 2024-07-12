@@ -31,3 +31,4 @@ dependencies:
   - transformers
   - tokenizers
   - openai
+  - seaborn

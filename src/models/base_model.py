@@ -22,6 +22,7 @@ class BaseModel(ABC):
         self.model = LlamaForCausalLM.from_pretrained(
             model_configs.configs.model_name_or_path,
             use_flash_attention_2="flash_attention_2",
+            attn_implementation="flash_attention_2",
             torch_dtype=torch.bfloat16,
             device_map="auto",
         ).eval()
