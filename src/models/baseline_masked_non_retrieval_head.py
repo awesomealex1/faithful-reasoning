@@ -77,7 +77,7 @@ class BaselineMaskedNonRetrievalHead(BaseModel):
                 block_list=self.random_heads,
             )
             decoded_text = self.tokenizer.decode(
-                output[0, inputs.size(1) :], skip_special_tokens=False
+                output[0, inputs.size(1) :], skip_special_tokens=True
             )
 
         return decoded_text

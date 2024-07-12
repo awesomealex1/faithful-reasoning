@@ -93,7 +93,7 @@ class DeCoRe(BaseModel):
                 )
 
             decoded_text = self.tokenizer.decode(
-                generated_tokens[0], skip_special_tokens=False
+                generated_tokens[0], skip_special_tokens=True
             )
 
         return decoded_text
