@@ -19,7 +19,11 @@ class Baseline(BaseModel):
         inputs,
     ) -> str:
         self.model.eval()
-        print(inputs)
+
+        if self.model_configs.model_type == "instruct":
+            inputs = [
+                p[0] for p in inputs
+            ]  # Quirky data loader behaviour to make things as tuple
 
         inputs = self._verbalise_input(inputs).to(self.model.device)
 
@@ -43,9 +47,10 @@ class Baseline(BaseModel):
         answer,
     ):
         with torch.no_grad():
-            print(prompt)
-            print(answer)
-            input_text = prompt + answer
+            if self.model_configs.model_type == "instruct":
+                input_text = [p[0] for p in prompt] + [answer]
+            elif self.model_configs.model_type == "base":
+                input_text = prompt + answer
             input_ids = self._verbalise_input(input_text).to(self.model.device)
             prefix_ids = self._verbalise_input(prompt).to(self.model.device)
             continue_ids = input_ids[0, prefix_ids.shape[-1] :]
