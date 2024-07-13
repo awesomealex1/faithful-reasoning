@@ -1,13 +1,12 @@
-from typing import List, Optional, Tuple
-
+import json
 import os
 import random
-import json
+from typing import List, Optional, Tuple
+
 import numpy as np
 import torch
 
 from src.configs import DecoderConfigs, ModelConfigs
-
 from src.models.base_model import BaseModel
 
 
@@ -88,7 +87,10 @@ class BaselineMaskedNonRetrievalHead(BaseModel):
         answer,
     ):
         with torch.no_grad():
-            input_text = prompt + answer
+            if type(prompt) == list:
+                input_text = prompt + [answer]
+            else:
+                input_text = prompt + answer
             input_ids = self._verbalise_input(input_text).to(self.model.device)
             prefix_ids = self._verbalise_input(prompt).to(self.model.device)
             continue_ids = input_ids[0, prefix_ids.shape[-1] :]
