@@ -42,25 +42,28 @@ class BaseModel(ABC):
 
     def _verbalise_input(
         self,
-        inputs: str,
+        inputs: Union[list, str],
         tokenizer: Union[PreTrainedTokenizer, PreTrainedTokenizerFast, None] = None,
     ) -> torch.Tensor:
         if tokenizer is None:
             tokenizer = self.tokenizer
 
+        print(inputs)
         if self.model_configs.model_type == "instruct":
-            # TODO: Consider adding system message, but now follow lm eval harness setup
-            print(inputs)
-            for idx, input in enumerate(inputs):
-                if idx == 0:
-                    chat_inputs = [{"role": "system", "content": input}]
-                else:
-                    if idx % 2 != 0:
-                        chat_inputs.append({"role": "user", "content": input})
+            chat_inputs = []
+            if type(inputs) == list:
+                for idx, input in enumerate(inputs):
+                    if idx == 0:
+                        chat_inputs += [{"role": "system", "content": input}]
                     else:
-                        chat_inputs.append({"role": "system", "content": input})
-            print(inputs)
-
+                        if idx % 2 != 0:
+                            chat_inputs += [{"role": "user", "content": input}]
+                        else:
+                            chat_inputs += [{"role": "system", "content": input}]
+                print(chat_inputs)
+            else:
+                chat_inputs += [{"role": "user", "content": inputs}]
+                print(chat_inputs)
             inputs = tokenizer.apply_chat_template(
                 chat_inputs,
                 add_generation_prompt=True,

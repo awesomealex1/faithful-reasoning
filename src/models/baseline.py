@@ -3,7 +3,6 @@ from typing import List, Optional, Tuple
 import torch
 
 from src.configs import DecoderConfigs, ModelConfigs
-
 from src.models.base_model import BaseModel
 
 
@@ -43,6 +42,8 @@ class Baseline(BaseModel):
         answer,
     ):
         with torch.no_grad():
+            print(prompt)
+            print(answer)
             input_text = prompt + answer
             input_ids = self._verbalise_input(input_text).to(self.model.device)
             prefix_ids = self._verbalise_input(prompt).to(self.model.device)
