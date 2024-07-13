@@ -58,7 +58,7 @@ class BaseModel(ABC):
                         if idx % 2 != 0:
                             chat_inputs += [{"role": "user", "content": input}]
                         else:
-                            chat_inputs += [{"role": "system", "content": input}]
+                            chat_inputs += [{"role": "assistant", "content": input}]
                 print("chat_inputs: ", chat_inputs)
             else:
                 chat_inputs += [{"role": "user", "content": inputs}]
