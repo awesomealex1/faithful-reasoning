@@ -52,6 +52,8 @@ class BaseModel(ABC):
             chat_inputs = []
             if type(inputs) == list:
                 for idx, input in enumerate(inputs):
+                    if type(input) == tuple:
+                        input = input[0]
                     if idx == 0:
                         chat_inputs += [{"role": "system", "content": input}]
                     else:
