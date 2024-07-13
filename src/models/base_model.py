@@ -48,7 +48,6 @@ class BaseModel(ABC):
         if tokenizer is None:
             tokenizer = self.tokenizer
 
-        print(inputs)
         if self.model_configs.model_type == "instruct":
             chat_inputs = []
             if type(inputs) == list:
@@ -60,10 +59,10 @@ class BaseModel(ABC):
                             chat_inputs += [{"role": "user", "content": input}]
                         else:
                             chat_inputs += [{"role": "system", "content": input}]
-                print(chat_inputs)
+                print("chat_inputs: ", chat_inputs)
             else:
                 chat_inputs += [{"role": "user", "content": inputs}]
-                print(chat_inputs)
+                print("chat_inputs: ", chat_inputs)
             inputs = tokenizer.apply_chat_template(
                 chat_inputs,
                 add_generation_prompt=True,
