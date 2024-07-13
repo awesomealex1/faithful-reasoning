@@ -44,7 +44,7 @@ class NQSwap(BaseDataset):
 
         return data
 
-    def create_demo_text(self):
+    def create_demo_text(self) -> List[str]:
         def build_prompt_with_answer(sub_context, question, sub_answer):
             input_text_prompt = (
                 f"Context: {sub_context}\nQuestion: {question}\nAnswer: {sub_answer}"
@@ -80,12 +80,9 @@ class NQSwap(BaseDataset):
             ]
             for i in range(len(questions)):
                 demo_texts += [
-                    (
-                        f"Context: {contexts[i]}\nQuestion: {questions[i]}\nAnswer:",
-                        answers[i],
-                    )
+                    f"Context: {contexts[i]}\nQuestion: {questions[i]}\nAnswer:",
+                    answers[i],
                 ]
-            return demo_texts
         else:
             # Concatenate demonstration examples ...
             demo_texts = [
@@ -100,8 +97,8 @@ class NQSwap(BaseDataset):
     def build_prompt(self, sub_context, question):
         if self.kwargs["use_chat_template"]:
             demo = self.create_demo_text()
-            input_text_prompt = demo + [
-                f"Context: {sub_context}\nQuestion: {question}\nAnswer:"
+            input_text_prompt = [
+                demo + [f"Context: {sub_context}\nQuestion: {question}\nAnswer:"]
             ]
             return input_text_prompt
         else:

@@ -20,10 +20,12 @@ class Baseline(BaseModel):
     ) -> str:
         self.model.eval()
 
+        print(inputs)
         if self.model_configs.model_type == "instruct":
             inputs = [
                 p[0] for p in inputs
             ]  # Quirky data loader behaviour to make things as tuple
+        print(inputs)
 
         inputs = self._verbalise_input(inputs).to(self.model.device)
 
