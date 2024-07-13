@@ -61,10 +61,8 @@ class BaseModel(ABC):
                             chat_inputs += [{"role": "user", "content": input}]
                         else:
                             chat_inputs += [{"role": "assistant", "content": input}]
-                print("chat_inputs: ", chat_inputs)
             else:
                 chat_inputs += [{"role": "user", "content": inputs}]
-                print("chat_inputs: ", chat_inputs)
             inputs = tokenizer.apply_chat_template(
                 chat_inputs,
                 add_generation_prompt=True,
