@@ -73,6 +73,7 @@ class Run:
         )
 
         for step, batch in enumerate(tqdm(self.dataloaders)):
+            print(batch)
             # Predict
             prediction = self.model.generate(batch["prompted_question"][0])
             batch["predicted_answer"] = prediction

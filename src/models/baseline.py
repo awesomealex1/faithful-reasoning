@@ -19,6 +19,7 @@ class Baseline(BaseModel):
         inputs,
     ) -> str:
         self.model.eval()
+        print(inputs)
 
         inputs = self._verbalise_input(inputs).to(self.model.device)
 
