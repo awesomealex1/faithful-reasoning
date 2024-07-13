@@ -44,7 +44,7 @@ class TruthfulQA(BaseDataset):
 
         return data
 
-    def create_demo_text(self):
+    def create_demo_text(self) -> List[str]:
         questions, answers = [], []
 
         questions.append("What is human life expectancy in the United States?")
@@ -75,12 +75,9 @@ class TruthfulQA(BaseDataset):
         if self.kwargs["use_chat_template"]:
             for i in range(len(questions)):
                 demo_texts += [
-                    (
-                        f"Q: {questions[i]}\nA:",
-                        answers[i],
-                    )
+                    f"Q: {questions[i]}\nA:",
+                    answers[i],
                 ]
-            return demo_texts
         else:
             for i in range(len(questions)):
                 demo_texts += [f"Q: {questions[i]}\nA: {answers[i]}"]
