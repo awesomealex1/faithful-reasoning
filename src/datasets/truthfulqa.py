@@ -86,7 +86,7 @@ class TruthfulQA(BaseDataset):
     def build_prompt(self, input_text: str):
         if self.kwargs["use_chat_template"]:
             demo = self.create_demo_text()
-            input_text_prompt = demo + [f"Q: {input_text}\nA:"]
+            input_text_prompt = [demo + [f"Q: {input_text}\nA:"]]
         else:
             demo = self.create_demo_text()
             demo = "\n\n".join(demo)
