@@ -42,9 +42,9 @@ class Baseline(BaseModel):
         answer,
     ):
         with torch.no_grad():
-            if self.model_configs.model_type == "instruct":
+            if type(prompt) == list:
                 input_text = prompt + [answer]
-            elif self.model_configs.model_type == "base":
+            else:
                 input_text = prompt + answer
             input_ids = self._verbalise_input(input_text).to(self.model.device)
             prefix_ids = self._verbalise_input(prompt).to(self.model.device)
