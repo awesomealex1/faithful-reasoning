@@ -83,11 +83,9 @@ from transformers.utils import (
 from transformers.utils.import_utils import is_torch_fx_available
 from transformers import LlamaConfig
 
-
 if is_flash_attn_2_available():
     from flash_attn import flash_attn_func, flash_attn_varlen_func
     from flash_attn.bert_padding import index_first_axis, pad_input, unpad_input  # noqa
-
 
 # This makes `_prepare_4d_causal_attention_mask` a leaf function in the FX graph.
 # It means that the function will not be traced through and simply appear as a node in the graph.
@@ -96,7 +94,6 @@ if is_torch_fx_available():
         import torch.fx
 
     _prepare_4d_causal_attention_mask = torch.fx.wrap(_prepare_4d_causal_attention_mask)
-
 
 logger = logging.get_logger(__name__)
 
@@ -602,8 +599,6 @@ class LlamaFlashAttention2(LlamaAttention):
         # Beware that with flash_attn<2.1, using q_seqlen != k_seqlen (except for the case q_seqlen == 1) produces a wrong mask (top-left).
         self._flash_attn_uses_top_left_mask = not is_flash_attn_greater_or_equal_2_10()
 
-        self.block_list = None
-
     def forward(
         self,
         hidden_states: torch.Tensor,
@@ -839,7 +834,7 @@ class LlamaFlashAttention2(LlamaAttention):
             for h in kwargs["block_list"]:
                 if self.layer_idx == h[0]:
                     attn_weights[:, h[1], :, :] = 0
-        # upcast attention to fp32
+                    # upcast attention to fp32
         attn_weights = nn.functional.softmax(
             attn_weights, dim=-1, dtype=torch.float32
         ).to(query_states.dtype)
@@ -1370,7 +1365,6 @@ class LlamaModel(LlamaPreTrainedModel):
         output_hidden_states: Optional[bool] = None,
         return_dict: Optional[bool] = None,
         block_list: list = None,
-        **kwargs,
     ) -> Union[Tuple, HeterogeneousMemoryOutput]:
         output_attentions = (
             output_attentions
@@ -1466,7 +1460,7 @@ class LlamaModel(LlamaPreTrainedModel):
         if block_list:
             kwargs = {"block_list": block_list}
         else:
-            kwargs = kwargs
+            kwargs = {}
 
         for decoder_layer in self.layers:
             if output_hidden_states:
@@ -1576,7 +1570,6 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         output_hidden_states: Optional[bool] = None,
         return_dict: Optional[bool] = None,
         block_list: list = None,
-        **kwargs,
     ) -> Union[Tuple, CausalLMOutputWithPast]:
         r"""
         Args:
@@ -1631,7 +1624,6 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             output_hidden_states=output_hidden_states,
             return_dict=return_dict,
             block_list=block_list,
-            **kwargs,
         )
 
         hidden_states = outputs[0]
