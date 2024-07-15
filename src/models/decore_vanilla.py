@@ -78,11 +78,6 @@ class DeCoReVanilla(BaseModel):
                 base_past_kv = base_outputs.past_key_values
                 hallucinated_past_kv = hallucinated_outputs.past_key_values
 
-                print(base_outputs)
-                print(base_outputs.logits)
-                print(hallucinated_outputs)
-                print(hallucinated_outputs.logits)
-
                 next_token_logits = (
                     1 + self.decoder_configs.configs.alpha
                 ) * base_outputs.logits[
@@ -90,7 +85,6 @@ class DeCoReVanilla(BaseModel):
                 ] - self.decoder_configs.configs.alpha * hallucinated_outputs.logits[
                     0, -1
                 ]
-                print(next_token_logits)
 
                 last_input_token = next_token_logits.argmax()
                 generated_ids.append(last_input_token.item())
@@ -124,14 +118,14 @@ class DeCoReVanilla(BaseModel):
                 0, prefix_ids.shape[-1] - 1 : -1, :
             ]
 
-            base_logits = base_logits.log_softmax(dim=-1)
-            hallucinated_logits = hallucinated_logits.log_softmax(dim=-1)
+            # base_logits = base_logits.log_softmax(dim=-1)
+            # hallucinated_logits = hallucinated_logits.log_softmax(dim=-1)
             diff_logits = (
                 (1 + self.decoder_configs.configs.alpha) * base_logits
                 - self.decoder_configs.configs.alpha * hallucinated_logits
             )
 
-            # diff_logits = diff_logits.log_softmax(dim=-1)
+            diff_logits = diff_logits.log_softmax(dim=-1)
 
             log_probs = (
                 diff_logits[range(diff_logits.shape[0]), continue_ids].sum().item()
