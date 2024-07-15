@@ -6,5 +6,4 @@ model_type: instruct
 configs:
   model_name_or_path: mistralai/Mistral-7B-Instruct-v0.3
   max_seq_len: 4096
-  system_prompt:
-  max_new_tokens: 32
+  max_new_tokens: 12
