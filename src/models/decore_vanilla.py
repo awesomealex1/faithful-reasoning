@@ -20,7 +20,7 @@ class DeCoReVanilla(BaseModel):
         super().__init__(model_configs, decoder_configs)
 
         self._load_retrieval_heads()
-        print(self.retrieval_heads)
+        print("Retrieval heads: ", self.retrieval_heads)
 
     def _load_retrieval_heads(self):
         self.num_retrieval_heads = self.decoder_configs.configs.num_retrieval_heads
