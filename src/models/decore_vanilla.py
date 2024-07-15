@@ -121,7 +121,10 @@ class DeCoReVanilla(BaseModel):
 
             base_logits = base_logits.log_softmax(dim=-1)
             hallucinated_logits = hallucinated_logits.log_softmax(dim=-1)
-            diff_logits = base_logits - hallucinated_logits
+            diff_logits = (
+                (1 + self.decoder_configs.configs.alpha) * base_logits
+                - self.decoder_configs.configs.alpha * hallucinated_logits
+            )
 
             # diff_logits = diff_logits.log_softmax(dim=-1)
 
