@@ -24,14 +24,25 @@ class Baseline(BaseModel):
 
         # Predict
         with torch.inference_mode():
-            output = self.model.generate(
-                inputs,
-                max_new_tokens=self.max_new_tokens,
-                do_sample=False,
-                pad_token_id=self.tokenizer.eos_token_id,
+            input_logits = self.model(
+                input_ids=inputs[:, :-1], use_cache=True, return_dict=True
             )
+            generated_ids = []
+            last_input_token = inputs[:, -1]
+            past_kv = input_logits.past_key_values
+            for _ in range(self.max_new_tokens):
+                last_input_token = last_input_token.view(1, 1)
+                outputs = self.model(
+                    input_ids=last_input_token,
+                    past_key_values=past_kv,
+                    use_cache=True,
+                    attn_mode="torch",
+                )
+                past_kv = outputs.past_key_values
+                last_input_token = outputs.logits[0, -1].argmax()
+                generated_ids.append(last_input_token.item())
             decoded_text = self.tokenizer.decode(
-                output[0, inputs.size(1) :], skip_special_tokens=True
+                generated_ids, skip_special_tokens=True
             )
 
         return decoded_text
