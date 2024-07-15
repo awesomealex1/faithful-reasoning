@@ -51,46 +51,51 @@ class DeCoReVanilla(BaseModel):
 
         # Predict
         with torch.inference_mode():
-            generated_tokens = torch.tensor(
-                [[]], dtype=torch.long, device=self.model.device
+            input_logits = self.model(
+                input_ids=inputs[:, :-1], use_cache=True, return_dict=True
             )
-            for forward_pass in range(self.max_new_tokens):
-                base_output = self.model.generate(
-                    input_ids=torch.cat([inputs, generated_tokens], dim=1),
-                    max_new_tokens=1,
-                    do_sample=False,
-                    return_dict_in_generate=True,
-                    output_scores=True,
-                    pad_token_id=self.tokenizer.eos_token_id,
+            generated_ids = []
+            last_input_token = inputs[:, -1]
+            base_past_kv = input_logits.past_key_values
+            hallucinated_past_kv = input_logits.past_key_values
+            for _ in range(self.max_new_tokens):
+                last_input_token = last_input_token.view(1, 1)
+
+                base_outputs = self.model(
+                    input_ids=last_input_token,
+                    past_key_values=base_past_kv,
+                    use_cache=True,
+                    attn_mode="torch",
                 )
-                hallucinated_output = self.model.generate(
-                    input_ids=torch.cat([inputs, generated_tokens], dim=1),
-                    max_new_tokens=1,
-                    do_sample=False,
-                    return_dict_in_generate=True,
-                    output_scores=True,
-                    pad_token_id=self.tokenizer.eos_token_id,
+                hallucinated_outputs = self.model(
+                    input_ids=last_input_token,
+                    past_key_values=hallucinated_past_kv,
+                    use_cache=True,
+                    attn_mode="torch",
                     block_list=self.retrieval_heads,
                 )
 
-                base_score = base_output["scores"][0][0].cpu()
-                hallucinated_score = hallucinated_output["scores"][0][0].cpu()
+                base_past_kv = base_outputs.past_key_values
+                hallucinated_past_kv = hallucinated_outputs.past_key_values
 
-                # Aggregate teacher LM and student LM scores
+                print(base_outputs)
+                print(base_outputs.logits)
+                print(hallucinated_outputs)
+                print(hallucinated_outputs.logits)
 
-                next_token_score = (
-                    (1 + self.decoder_configs.configs.alpha) * base_score
-                    - self.decoder_configs.configs.alpha * hallucinated_score
-                )
+                next_token_logits = (
+                    1 + self.decoder_configs.configs.alpha
+                ) * base_outputs.logits[
+                    0, -1
+                ] - self.decoder_configs.configs.alpha * hallucinated_outputs.logits[
+                    0, -1
+                ]
+                print(next_token_logits)
 
-                _, indices = torch.topk(next_token_score, 1)
-                generated_tokens = torch.cat(
-                    [generated_tokens, indices.unsqueeze(dim=0).to(self.model.device)],
-                    dim=1,
-                )
-
+                last_input_token = next_token_logits.argmax()
+                generated_ids.append(last_input_token.item())
             decoded_text = self.tokenizer.decode(
-                generated_tokens[0], skip_special_tokens=True
+                generated_ids, skip_special_tokens=True
             )
 
         return decoded_text
