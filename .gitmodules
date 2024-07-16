@@ -1,0 +1,3 @@
+[submodule "submodules/pyvene"]
+	path = submodules/pyvene
+	url = git@github.com:aryopg/pyvene.git
