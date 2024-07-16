@@ -69,7 +69,9 @@ class BaselineMaskedRetrievalHead(BaseModel):
                 generated_ids.append(last_input_token.item())
                 if last_input_token.item() == self.tokenizer.eos_token_id:
                     break
-            decoded_text = self.tokenizer.decode(generated_ids)
+            decoded_text = self.tokenizer.decode(
+                generated_ids, skip_special_tokens=True
+            )
 
         return decoded_text
 
