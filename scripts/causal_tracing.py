@@ -10,14 +10,14 @@ from pyvene import (
     ConstantSourceIntervention,
     LocalistRepresentationIntervention,
 )
-from pyvene import create_gpt2, create_llama
+from pyvene import create_llama2, create_llama
 
 from plotnine import ggplot, geom_tile, aes, theme, element_text, xlab, ylab, ggsave
 from plotnine.scales import scale_y_reverse, scale_fill_cmap
 from tqdm import tqdm
 
 titles = {
-    "block_output": "single restored layer in GPT2-XL",
+    "block_output": "single restored layer in LLAMA-3-8B",
     "mlp_activation": "center of interval of 10 patched mlp layer",
     "attention_output": "center of interval of 10 patched attn layer",
 }
@@ -31,24 +31,25 @@ colors = {
 from transformers import AutoConfig, AutoTokenizer, AutoModelForCausalLM
 
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
-# config, tokenizer, gpt = create_gpt2(name="gpt2-xl")
+# config, tokenizer, llama = create_llama2(name="llama2-xl")
 model_name = "meta-llama/Meta-Llama-3-8B"
 config = AutoConfig.from_pretrained(model_name)
 tokenizer = AutoTokenizer.from_pretrained(model_name)
-gpt = AutoModelForCausalLM.from_pretrained(
+llama = AutoModelForCausalLM.from_pretrained(
     model_name,
     config=config,
-    torch_dtype=torch.float16,  # save memory
+    torch_dtype=torch.bfloat16,  # save memory
+    device_map="auto",
 )
-gpt.to(device)
+# llama.to(device)
 
 base = "The Space Needle is in downtown"
 inputs = [
     tokenizer(base, return_tensors="pt").to(device),
 ]
 print(base)
-res = gpt(**inputs[0], return_dict=True, output_hidden_states=True)
-distrib = embed_to_distrib(gpt, res.hidden_states[-1], logits=False)
+res = llama(**inputs[0], return_dict=True, output_hidden_states=True)
+distrib = embed_to_distrib(llama, res.hidden_states[-1], logits=False)
 print("Before corruption")
 top_vals(tokenizer, distrib[0][-1], n=10)
 
@@ -87,13 +88,15 @@ def corrupted_config(model_type):
 
 print("After corruption")
 base = tokenizer("The Space Needle is in downtown", return_tensors="pt").to(device)
-config = corrupted_config(type(gpt))
-intervenable = IntervenableModel(config, gpt)
+config = corrupted_config(type(llama))
+intervenable = IntervenableModel(config, llama)
 _, counterfactual_outputs = intervenable(
     base, unit_locations={"base": ([[[0, 1, 2, 3]]])}
 )
 
-distrib = embed_to_distrib(gpt, counterfactual_outputs.hidden_states[-1], logits=False)
+distrib = embed_to_distrib(
+    llama, counterfactual_outputs.hidden_states[-1], logits=False
+)
 top_vals(tokenizer, distrib[0][-1], n=10)
 
 
@@ -131,13 +134,13 @@ os.makedirs("./tutorial_data", exist_ok=True)
 
 for stream in ["block_output", "mlp_activation", "attention_output"]:
     data = []
-    for layer_i in tqdm(range(gpt.config.num_hidden_layers)):
+    for layer_i in tqdm(range(llama.config.num_hidden_layers)):
         for pos_i in range(7):
             config = restore_corrupted_with_interval_config(
                 layer_i, stream, window=1 if stream == "block_output" else 10
             )
             n_restores = len(config.representations) - 1
-            intervenable = IntervenableModel(config, gpt)
+            intervenable = IntervenableModel(config, llama)
             _, counterfactual_outputs = intervenable(
                 base,
                 [None] + [base] * n_restores,
@@ -149,7 +152,7 @@ for stream in ["block_output", "mlp_activation", "attention_output"]:
                 },
             )
             distrib = embed_to_distrib(
-                gpt, counterfactual_outputs.hidden_states[-1], logits=False
+                llama, counterfactual_outputs.hidden_states[-1], logits=False
             )
             prob = distrib[0][-1][token].detach().cpu().item()
             data.append({"layer": layer_i, "pos": pos_i, "prob": prob})
