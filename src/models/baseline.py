@@ -41,9 +41,9 @@ class Baseline(BaseModel):
                 past_kv = outputs.past_key_values
                 last_input_token = outputs.logits[0, -1].argmax()
                 generated_ids.append(last_input_token.item())
-            decoded_text = self.tokenizer.decode(
-                generated_ids, skip_special_tokens=True
-            )
+                if last_input_token.item() == self.tokenizer.eos_token_id:
+                    break
+            decoded_text = self.tokenizer.decode(generated_ids)
 
         return decoded_text
 
