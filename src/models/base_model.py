@@ -52,7 +52,7 @@ class BaseModel(ABC):
             chat_inputs = []
             if type(inputs) == list:
                 for idx, input in enumerate(inputs):
-                    if type(input) == tuple:
+                    if type(input) in [tuple, list]:
                         input = input[0]
                     if idx == 0:
                         chat_inputs += [{"role": "system", "content": input}]
@@ -63,6 +63,8 @@ class BaseModel(ABC):
                             chat_inputs += [{"role": "assistant", "content": input}]
             else:
                 chat_inputs += [{"role": "user", "content": inputs}]
+
+            print(chat_inputs)
             inputs = tokenizer.apply_chat_template(
                 chat_inputs,
                 add_generation_prompt=True,
