@@ -36,10 +36,9 @@ tokenizer = AutoTokenizer.from_pretrained(model_name)
 llama = AutoModelForCausalLM.from_pretrained(
     model_name,
     config=config,
-    torch_dtype=torch.bfloat16,  # save memory
-    device_map="auto",
+    torch_dtype=torch.bfloat16,
 )
-# llama.to(device)
+llama.to(device)
 
 base = "The Space Needle is in downtown"
 inputs = [
@@ -90,7 +89,7 @@ config = corrupted_config(type(llama))
 intervenable = IntervenableModel(config, llama)
 intervenable.set_device(device, set_model=True)
 _, counterfactual_outputs = intervenable(
-    base, unit_locations={"base": ([[[0, 1, 2, 3]]])}
+    base.cuda(), unit_locations={"base": ([[[0, 1, 2, 3]]])}
 )
 
 distrib = embed_to_distrib(
