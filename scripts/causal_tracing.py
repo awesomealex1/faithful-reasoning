@@ -89,7 +89,7 @@ config = corrupted_config(type(llama))
 intervenable = IntervenableModel(config, llama)
 intervenable.set_device(device, set_model=True)
 _, counterfactual_outputs = intervenable(
-    base.cuda(), unit_locations={"base": ([[[0, 1, 2, 3]]])}
+    base.to(device), unit_locations={"base": ([[[0, 1, 2, 3]]])}
 )
 
 distrib = embed_to_distrib(
