@@ -88,6 +88,7 @@ print("After corruption")
 base = tokenizer("The Space Needle is in downtown", return_tensors="pt").to(device)
 config = corrupted_config(type(llama))
 intervenable = IntervenableModel(config, llama)
+intervenable.set_device(device, set_model=True)
 _, counterfactual_outputs = intervenable(
     base, unit_locations={"base": ([[[0, 1, 2, 3]]])}
 )
