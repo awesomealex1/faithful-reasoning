@@ -10,7 +10,6 @@ from pyvene import (
     ConstantSourceIntervention,
     LocalistRepresentationIntervention,
 )
-from pyvene import create_llama2, create_llama
 
 from plotnine import ggplot, geom_tile, aes, theme, element_text, xlab, ylab, ggsave
 from plotnine.scales import scale_y_reverse, scale_fill_cmap
@@ -31,7 +30,6 @@ colors = {
 from transformers import AutoConfig, AutoTokenizer, AutoModelForCausalLM
 
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
-# config, tokenizer, llama = create_llama2(name="llama2-xl")
 model_name = "meta-llama/Meta-Llama-3-8B"
 config = AutoConfig.from_pretrained(model_name)
 tokenizer = AutoTokenizer.from_pretrained(model_name)
