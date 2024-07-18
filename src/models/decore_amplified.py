@@ -138,20 +138,23 @@ class DeCoReAmplified(BaseModel):
             continue_ids = input_ids[0, prefix_ids.shape[-1] :]
 
             base_outputs = self.model(input_ids)[0]
-            hallucinated_outputs = self.model(
+            random_mask_outputs = self.model(input_ids, block_list=self.random_heads)[0]
+            retrieval_mask_outputs = self.model(
                 input_ids, block_list=self.retrieval_heads
             )[0]
 
             base_logits = base_outputs[0, prefix_ids.shape[-1] - 1 : -1, :]
-            hallucinated_logits = hallucinated_outputs[
+            random_mask_logits = random_mask_outputs[
+                0, prefix_ids.shape[-1] - 1 : -1, :
+            ]
+            retrieval_mask_logits = retrieval_mask_outputs[
                 0, prefix_ids.shape[-1] - 1 : -1, :
             ]
 
             # base_logits = base_logits.log_softmax(dim=-1)
             # hallucinated_logits = hallucinated_logits.log_softmax(dim=-1)
-            diff_logits = (
-                (1 + self.decoder_configs.configs.alpha) * base_logits
-                - self.decoder_configs.configs.alpha * hallucinated_logits
+            diff_logits = base_logits + self.decoder_configs.configs.alpha * (
+                random_mask_logits - retrieval_mask_logits
             )
 
             diff_logits = diff_logits.log_softmax(dim=-1)
