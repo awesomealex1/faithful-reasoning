@@ -17,13 +17,11 @@ from src.datasets.base_dataset import BaseDataset
 class NQ(BaseDataset):
     available_variations = {
         "oracle": "nq-open-oracle.jsonl.gz",
-        "gold_at_0": "nq-open-30_total_documents_gold_at_0.jsonl.gz",
-        "gold_at_4": "nq-open-30_total_documents_gold_at_4.jsonl.gz",
-        "gold_at_9": "nq-open-30_total_documents_gold_at_9.jsonl.gz",
-        "gold_at_14": "nq-open-30_total_documents_gold_at_14.jsonl.gz",
-        "gold_at_19": "nq-open-30_total_documents_gold_at_19.jsonl.gz",
-        "gold_at_24": "nq-open-30_total_documents_gold_at_24.jsonl.gz",
-        "gold_at_29": "nq-open-30_total_documents_gold_at_29.jsonl.gz",
+        "gold_at_0": "nq-open-20_total_documents_gold_at_0.jsonl.gz",
+        "gold_at_4": "nq-open-20_total_documents_gold_at_4.jsonl.gz",
+        "gold_at_9": "nq-open-20_total_documents_gold_at_9.jsonl.gz",
+        "gold_at_14": "nq-open-20_total_documents_gold_at_14.jsonl.gz",
+        "gold_at_19": "nq-open-20_total_documents_gold_at_19.jsonl.gz",
     }
 
     def __init__(
@@ -65,18 +63,10 @@ class NQ(BaseDataset):
         return data
 
     def build_prompt(self, contexts, question):
-        """
-        Prompt design (From Lost in the Middle):
-        Write a high-quality answer for the given question using only the provided search results (some of which might be irrelevant).
-
-        {search_results}
-
-        Question: {question}
-        Answer:
-        """
 
         instruction = [
-            "Write a high-quality answer for the given question using only the provided search results (some of which might be irrelevant)."
+            "Write a high-quality answer for the given question using only the provided search results (some of which might be irrelevant). Provide the answer in 5 words or less without any explanation.\n\n"
+            "Document [1](Title: Example Title) Example Text\n\nQuestion: example question\nAnswer: march 2018"
         ]
 
         prompted_contexts = "\n".join(
