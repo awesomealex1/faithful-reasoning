@@ -9,6 +9,7 @@ from omegaconf import MISSING
 class DataConfigs:
     name: str = MISSING
     data_dir: str = MISSING
+    variation: Optional[str] = None
 
 
 @dataclass

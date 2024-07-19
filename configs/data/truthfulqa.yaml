@@ -3,3 +3,4 @@ defaults:
 
 name: TruthfulQA
 data_dir: data/TruthfulQA
+variation: null

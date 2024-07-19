@@ -3,3 +3,4 @@ defaults:
 
 name: NQSwap
 data_dir: data/NQ-Swap/data
+variation: null
