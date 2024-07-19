@@ -84,10 +84,9 @@ class NQ(BaseDataset):
         )
 
         if self.kwargs["use_chat_template"]:
-            input_text_prompt = instruction + [
-                f"{prompted_contexts}\n\nQuestion: {question}\nAnswer: "
+            input_text_prompt = [
+                instruction + [f"{prompted_contexts}\n\nQuestion: {question}\nAnswer: "]
             ]
-            print(input_text_prompt)
             return input_text_prompt
         else:
             input_text_prompt = (
