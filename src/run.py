@@ -107,9 +107,6 @@ class Run:
             with open(prediction_filepath, "a") as f:
                 f.write(json.dumps(batch) + "\n")
 
-            if step >= 10:
-                break
-
         # Evaluate
         metrics = self.metrics(predictions)
 
