@@ -87,6 +87,7 @@ class NQ(BaseDataset):
             input_text_prompt = instruction + [
                 f"{prompted_contexts}\n\nQuestion: {question}\nAnswer: "
             ]
+            print(input_text_prompt)
             return input_text_prompt
         else:
             input_text_prompt = (
