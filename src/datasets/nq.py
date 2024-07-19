@@ -80,7 +80,7 @@ class NQ(BaseDataset):
         ]
 
         prompted_contexts = "\n".join(
-            [f"Document [{i}]{context}" for i, context in enumerate(contexts)]
+            [f"Document [{i+1}]{context}" for i, context in enumerate(contexts)]
         )
 
         if self.kwargs["use_chat_template"]:

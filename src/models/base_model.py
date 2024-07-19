@@ -48,6 +48,7 @@ class BaseModel(ABC):
         if tokenizer is None:
             tokenizer = self.tokenizer
 
+        print(inputs)
         if self.model_configs.model_type == "instruct":
             chat_inputs = []
             if type(inputs) == list:
