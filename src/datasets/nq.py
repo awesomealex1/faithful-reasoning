@@ -17,11 +17,9 @@ from src.datasets.base_dataset import BaseDataset
 class NQ(BaseDataset):
     available_variations = {
         "oracle": "nq-open-oracle.jsonl.gz",
-        "gold_at_0": "nq-open-20_total_documents_gold_at_0.jsonl.gz",
-        "gold_at_4": "nq-open-20_total_documents_gold_at_4.jsonl.gz",
-        "gold_at_9": "nq-open-20_total_documents_gold_at_9.jsonl.gz",
-        "gold_at_14": "nq-open-20_total_documents_gold_at_14.jsonl.gz",
-        "gold_at_19": "nq-open-20_total_documents_gold_at_19.jsonl.gz",
+        "gold_at_0": "nq-open-10_total_documents_gold_at_0.jsonl.gz",
+        "gold_at_4": "nq-open-10_total_documents_gold_at_4.jsonl.gz",
+        "gold_at_9": "nq-open-10_total_documents_gold_at_9.jsonl.gz",
     }
 
     def __init__(
