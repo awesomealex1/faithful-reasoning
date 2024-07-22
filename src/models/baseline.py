@@ -121,6 +121,8 @@ class Baseline(BaseModel):
             )
             for i in range(len(attentions)):  # iterating over the new tokens length
                 for l in range(num_layers):
+                    print(attentions[i][l])
+                    print(attentions[i][l].size())
                     attn_on_bos = attentions[i][l][0, :, -1, 0].mean(-1)
                     attn_on_context = attentions[i][l][
                         0, :, -1, bos_length : context_length + 1
