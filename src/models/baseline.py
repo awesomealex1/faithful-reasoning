@@ -29,7 +29,7 @@ class Baseline(BaseModel):
         if self.model_configs.model_type == "instruct":
             bos_length = 1
             question_length = self._verbalise_input(
-                inputs["verbalised_question"]
+                inputs["verbalised_question"][0]
             ).shape[-1]
             context_length = tokenised_inputs.size(1) - question_length - bos_length
         else:
