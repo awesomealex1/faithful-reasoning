@@ -33,19 +33,21 @@ class Baseline(BaseModel):
         else:
             bos_length = 1
             question_length = self._verbalise_input(inputs["question"]).shape[-1]
-            context_length = len(tokenised_inputs) - question_length - bos_length
+            context_length = (
+                len(tokenised_inputs.size(1)) - question_length - bos_length
+            )
         print("bos_length: ", bos_length)
         print("question_length: ", question_length)
         print("context_length: ", context_length)
 
-        print("tokenised_inputs[:bos_length]: ", tokenised_inputs[: bos_length + 1])
+        print("tokenised_inputs[:bos_length]: ", tokenised_inputs[:, : bos_length + 1])
         print(
             "tokenised_inputs[bos_length:context_length]: ",
-            tokenised_inputs[bos_length : context_length + 1],
+            tokenised_inputs[:, bos_length : context_length + 1],
         )
         print(
             "tokenised_inputs[bos_length+context_length:question_length]: ",
-            tokenised_inputs[bos_length + context_length : question_length + 1],
+            tokenised_inputs[:, bos_length + context_length : question_length + 1],
         )
         print(
             "bos_length+context_length+question_length: ",
