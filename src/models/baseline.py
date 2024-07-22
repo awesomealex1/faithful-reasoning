@@ -41,8 +41,8 @@ class Baseline(BaseModel):
                     output_attentions=False,
                     attn_mode="torch",
                 )
-                print(outputs.attention)
-                print(outputs.attention.size())
+                print(outputs.attentions)
+                print(outputs.attentions.size())
                 attentions += [outputs.attentions]
                 past_kv = outputs.past_key_values
                 last_input_token = outputs.logits[0, -1].argmax()
