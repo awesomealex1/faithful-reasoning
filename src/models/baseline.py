@@ -50,14 +50,13 @@ class Baseline(BaseModel):
         print(
             self.tokenizer.decode(tokenised_inputs[0][bos_length : context_length + 1])
         )
+        print()
         print(
             "tokenised_inputs[bos_length+context_length:question_length]: ",
             tokenised_inputs[:, bos_length + context_length : question_length + 1],
-        )
-        print(
             self.tokenizer.decode(
                 tokenised_inputs[0][bos_length + context_length : question_length + 1]
-            )
+            ),
         )
         print(
             "bos_length+context_length+question_length: ",
