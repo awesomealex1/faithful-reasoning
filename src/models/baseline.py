@@ -31,11 +31,11 @@ class Baseline(BaseModel):
             verbalised_question = self._verbalise_input(
                 inputs["verbalised_question"][0]
             )
-            print("verbalised_question: ", verbalised_question)
-            print(self.tokenizer.decode(verbalised_question[0]))
-            question_length = self._verbalise_input(
-                inputs["verbalised_question"][0]
-            ).shape[-1]
+            question_length = self._verbalise_input(inputs["verbalised_question"][0])[
+                :, 6:
+            ].shape[
+                -1
+            ]  # FIXME: 6 is <|begin_of_text|><|start_header_id|>user<|end_header_id|>\n\n in llama3-8b-instruct tokenizer
             context_length = tokenised_inputs.size(1) - question_length - bos_length
         else:
             bos_length = 1
