@@ -103,6 +103,8 @@ class Baseline(BaseModel):
             attentions = merge_attention_weights(attentions)
 
             # print(attentions)
+            print("len(attentions): ", len(attentions))
+            print("attentions[0].size(): ", attentions[0].size())
 
             new_token_length = len(attentions)
             num_layers = len(attentions[0])
@@ -121,7 +123,7 @@ class Baseline(BaseModel):
             )
             for i in range(len(attentions)):  # iterating over the new tokens length
                 for l in range(num_layers):
-                    print(attentions[i][l])
+                    # print(attentions[i][l])
                     print(attentions[i][l].size())
                     attn_on_bos = attentions[i][l][0, :, -1, 0].mean(-1)
                     attn_on_context = attentions[i][l][
