@@ -169,6 +169,11 @@ class Baseline(BaseModel):
             print("question_lookback_ratio: ", question_lookback_ratio)
             print("new_tokens_lookback_ratio: ", new_tokens_lookback_ratio)
 
+            print("bos_lookback_ratio: ", bos_lookback_ratio.size())
+            print("context_lookback_ratio: ", context_lookback_ratio.size())
+            print("question_lookback_ratio: ", question_lookback_ratio.size())
+            print("new_tokens_lookback_ratio: ", new_tokens_lookback_ratio.size())
+
             generation_output["attentions"]["bos_lookback_ratio"] = bos_lookback_ratio
             generation_output["attentions"][
                 "context_lookback_ratio"
