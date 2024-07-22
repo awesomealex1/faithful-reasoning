@@ -38,19 +38,28 @@ class Baseline(BaseModel):
         print("question_length: ", question_length)
         print("context_length: ", context_length)
 
-        print("tokenised_inputs[:bos_length]: ", tokenised_inputs[:, : bos_length + 1])
+        print("tokenised_inputs[:bos_length]: ", tokenised_inputs[:, :bos_length])
         print(
             "tokenised_inputs[bos_length:context_length]: ",
             tokenised_inputs[:, bos_length : context_length + 1],
+        )
+        print(
+            self.tokenizer.decode(tokenised_inputs[:, bos_length : context_length + 1])
         )
         print(
             "tokenised_inputs[bos_length+context_length:question_length]: ",
             tokenised_inputs[:, bos_length + context_length : question_length + 1],
         )
         print(
+            self.tokenizer.decode(
+                tokenised_inputs[:, bos_length + context_length : question_length + 1]
+            )
+        )
+        print(
             "bos_length+context_length+question_length: ",
             bos_length + context_length + question_length,
         )
+        print("tokenised_inputs.size(1): ", tokenised_inputs.size(1))
         exit()
 
         # Predict
