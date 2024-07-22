@@ -52,10 +52,12 @@ class Baseline(BaseModel):
         )
         print()
         print(
-            "tokenised_inputs[bos_length+context_length:question_length]: ",
-            tokenised_inputs[:, bos_length + context_length : question_length + 1],
+            "tokenised_inputs[bos_length+context_length:tokenised_inputs.size(1)]: ",
+            tokenised_inputs[:, bos_length + context_length : tokenised_inputs.size(1)],
             self.tokenizer.decode(
-                tokenised_inputs[0][bos_length + context_length : question_length + 1]
+                tokenised_inputs[0][
+                    bos_length + context_length : tokenised_inputs.size(1)
+                ]
             ),
         )
         print(
