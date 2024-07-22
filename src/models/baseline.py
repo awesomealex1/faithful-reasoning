@@ -100,11 +100,11 @@ class Baseline(BaseModel):
 
         generation_output = {"decoded_text": decoded_text}
         if return_attentions:
-            attentions = merge_attention_weights(attentions)
+            # attentions = merge_attention_weights(attentions)
 
             # print(attentions)
-            print("len(attentions): ", len(attentions))
-            print("attentions[0].size(): ", attentions[0].size())
+            # print("len(attentions): ", len(attentions))
+            # print("attentions[0].size(): ", attentions[0].size())
 
             new_token_length = len(attentions)
             num_layers = len(attentions[0])
