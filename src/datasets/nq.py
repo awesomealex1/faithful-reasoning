@@ -91,7 +91,6 @@ class NQ(BaseDataset):
             input_text_prompt = [
                 instruction + [f"{prompted_contexts}{verbalised_question}"]
             ]
-            return input_text_prompt
         else:
             verbalised_question = f"Question: {question}\nAnswer: "
             input_text_prompt = (
