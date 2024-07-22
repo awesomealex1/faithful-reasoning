@@ -61,7 +61,7 @@ class DeCoReAmplified(BaseModel):
     def generate(
         self,
         inputs,
-    ) -> str:
+    ) -> dict:
         self.model.eval()
 
         inputs = self._verbalise_input(inputs).to(self.model.device)
@@ -121,7 +121,7 @@ class DeCoReAmplified(BaseModel):
                 generated_ids, skip_special_tokens=True
             )
 
-        return decoded_text
+        return {"decoded_text": decoded_text}
 
     def lm_score(
         self,

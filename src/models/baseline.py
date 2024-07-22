@@ -4,6 +4,7 @@ import torch
 
 from src.configs import DecoderConfigs, ModelConfigs
 from src.models.base_model import BaseModel
+from src.models.utils import merge_attention_weights
 
 
 class Baseline(BaseModel):
@@ -18,7 +19,7 @@ class Baseline(BaseModel):
         self,
         inputs,
         return_attentions: bool = False,
-    ) -> Union[str, Tuple[str, List[torch.Tensor]]]:
+    ) -> dict:
         self.model.eval()
 
         inputs = self._verbalise_input(inputs).to(self.model.device)
@@ -41,10 +42,6 @@ class Baseline(BaseModel):
                     output_attentions=True,
                     attn_mode="torch",
                 )
-                print(outputs.attentions)
-                print(len(outputs.attentions))
-                for attn in outputs.attentions:
-                    print(attn.size())
                 # print(outputs.attentions.size())
                 attentions += [outputs.attentions]
                 past_kv = outputs.past_key_values
@@ -56,9 +53,11 @@ class Baseline(BaseModel):
                 generated_ids, skip_special_tokens=True
             )
 
+        generation_output = {"decoded_text": decoded_text}
         if return_attentions:
-            return decoded_text, attentions
-        return decoded_text
+            generation_output["attentions"] = merge_attention_weights(attentions)
+
+        return generation_output
 
     def lm_score(
         self,

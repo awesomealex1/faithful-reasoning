@@ -71,14 +71,17 @@ class Run:
         prediction_filepath = os.path.join(
             self.output_dir, f"pred_{self.configs.data.name}.json"
         )
+        attentions_filepath = os.path.join(
+            self.output_dir, f"att_{self.configs.data.name}.pt"
+        )
 
+        attentions_list = []
         for step, batch in enumerate(tqdm(self.dataloaders)):
             # Predict
-            prediction, attentions = self.model.generate(
+            prediction = self.model.generate(
                 batch["prompted_question"][0], return_attentions=True
             )
-            batch["predicted_answer"] = prediction
-            batch["attentions"] = attentions
+            batch["predicted_answer"] = prediction["decoded_text"]
 
             if self.configs.data.name in ["TruthfulQA", "MemoTrap"]:
                 scores_true = []
@@ -110,8 +113,14 @@ class Run:
             with open(prediction_filepath, "a") as f:
                 f.write(json.dumps(batch) + "\n")
 
+            if "attentions" in prediction:
+                batch["attentions"] = prediction["attentions"]
+                attentions_list += [batch]
+
             if step > 10:
                 break
+
+        torch.save(attentions_list, attentions_filepath)
 
         # Evaluate
         metrics = self.metrics(predictions)
@@ -119,6 +128,15 @@ class Run:
         # Log
         wandb.log(metrics)
 
-        artifact = wandb.Artifact(f"pred_{self.configs.data.name}", type="prediction")
-        artifact.add_file(prediction_filepath)
-        wandb.log_artifact(artifact)
+        pred_artifact = wandb.Artifact(
+            f"pred_{self.configs.data.name}_{self.wandb_run_name}", type="prediction"
+        )
+        pred_artifact.add_file(prediction_filepath)
+        wandb.log_artifact(pred_artifact)
+
+        attn_artifact = wandb.Artifact(
+            f"attn_{self.configs.data.name}_{self.wandb_run_name}",
+            type="attention_weights",
+        )
+        attn_artifact.add_file(attentions_filepath)
+        wandb.log_artifact(attn_artifact)

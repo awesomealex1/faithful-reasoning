@@ -29,7 +29,7 @@ class ContrastiveDecoding(BaseModel):
     def generate(
         self,
         inputs,
-    ) -> str:
+    ) -> dict:
         self.model.eval()
 
         slm_input = self._verbalise_task_input(inputs)
@@ -77,8 +77,11 @@ class ContrastiveDecoding(BaseModel):
                     dim=1,
                 )
 
+                if indices == self.tokenizer.eos_token_id:
+                    break
+
             decoded_text = self.tokenizer.decode(
                 generated_tokens[0], skip_special_tokens=True
             )
 
-        return decoded_text
+        return {"decoded_text": decoded_text}
