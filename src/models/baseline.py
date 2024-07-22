@@ -25,7 +25,6 @@ class Baseline(BaseModel):
         prompt = inputs["prompted_question"][0]
         tokenised_inputs = self._verbalise_input(prompt).to(self.model.device)
 
-        print(inputs)
         if self.model_configs.model_type == "instruct":
             bos_length = 1
             question_length = self._verbalise_input(inputs["verbalised_question"][0])[
@@ -40,34 +39,6 @@ class Baseline(BaseModel):
                 inputs["verbalised_question"]
             ).shape[-1]
             context_length = tokenised_inputs.size(1) - question_length - bos_length
-        print("bos_length: ", bos_length)
-        print("question_length: ", question_length)
-        print("context_length: ", context_length)
-
-        print("tokenised_inputs[:bos_length]: ", tokenised_inputs[:, :bos_length])
-        print(
-            "tokenised_inputs[bos_length:context_length]: ",
-            tokenised_inputs[:, bos_length : context_length + 1],
-        )
-        print(
-            self.tokenizer.decode(tokenised_inputs[0][bos_length : context_length + 1])
-        )
-        print()
-        print(
-            "tokenised_inputs[bos_length+context_length:tokenised_inputs.size(1)]: ",
-            tokenised_inputs[:, bos_length + context_length : tokenised_inputs.size(1)],
-            self.tokenizer.decode(
-                tokenised_inputs[0][
-                    bos_length + context_length : tokenised_inputs.size(1)
-                ]
-            ),
-        )
-        print(
-            "bos_length+context_length+question_length: ",
-            bos_length + context_length + question_length,
-        )
-        print("tokenised_inputs.size(1): ", tokenised_inputs.size(1))
-        # exit()
 
         # Predict
         with torch.inference_mode():
@@ -135,10 +106,6 @@ class Baseline(BaseModel):
                     attn_on_new_tokens = attentions[i][l][
                         0, :, -1, tokenised_inputs.size(1) :
                     ].mean(-1)
-                    print("attn_on_bos: ", attn_on_bos)
-                    print("attn_on_context: ", attn_on_context)
-                    print("attn_on_question: ", attn_on_question)
-                    print("attn_on_new_tokens: ", attn_on_new_tokens)
                     bos_lookback_ratio[l, :, i] = attn_on_bos / (
                         attn_on_bos
                         + attn_on_context
@@ -164,16 +131,6 @@ class Baseline(BaseModel):
                         + attn_on_new_tokens
                     )
 
-            print("bos_lookback_ratio: ", bos_lookback_ratio)
-            print("context_lookback_ratio: ", context_lookback_ratio)
-            print("question_lookback_ratio: ", question_lookback_ratio)
-            print("new_tokens_lookback_ratio: ", new_tokens_lookback_ratio)
-
-            print("bos_lookback_ratio: ", bos_lookback_ratio.size())
-            print("context_lookback_ratio: ", context_lookback_ratio.size())
-            print("question_lookback_ratio: ", question_lookback_ratio.size())
-            print("new_tokens_lookback_ratio: ", new_tokens_lookback_ratio.size())
-
             generation_output["attentions"]["bos_lookback_ratio"] = bos_lookback_ratio
             generation_output["attentions"][
                 "context_lookback_ratio"
@@ -184,7 +141,7 @@ class Baseline(BaseModel):
             generation_output["attentions"][
                 "new_tokens_lookback_ratio"
             ] = new_tokens_lookback_ratio
-        exit()
+
         return generation_output
 
     def lm_score(
