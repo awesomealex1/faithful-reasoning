@@ -4,7 +4,6 @@ import torch
 
 from src.configs import DecoderConfigs, ModelConfigs
 from src.models.base_model import BaseModel
-from src.models.utils import merge_attention_weights
 
 
 class Baseline(BaseModel):
@@ -58,7 +57,6 @@ class Baseline(BaseModel):
                     output_attentions=True,
                     attn_mode="torch",
                 )
-                # print(outputs.attentions.size())
                 attentions += [outputs.attentions]
                 past_kv = outputs.past_key_values
                 last_input_token = outputs.logits[0, -1].argmax()
@@ -71,12 +69,6 @@ class Baseline(BaseModel):
 
         generation_output = {"decoded_text": decoded_text}
         if return_attentions:
-            # attentions = merge_attention_weights(attentions)
-
-            # print(attentions)
-            # print("len(attentions): ", len(attentions))
-            # print("attentions[0].size(): ", attentions[0].size())
-
             new_token_length = len(attentions)
             num_layers = len(attentions[0])
             num_heads = attentions[0][0].shape[1]
@@ -94,8 +86,6 @@ class Baseline(BaseModel):
             )
             for i in range(len(attentions)):  # iterating over the new tokens length
                 for l in range(num_layers):
-                    # print(attentions[i][l])
-                    print(attentions[i][l].size())
                     attn_on_bos = attentions[i][l][0, :, -1, 0].mean(-1)
                     attn_on_context = attentions[i][l][
                         0, :, -1, bos_length : context_length + 1
