@@ -78,9 +78,7 @@ class Run:
         attentions_list = []
         for step, batch in enumerate(tqdm(self.dataloaders)):
             # Predict
-            prediction = self.model.generate(
-                batch["prompted_question"][0], return_attentions=True
-            )
+            prediction = self.model.generate(batch, return_attentions=True)
             batch["predicted_answer"] = prediction["decoded_text"]
 
             if self.configs.data.name in ["TruthfulQA", "MemoTrap"]:
@@ -88,12 +86,12 @@ class Run:
                 scores_false = []
                 for temp_ans in batch["prompted_ref_true"]:
                     ans = temp_ans[0] if type(temp_ans) in [list, tuple] else temp_ans
-                    log_probs = self.model.lm_score(batch["prompted_question"][0], ans)
+                    log_probs = self.model.lm_score(batch, ans)
                     scores_true.append(log_probs)
 
                 for temp_ans in batch["prompted_ref_false"]:
                     ans = temp_ans[0] if type(temp_ans) in [list, tuple] else temp_ans
-                    log_probs = self.model.lm_score(batch["prompted_question"][0], ans)
+                    log_probs = self.model.lm_score(batch, ans)
                     scores_false.append(log_probs)
 
                 batch["scores_true"] = scores_true

@@ -87,24 +87,29 @@ class NQ(BaseDataset):
             prompted_contexts += "\n\n"
 
         if self.kwargs["use_chat_template"]:
+            verbalised_question = f"Question: {question}\nAnswer: "
             input_text_prompt = [
-                instruction + [f"{prompted_contexts}Question: {question}\nAnswer: "]
+                instruction + [f"{prompted_contexts}{verbalised_question}"]
             ]
             return input_text_prompt
         else:
+            verbalised_question = f"Question: {question}\nAnswer: "
             input_text_prompt = (
-                instruction[0]
-                + "\n\n"
-                + (f"{prompted_contexts}Question: {question}\nAnswer: ")
+                instruction[0] + "\n\n" + (f"{prompted_contexts}{verbalised_question}")
             )
-            return input_text_prompt
+        return {
+            "prompted_contexts": prompted_contexts,
+            "verbalised_question": verbalised_question,
+            "prompted_question": input_text_prompt,
+        }
 
     def __getitem__(self, idx):
         sample = self.data[idx]
 
-        sample["prompted_question"] = self.build_prompt(
-            sample["contexts"], sample["question"]
-        )
+        prompt = self.build_prompt(sample["contexts"], sample["question"])
+        sample["prompted_contexts"] = prompt["prompted_contexts"]
+        sample["verbalised_question"] = prompt["verbalised_question"]
+        sample["prompted_question"] = prompt["prompted_question"]
 
         return sample
 

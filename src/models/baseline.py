@@ -22,7 +22,31 @@ class Baseline(BaseModel):
     ) -> dict:
         self.model.eval()
 
-        inputs = self._verbalise_input(inputs).to(self.model.device)
+        prompt = inputs["prompted_question"][0]
+        inputs = self._verbalise_input(prompt).to(self.model.device)
+
+        if self.model_configs.model_type == "instruct":
+            print(inputs)
+            bos_length = 1
+            question_length = self._verbalise_input(inputs["question"]).shape[-1]
+            context_length = len(inputs) - question_length - bos_length
+        else:
+            bos_length = 1
+            question_length = self._verbalise_input(inputs["question"]).shape[-1]
+            context_length = len(inputs) - question_length - bos_length
+        print("bos_length: ", bos_length)
+        print("question_length: ", question_length)
+        print("context_length: ", context_length)
+        print("inputs[:bos_length]: ", inputs[:bos_length])
+        print("inputs[bos_length:context_length]: ", inputs[bos_length:context_length])
+        print(
+            "inputs[bos_length+context_length:question_length]: ",
+            inputs[bos_length + context_length : question_length],
+        )
+        print(
+            "bos_length+context_length+question_length: ",
+            bos_length + context_length + question_length,
+        )
 
         # Predict
         with torch.inference_mode():
@@ -55,7 +79,65 @@ class Baseline(BaseModel):
 
         generation_output = {"decoded_text": decoded_text}
         if return_attentions:
-            generation_output["attentions"] = merge_attention_weights(attentions)
+            attentions = merge_attention_weights(attentions)
+
+            print(attentions)
+            print(attentions)
+
+            context_length = attentions[0][0].shape[-1]
+            new_token_length = len(attentions)
+            num_layers = len(attentions[0])
+            num_heads = attentions[0][0].shape[1]
+
+            generation_output["attentions"] = {}
+            lookback_ratio = torch.zeros((num_layers, num_heads, new_token_length))
+            for i in range(len(attentions)):  # iterating over the new tokens length
+                for l in range(num_layers):
+                    attn_on_bos = attentions[i][l][0, :, -1, 0].mean(-1)
+                    attn_on_context = attentions[i][l][0, :, -1, :context_length].mean(
+                        -1
+                    )
+                    attn_on_question = attentions[i][l][0, :, -1, context_length:].mean(
+                        -1
+                    )
+                    attn_on_new_tokens = attentions[i][l][
+                        0, :, -1, context_length:
+                    ].mean(-1)
+                    bos_lookback_ratio[l, :, i] = attn_on_bos / (
+                        attn_on_bos
+                        + attn_on_context
+                        + attn_on_question
+                        + attn_on_new_tokens
+                    )
+                    context_lookback_ratio[l, :, i] = attn_on_context / (
+                        attn_on_bos
+                        + attn_on_context
+                        + attn_on_question
+                        + attn_on_new_tokens
+                    )
+                    question_lookback_ratio[l, :, i] = attn_on_question / (
+                        attn_on_bos
+                        + attn_on_context
+                        + attn_on_question
+                        + attn_on_new_tokens
+                    )
+                    new_tokens_lookback_ratio[l, :, i] = attn_on_new_tokens / (
+                        attn_on_bos
+                        + attn_on_context
+                        + attn_on_question
+                        + attn_on_new_tokens
+                    )
+
+            generation_output["attentions"]["bos_lookback_ratio"] = bos_lookback_ratio
+            generation_output["attentions"][
+                "context_lookback_ratio"
+            ] = context_lookback_ratio
+            generation_output["attentions"][
+                "question_lookback_ratio"
+            ] = question_lookback_ratio
+            generation_output["attentions"][
+                "new_tokens_lookback_ratio"
+            ] = new_tokens_lookback_ratio
 
         return generation_output
 
@@ -64,6 +146,8 @@ class Baseline(BaseModel):
         prompt,
         answer,
     ):
+        prompt = prompt["prompted_question"][0]
+
         with torch.no_grad():
             if type(prompt) == list:
                 input_text = prompt + [answer]
