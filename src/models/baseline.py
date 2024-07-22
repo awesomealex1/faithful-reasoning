@@ -23,6 +23,7 @@ class Baseline(BaseModel):
         self.model.eval()
 
         prompt = inputs["prompted_question"][0]
+        tokenised_inputs = self._verbalise_input(prompt).to(self.model.device)
 
         print(inputs)
         if self.model_configs.model_type == "instruct":
@@ -32,17 +33,19 @@ class Baseline(BaseModel):
         else:
             bos_length = 1
             question_length = self._verbalise_input(inputs["question"]).shape[-1]
-            context_length = len(inputs) - question_length - bos_length
+            context_length = len(tokenised_inputs) - question_length - bos_length
         print("bos_length: ", bos_length)
         print("question_length: ", question_length)
         print("context_length: ", context_length)
 
-        inputs = self._verbalise_input(prompt).to(self.model.device)
-        print("inputs[:bos_length]: ", inputs[:bos_length])
-        print("inputs[bos_length:context_length]: ", inputs[bos_length:context_length])
+        print("inputs[:bos_length]: ", inputs[: bos_length + 1])
+        print(
+            "inputs[bos_length:context_length]: ",
+            inputs[bos_length : context_length + 1],
+        )
         print(
             "inputs[bos_length+context_length:question_length]: ",
-            inputs[bos_length + context_length : question_length],
+            inputs[bos_length + context_length : question_length + 1],
         )
         print(
             "bos_length+context_length+question_length: ",
@@ -53,11 +56,11 @@ class Baseline(BaseModel):
         # Predict
         with torch.inference_mode():
             input_logits = self.model(
-                input_ids=inputs[:, :-1], use_cache=True, return_dict=True
+                input_ids=tokenised_inputs[:, :-1], use_cache=True, return_dict=True
             )
             generated_ids = []
             attentions = []
-            last_input_token = inputs[:, -1]
+            last_input_token = tokenised_inputs[:, -1]
             past_kv = input_logits.past_key_values
             for _ in range(self.max_new_tokens):
                 last_input_token = last_input_token.view(1, 1)
