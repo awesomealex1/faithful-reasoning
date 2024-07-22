@@ -32,7 +32,7 @@ class Baseline(BaseModel):
                 inputs["verbalised_question"][0]
             )
             print("verbalised_question: ", verbalised_question)
-            print(self.tokenizer.decode(verbalised_question))
+            print(self.tokenizer.decode(verbalised_question[0]))
             question_length = self._verbalise_input(
                 inputs["verbalised_question"][0]
             ).shape[-1]
