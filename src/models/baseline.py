@@ -38,14 +38,14 @@ class Baseline(BaseModel):
         print("question_length: ", question_length)
         print("context_length: ", context_length)
 
-        print("inputs[:bos_length]: ", inputs[: bos_length + 1])
+        print("tokenised_inputs[:bos_length]: ", tokenised_inputs[: bos_length + 1])
         print(
-            "inputs[bos_length:context_length]: ",
-            inputs[bos_length : context_length + 1],
+            "tokenised_inputs[bos_length:context_length]: ",
+            tokenised_inputs[bos_length : context_length + 1],
         )
         print(
-            "inputs[bos_length+context_length:question_length]: ",
-            inputs[bos_length + context_length : question_length + 1],
+            "tokenised_inputs[bos_length+context_length:question_length]: ",
+            tokenised_inputs[bos_length + context_length : question_length + 1],
         )
         print(
             "bos_length+context_length+question_length: ",
