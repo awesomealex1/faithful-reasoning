@@ -74,8 +74,11 @@ class Run:
 
         for step, batch in enumerate(tqdm(self.dataloaders)):
             # Predict
-            prediction = self.model.generate(batch["prompted_question"][0])
+            prediction, attentions = self.model.generate(
+                batch["prompted_question"][0], return_attentions=True
+            )
             batch["predicted_answer"] = prediction
+            batch["attentions"] = attentions
 
             if self.configs.data.name in ["TruthfulQA", "MemoTrap"]:
                 scores_true = []
@@ -106,6 +109,9 @@ class Run:
             # Save the predictions to a JSONL file after each batch
             with open(prediction_filepath, "a") as f:
                 f.write(json.dumps(batch) + "\n")
+
+            if step > 10:
+                break
 
         # Evaluate
         metrics = self.metrics(predictions)

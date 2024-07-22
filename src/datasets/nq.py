@@ -17,6 +17,7 @@ from src.datasets.base_dataset import BaseDataset
 class NQ(BaseDataset):
     available_variations = {
         "oracle": "nq-open-oracle.jsonl.gz",
+        "closed_book": "nq-open-oracle.jsonl.gz",
         "gold_at_0": "nq-open-10_total_documents_gold_at_0.jsonl.gz",
         "gold_at_4": "nq-open-10_total_documents_gold_at_4.jsonl.gz",
         "gold_at_9": "nq-open-10_total_documents_gold_at_9.jsonl.gz",
@@ -28,6 +29,8 @@ class NQ(BaseDataset):
         **kwargs,
     ):
         super().__init__(data_configs, **kwargs)
+        self.variation = data_configs.variation
+
         self.data_filename = os.path.join(
             self.data_dir, self.available_variations[data_configs.variation]
         )
@@ -46,15 +49,20 @@ class NQ(BaseDataset):
         with gzip.open(self.data_filename, "rb") as f:
             for i, line in enumerate(f):
                 instance = json.loads(line)
+                if self.variation == "closed_book":
+                    contexts = []
+                else:
+                    contexts = [
+                        self.concat(context["title"], context["text"])
+                        for context in instance["ctxs"]
+                    ]
+
                 data += [
                     {
                         "idx": i,
                         "question": instance["question"],
                         "answers": instance["answers"],
-                        "contexts": [
-                            self.concat(context["title"], context["text"])
-                            for context in instance["ctxs"]
-                        ],
+                        "contexts": contexts,
                     }
                 ]
 
@@ -64,23 +72,30 @@ class NQ(BaseDataset):
 
         instruction = [
             "Write a high-quality answer for the given question using only the provided search results (some of which might be irrelevant). Provide the answer in 5 words or less without any explanation.\n\n"
-            "Document [1](Title: Example Title) Example Text\n\nQuestion: example question\nAnswer: march 2018"
+            + (
+                "Document [1](Title: Example Title) Example Text\n\n"
+                if len(contexts)
+                else ""
+            )
+            + "Question: example question\nAnswer: march 2018"
         ]
 
         prompted_contexts = "\n".join(
             [f"Document [{i+1}]{context}" for i, context in enumerate(contexts)]
         )
+        if prompted_contexts:
+            prompted_contexts += "\n\n"
 
         if self.kwargs["use_chat_template"]:
             input_text_prompt = [
-                instruction + [f"{prompted_contexts}\n\nQuestion: {question}\nAnswer: "]
+                instruction + [f"{prompted_contexts}Question: {question}\nAnswer: "]
             ]
             return input_text_prompt
         else:
             input_text_prompt = (
                 instruction[0]
                 + "\n\n"
-                + (f"{prompted_contexts}\n\nQuestion: {question}\nAnswer: ")
+                + (f"{prompted_contexts}Question: {question}\nAnswer: ")
             )
             return input_text_prompt
 

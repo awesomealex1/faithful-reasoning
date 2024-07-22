@@ -1,4 +1,4 @@
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Union
 
 import torch
 
@@ -17,7 +17,8 @@ class Baseline(BaseModel):
     def generate(
         self,
         inputs,
-    ) -> str:
+        return_attentions: bool = False,
+    ) -> Union[str, Tuple[str, List[torch.Tensor]]]:
         self.model.eval()
 
         inputs = self._verbalise_input(inputs).to(self.model.device)
@@ -28,6 +29,7 @@ class Baseline(BaseModel):
                 input_ids=inputs[:, :-1], use_cache=True, return_dict=True
             )
             generated_ids = []
+            attentions = []
             last_input_token = inputs[:, -1]
             past_kv = input_logits.past_key_values
             for _ in range(self.max_new_tokens):
@@ -36,8 +38,12 @@ class Baseline(BaseModel):
                     input_ids=last_input_token,
                     past_key_values=past_kv,
                     use_cache=True,
+                    output_attentions=False,
                     attn_mode="torch",
                 )
+                print(outputs.attention)
+                print(outputs.attention.size())
+                attentions += [outputs.attentions]
                 past_kv = outputs.past_key_values
                 last_input_token = outputs.logits[0, -1].argmax()
                 generated_ids.append(last_input_token.item())
@@ -47,6 +53,8 @@ class Baseline(BaseModel):
                 generated_ids, skip_special_tokens=True
             )
 
+        if return_attentions:
+            return decoded_text, attentions
         return decoded_text
 
     def lm_score(
