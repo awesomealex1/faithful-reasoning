@@ -48,6 +48,7 @@ class Baseline(BaseModel):
             "bos_length+context_length+question_length: ",
             bos_length + context_length + question_length,
         )
+        exit()
 
         # Predict
         with torch.inference_mode():
@@ -82,8 +83,7 @@ class Baseline(BaseModel):
         if return_attentions:
             attentions = merge_attention_weights(attentions)
 
-            print(attentions)
-            print(attentions)
+            # print(attentions)
 
             context_length = attentions[0][0].shape[-1]
             new_token_length = len(attentions)
