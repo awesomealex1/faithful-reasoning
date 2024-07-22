@@ -38,7 +38,7 @@ class Baseline(BaseModel):
                     input_ids=last_input_token,
                     past_key_values=past_kv,
                     use_cache=True,
-                    output_attentions=False,
+                    output_attentions=True,
                     attn_mode="torch",
                 )
                 print(outputs.attentions)
