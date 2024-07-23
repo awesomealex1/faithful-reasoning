@@ -84,21 +84,19 @@ class TruthfulQA(BaseDataset):
         return demo_texts
 
     def build_prompt(self, input_text: str):
+        verbalised_question = f"Q: {input_text}\nA:"
         if self.kwargs["use_chat_template"]:
             demo = self.create_demo_text()
-            input_text_prompt = [demo + [f"Q: {input_text}\nA:"]]
+            input_text_prompt = [demo + [verbalised_question]]
         else:
             demo = self.create_demo_text()
             demo = "\n\n".join(demo)
-            input_text_prompt = (
-                demo
-                + "\n\n"
-                + (
-                    # "Answer the following question based on the provided context:\n\n"
-                    f"Q: {input_text}\nA:"
-                )
-            )
-        return input_text_prompt
+            input_text_prompt = demo + "\n\n" + verbalised_question
+        return {
+            "prompted_contexts": demo,
+            "verbalised_question": verbalised_question,
+            "prompted_question": input_text_prompt,
+        }
 
     def build_answer(self, answer) -> str:
         return " " + answer
@@ -135,7 +133,10 @@ class TruthfulQA(BaseDataset):
         idx,
     ):
         sample = self.data[idx]
-        sample["prompted_question"] = self.build_prompt(sample["question"])
+        prompt = self.build_prompt(sample["question"])
+        sample["prompted_contexts"] = prompt["prompted_contexts"]
+        sample["verbalised_question"] = prompt["verbalised_question"]
+        sample["prompted_question"] = prompt["prompted_question"]
 
         sample["ref_best"] = self.format_best(sample["answer_best"])
 
