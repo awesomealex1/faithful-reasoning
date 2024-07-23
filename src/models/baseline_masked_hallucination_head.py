@@ -65,15 +65,16 @@ class BaselineMaskedHallucinationHead(BaseModel):
     def generate(self, inputs, return_attentions=False) -> dict:
         self.model.eval()
 
-        inputs = self._verbalise_input(inputs).to(self.model.device)
+        prompt = inputs["prompted_question"][0]
+        tokenised_inputs = self._verbalise_input(prompt).to(self.model.device)
 
         # Predict
         with torch.inference_mode():
             input_logits = self.model(
-                input_ids=inputs[:, :-1], use_cache=True, return_dict=True
+                input_ids=tokenised_inputs[:, :-1], use_cache=True, return_dict=True
             )
             generated_ids = []
-            last_input_token = inputs[:, -1]
+            last_input_token = tokenised_inputs[:, -1]
             past_kv = input_logits.past_key_values
             for _ in range(self.max_new_tokens):
                 last_input_token = last_input_token.view(1, 1)
@@ -93,7 +94,14 @@ class BaselineMaskedHallucinationHead(BaseModel):
                 generated_ids, skip_special_tokens=True
             )
 
-        return {"decoded_text": decoded_text}
+        attentions = {
+            "bos_lookback_ratio": 0.0,
+            "context_lookback_ratio": 0.0,
+            "question_lookback_ratio": 0.0,
+            "new_tokens_lookback_ratio": 0.0,
+        }
+
+        return {"decoded_text": decoded_text, "attentions": attentions}
 
     def lm_score(
         self,
