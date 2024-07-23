@@ -1,0 +1,11 @@
+defaults:
+  - base_decoder_config
+
+name: BaselineMaskedHallucinationHead
+method: baseline_masked_hallucination_head
+configs:
+  retrieval_heads_dir: ./hallucination_heads/
+  num_retrieval_heads: 10
+  feature_names:
+    - bos
+  aggregation_method: max

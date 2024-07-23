@@ -45,12 +45,6 @@ class NQSwap(BaseDataset):
         return data
 
     def create_demo_text(self) -> List[str]:
-        def build_prompt_with_answer(sub_context, question, sub_answer):
-            input_text_prompt = (
-                f"Context: {sub_context}\nQuestion: {question}\nAnswer: {sub_answer}"
-            )
-            return input_text_prompt
-
         contexts, questions, answers = [], [], []
 
         contexts.append(
@@ -95,12 +89,12 @@ class NQSwap(BaseDataset):
         return demo_texts
 
     def build_prompt(self, sub_context, question):
+        prompted_contexts = f"Context: {sub_context}\n"
+        verbalised_question = f"Question: {question}\nAnswer:"
+
         if self.kwargs["use_chat_template"]:
             demo = self.create_demo_text()
-            input_text_prompt = [
-                demo + [f"Context: {sub_context}\nQuestion: {question}\nAnswer:"]
-            ]
-            return input_text_prompt
+            input_text_prompt = [demo + [f"{prompted_contexts}{verbalised_question}"]]
         else:
             demo = self.create_demo_text()
             demo = "\n\n".join(demo)
@@ -109,17 +103,22 @@ class NQSwap(BaseDataset):
                 + "\n\n"
                 + (
                     # "Answer the following question based on the provided context:\n\n"
-                    f"Context: {sub_context}\nQuestion: {question}\nAnswer:"
+                    f"{prompted_contexts}{verbalised_question}"
                 )
             )
-            return input_text_prompt
+        return {
+            "prompted_contexts": prompted_contexts,
+            "verbalised_question": verbalised_question,
+            "prompted_question": input_text_prompt,
+        }
 
     def __getitem__(self, idx):
         sample = self.data[idx]
 
-        sample["prompted_question"] = self.build_prompt(
-            sample["sub_context"], sample["question"]
-        )
+        prompt = self.build_prompt(sample["sub_context"], sample["question"])
+        sample["prompted_contexts"] = prompt["prompted_contexts"]
+        sample["verbalised_question"] = prompt["verbalised_question"]
+        sample["prompted_question"] = prompt["prompted_question"]
 
         return sample
 
