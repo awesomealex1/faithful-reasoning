@@ -65,11 +65,6 @@ class BaselineMaskedHallucinationHead(BaseModel):
     def generate(self, inputs, return_attentions=False) -> dict:
         self.model.eval()
 
-        if return_attentions:
-            raise NotImplementedError(
-                "return_attentions is not implemented for this model yet"
-            )
-
         inputs = self._verbalise_input(inputs).to(self.model.device)
 
         # Predict
