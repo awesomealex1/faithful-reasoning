@@ -56,9 +56,11 @@ class BaselineMaskedHallucinationHead(BaseModel):
 
         hallucination_heads = sorted(hallucination_heads.items(), key=lambda x: x[1])
         self.hallucination_heads = [
-            [int(ll) for ll in l.split("-")] for l in list(hallucination_heads.keys())
+            [int(ll) for ll in l[0].split("-")] for l in hallucination_heads
         ][: self.num_hallucination_heads]
-        self.hallucination_head_scores = [l for l in list(hallucination_heads.values())]
+        self.hallucination_head_scores = [l[1] for l in hallucination_heads][
+            : self.num_hallucination_heads
+        ]
 
     def generate(
         self,
