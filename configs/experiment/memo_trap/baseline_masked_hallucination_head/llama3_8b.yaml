@@ -1,5 +1,5 @@
 # @package _global_
 defaults:
   - override /model: llama3_8b
-  - override /data: memotrap
+  - override /data: memo_trap
   - override /decoder: baseline_masked_hallucination_head
