@@ -6,3 +6,9 @@ method: baseline_masked_honest_head
 configs:
   honest_heads_dir: ./hallucination_heads/  # Use the same as hallucination heads, but take the reverse
   num_honest_heads: 50
+  feature_names:
+    - bos
+    - context
+    - question
+    - new_tokens
+  aggregation_method: max
