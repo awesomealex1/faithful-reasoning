@@ -88,6 +88,65 @@ class BaseModel(ABC):
 
         return inputs
 
+    def _get_component_lengths(self, inputs, tokenised_inputs):
+        print(inputs)
+        if self.model_configs.model_type == "instruct":
+            bos_length = 1
+            # Skip BOS
+            instruction_length = self._verbalise_input(
+                inputs["verbalised_instruction"][0]
+            )[:, 1:].shape[-1]
+            # 5 is <|begin_of_text|><|start_header_id|>user<|end_header_id|> in llama3-8b-instruct tokenizer
+            icl_demo_length = self._verbalise_input(
+                inputs["verbalised_icl_demo"], use_system_prompt=False
+            )[:, 5:].shape[-1]
+            contexts_length = self._verbalise_input(
+                inputs["verbalised_contexts"][0], add_generation_prompt=False
+            )[:, 5:].shape[-1]
+            question_length = self._verbalise_input(
+                inputs["verbalised_question"][0], add_generation_prompt=False
+            )[:, 5:].shape[-1]
+            answer_prefix_length = self._verbalise_input(
+                inputs["verbalised_answer_prefix"][0]
+            )[:, 5:].shape[-1]
+        else:
+            bos_length = 1
+            # Start from 1 to skip the BOS token
+            instruction_length = self._verbalise_input(
+                inputs["verbalised_instruction"]
+            )[:, 1:].shape[-1]
+            icl_demo_length = self._verbalise_input(inputs["verbalised_icl_demo"])[
+                :, 1:
+            ].shape[-1]
+            contexts_length = self._verbalise_input(inputs["verbalised_contexts"])[
+                :, 1:
+            ].shape[-1]
+            question_length = self._verbalise_input(inputs["verbalised_question"])[
+                :, 1:
+            ].shape[-1]
+            answer_prefix_length = self._verbalise_input(
+                inputs["verbalised_answer_prefix"]
+            )[1:].shape[-1]
+
+        assert (
+            bos_length
+            + instruction_length
+            + icl_demo_length
+            + contexts_length
+            + question_length
+            + answer_prefix_length
+            == tokenised_inputs.size(1)
+        ), "Tokenised inputs length does not match the sum of the lengths of the components"
+
+        return {
+            "bos": bos_length,
+            "instruction": instruction_length,
+            "icl_demo": icl_demo_length,
+            "contexts": contexts_length,
+            "question": question_length,
+            "answer_prefix": answer_prefix_length,
+        }
+
     @abstractmethod
     def generate(self, logits):
         pass
