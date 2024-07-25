@@ -37,21 +37,30 @@ class Baseline(BaseModel):
 
         else:
             bos_length = 1
-            instruction_tokens = self._verbalise_input(inputs["verbalised_instruction"])
+            # Start from 1 to skip the BOS token
+            instruction_tokens = self._verbalise_input(
+                inputs["verbalised_instruction"]
+            )[:, 1:]
             print("instruction_tokens: ", instruction_tokens)
             instruction_length = instruction_tokens.shape[-1]
-            icl_demo_tokens = self._verbalise_input(inputs["verbalised_icl_demo"])
+            icl_demo_tokens = self._verbalise_input(inputs["verbalised_icl_demo"])[
+                :, 1:
+            ]
             print("icl_demo_tokens: ", icl_demo_tokens)
             icl_demo_length = icl_demo_tokens.shape[-1]
-            contexts_tokens = self._verbalise_input(inputs["verbalised_contexts"])
+            contexts_tokens = self._verbalise_input(inputs["verbalised_contexts"])[
+                :, 1:
+            ]
             print("contexts_tokens: ", contexts_tokens)
             contexts_length = contexts_tokens.shape[-1]
-            question_tokens = self._verbalise_input(inputs["verbalised_question"])
+            question_tokens = self._verbalise_input(inputs["verbalised_question"])[
+                :, 1:
+            ]
             print("question_tokens: ", question_tokens)
             question_length = question_tokens.shape[-1]
             answer_prefix_tokens = self._verbalise_input(
                 inputs["verbalised_answer_prefix"]
-            )
+            )[1:]
             print("answer_prefix_tokens: ", answer_prefix_tokens)
             answer_prefix_length = answer_prefix_tokens.shape[-1]
         print("tokenised_inputs: ", tokenised_inputs)
