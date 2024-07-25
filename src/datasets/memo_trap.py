@@ -64,8 +64,13 @@ class MemoTrap(BaseDataset):
         true_idx = sample["answer_index"]
         false_idx = 0 if true_idx == 1 else 1
 
-        sample["prompted_contexts"] = ""
+        # Attention analysis is challenging for MemoTrap as the dataset is very occluded
+        sample["verbalised_instruction"] = ""
+        sample["verbalised_icl_demo"] = ""
+        sample["verbalised_contexts"] = ""
         sample["verbalised_question"] = sample["question"]
+        sample["verbalised_answer_prefix"] = ""
+
         sample["prompted_question"] = sample["question"]
         sample["prompted_ref_true"] = sample["classes"][true_idx]
         sample["prompted_ref_false"] = sample["classes"][false_idx]
