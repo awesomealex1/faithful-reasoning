@@ -19,62 +19,68 @@ class Baseline(BaseModel):
         if self.model_configs.model_type == "instruct":
             bos_length = 1
             # FIXME: 5 is <|begin_of_text|><|start_header_id|>user<|end_header_id|> in llama3-8b-instruct tokenizer
-            instruction_length = self._verbalise_input(
-                inputs["verbalised_instruction"][0]
-            )[:, 5:].shape[-1]
-            icl_demo_length = self._verbalise_input(inputs["verbalised_icl_demo"][0])[
-                :, 5:
-            ].shape[-1]
-            contexts_length = self._verbalise_input(inputs["verbalised_contexts"][0])[
-                :, 5:
-            ].shape[-1]
-            question_length = self._verbalise_input(inputs["verbalised_question"][0])[
-                :, 5:
-            ].shape[-1]
-            answer_prefix_length = self._verbalise_input(
-                inputs["verbalised_answer_prefix"][0]
-            )[:, 5:].shape[-1]
-
-        else:
-            bos_length = 1
-            # Start from 1 to skip the BOS token
             instruction_tokens = self._verbalise_input(
-                inputs["verbalised_instruction"]
-            )[:, 1:]
+                inputs["verbalised_instruction"][0]
+            )[:, 5:]
             print("instruction_tokens: ", instruction_tokens)
             instruction_length = instruction_tokens.shape[-1]
-            icl_demo_tokens = self._verbalise_input(inputs["verbalised_icl_demo"])[
-                :, 1:
+            icl_demo_tokens = self._verbalise_input(inputs["verbalised_icl_demo"][0])[
+                :, 5:
             ]
             print("icl_demo_tokens: ", icl_demo_tokens)
             icl_demo_length = icl_demo_tokens.shape[-1]
-            contexts_tokens = self._verbalise_input(inputs["verbalised_contexts"])[
-                :, 1:
+            contexts_tokens = self._verbalise_input(inputs["verbalised_contexts"][0])[
+                :, 5:
             ]
             print("contexts_tokens: ", contexts_tokens)
             contexts_length = contexts_tokens.shape[-1]
-            question_tokens = self._verbalise_input(inputs["verbalised_question"])[
-                :, 1:
+            question_tokens = self._verbalise_input(inputs["verbalised_question"][0])[
+                :, 5:
             ]
             print("question_tokens: ", question_tokens)
             question_length = question_tokens.shape[-1]
             answer_prefix_tokens = self._verbalise_input(
-                inputs["verbalised_answer_prefix"]
-            )[1:]
+                inputs["verbalised_answer_prefix"][0]
+            )[:, 5:]
             print("answer_prefix_tokens: ", answer_prefix_tokens)
             answer_prefix_length = answer_prefix_tokens.shape[-1]
+        else:
+            bos_length = 1
+            # Start from 1 to skip the BOS token
+            instruction_length = self._verbalise_input(
+                inputs["verbalised_instruction"]
+            )[:, 1:].shape[-1]
+            icl_demo_length = self._verbalise_input(inputs["verbalised_icl_demo"])[
+                :, 1:
+            ].shape[-1]
+            contexts_length = self._verbalise_input(inputs["verbalised_contexts"])[
+                :, 1:
+            ].shape[-1]
+            question_length = self._verbalise_input(inputs["verbalised_question"])[
+                :, 1:
+            ].shape[-1]
+            answer_prefix_length = self._verbalise_input(
+                inputs["verbalised_answer_prefix"]
+            )[1:].shape[-1]
+
         print("tokenised_inputs: ", tokenised_inputs)
 
-        print(f"bos_length: {bos_length}")
-        print(f"answer_prefix_length: {answer_prefix_length}")
-        print(f"question_length: {question_length}")
-        print(f"contexts_length: {contexts_length}")
-        print(f"icl_demo_length: {icl_demo_length}")
-        print(f"instruction_length: {instruction_length}")
+        print("bos_length: ", bos_length)
+        print("answer_prefix_length: ", answer_prefix_length)
+        print("question_length: ", question_length)
+        print("contexts_length: ", contexts_length)
+        print("icl_demo_length: ", icl_demo_length)
+        print("instruction_length: ", instruction_length)
         print(
-            f"Sum: {bos_length + answer_prefix_length + question_length + contexts_length + icl_demo_length + instruction_length}"
+            "sum: ",
+            bos_length
+            + answer_prefix_length
+            + question_length
+            + contexts_length
+            + icl_demo_length
+            + instruction_length,
         )
-        print(f"tokenised_inputs.size(1): {tokenised_inputs.size(1)}")
+        print("tokenised_inputs.size(1): ", tokenised_inputs.size(1))
         assert (
             bos_length
             + answer_prefix_length
