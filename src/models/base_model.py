@@ -44,6 +44,7 @@ class BaseModel(ABC):
         self,
         inputs: Union[list, str],
         tokenizer: Union[PreTrainedTokenizer, PreTrainedTokenizerFast, None] = None,
+        use_system_prompt: bool = True,
         add_generation_prompt: bool = True,
     ) -> torch.Tensor:
         if tokenizer is None:
@@ -55,7 +56,7 @@ class BaseModel(ABC):
                 for idx, input in enumerate(inputs):
                     if type(input) in [tuple, list]:
                         input = input[0]
-                    if idx == 0:
+                    if idx == 0 and use_system_prompt:
                         chat_inputs += [{"role": "system", "content": input}]
                     else:
                         if idx % 2 != 0:

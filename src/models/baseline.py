@@ -25,9 +25,9 @@ class Baseline(BaseModel):
             # 5 is <|begin_of_text|><|start_header_id|>user<|end_header_id|> in llama3-8b-instruct tokenizer
             print("instruction_tokens: ", instruction_tokens.cpu().numpy()[0].tolist())
             instruction_length = instruction_tokens.shape[-1]
-            icl_demo_tokens = self._verbalise_input(inputs["verbalised_icl_demo"][0])[
-                :, 5:
-            ]
+            icl_demo_tokens = self._verbalise_input(
+                inputs["verbalised_icl_demo"], use_system_prompt=False
+            )[:, 5:]
             print("icl_demo_tokens: ", icl_demo_tokens.cpu().numpy()[0].tolist())
             icl_demo_length = icl_demo_tokens.shape[-1]
             contexts_tokens = self._verbalise_input(
