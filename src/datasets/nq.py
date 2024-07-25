@@ -219,11 +219,14 @@ class NQ(BaseDataset):
         sample = self.data[idx]
 
         prompt = self.build_prompt(sample["contexts"], sample["question"])
-        sample["instruction"] = prompt["instruction"]
-        sample["icl_demo"] = prompt["icl_demo"]
-        sample["prompted_contexts"] = prompt["prompted_contexts"]
+
+        # For attention analysis
+        sample["verbalised_instruction"] = prompt["verbalised_instruction"]
+        sample["verbalised_icl_demo"] = prompt["verbalised_icl_demo"]
+        sample["verbalised_contexts"] = prompt["verbalised_contexts"]
         sample["verbalised_question"] = prompt["verbalised_question"]
-        sample["answer_prefix"] = prompt["answer_prefix"]
+        sample["verbalised_answer_prefix"] = prompt["verbalised_answer_prefix"]
+
         sample["prompted_question"] = prompt["prompted_question"]
 
         return sample
