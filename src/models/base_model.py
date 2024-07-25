@@ -149,6 +149,7 @@ class BaseModel(ABC):
             print(f"answer_prefix_length: {answer_prefix_length}")
             print(f"Sum:{sum_lengths}")
             print(f"Tokenised inputs:{tokenised_inputs.size(1)}")
+            raise AssertionError
 
         return {
             "bos": bos_length,
