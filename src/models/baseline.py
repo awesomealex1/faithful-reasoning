@@ -54,6 +54,7 @@ class Baseline(BaseModel):
             )
             print("answer_prefix_tokens: ", answer_prefix_tokens)
             answer_prefix_length = answer_prefix_tokens.shape[-1]
+        print("tokenised_inputs: ", tokenised_inputs)
 
         print(f"bos_length: {bos_length}")
         print(f"answer_prefix_length: {answer_prefix_length}")
