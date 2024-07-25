@@ -69,6 +69,8 @@ class Baseline(BaseModel):
                     print(lookback_ratios[comp])
                     print(attn_sum)
                     lookback_ratios[comp][l, :, i] /= attn_sum
+            break
+        exit()
 
         return lookback_ratios
 
