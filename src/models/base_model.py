@@ -44,6 +44,7 @@ class BaseModel(ABC):
         self,
         inputs: Union[list, str],
         tokenizer: Union[PreTrainedTokenizer, PreTrainedTokenizerFast, None] = None,
+        add_generation_prompt: bool = True,
     ) -> torch.Tensor:
         if tokenizer is None:
             tokenizer = self.tokenizer
@@ -65,13 +66,13 @@ class BaseModel(ABC):
                 if type(inputs) in [tuple, list]:
                     inputs = inputs[0]
                 chat_inputs += [{"role": "user", "content": inputs}]
-
             inputs = tokenizer.apply_chat_template(
                 chat_inputs,
-                add_generation_prompt=True,
+                add_generation_prompt=add_generation_prompt,
                 return_tensors="pt",
                 max_length=self.max_seq_len,
             )
+
         elif self.model_configs.model_type == "base":
             inputs = tokenizer(
                 inputs,

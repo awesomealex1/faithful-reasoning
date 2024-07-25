@@ -30,14 +30,14 @@ class Baseline(BaseModel):
             ]
             print("icl_demo_tokens: ", icl_demo_tokens.cpu().numpy()[0].tolist())
             icl_demo_length = icl_demo_tokens.shape[-1]
-            contexts_tokens = self._verbalise_input(inputs["verbalised_contexts"][0])[
-                :, 5:
-            ]
+            contexts_tokens = self._verbalise_input(
+                inputs["verbalised_contexts"][0], add_generation_prompt=False
+            )[:, 5:]
             print("contexts_tokens: ", contexts_tokens.cpu().numpy()[0].tolist())
             contexts_length = contexts_tokens.shape[-1]
-            question_tokens = self._verbalise_input(inputs["verbalised_question"][0])[
-                :, 5:
-            ]
+            question_tokens = self._verbalise_input(
+                inputs["verbalised_question"][0], add_generation_prompt=False
+            )[:, 5:]
             print("question_tokens: ", question_tokens.cpu().numpy()[0].tolist())
             question_length = question_tokens.shape[-1]
             answer_prefix_tokens = self._verbalise_input(
