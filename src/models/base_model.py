@@ -70,12 +70,12 @@ class BaseModel(ABC):
                         inputs = inputs[0]
                     chat_inputs += [{"role": "user", "content": inputs}]
 
-                    inputs = tokenizer.apply_chat_template(
-                        chat_inputs,
-                        add_generation_prompt=add_generation_prompt,
-                        return_tensors="pt",
-                        max_length=self.max_seq_len,
-                    )
+                inputs = tokenizer.apply_chat_template(
+                    chat_inputs,
+                    add_generation_prompt=add_generation_prompt,
+                    return_tensors="pt",
+                    max_length=self.max_seq_len,
+                )
             else:
                 if type(inputs) in [tuple, list]:
                     inputs = inputs[0]
