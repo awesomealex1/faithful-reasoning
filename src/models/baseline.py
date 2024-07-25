@@ -18,10 +18,11 @@ class Baseline(BaseModel):
         print(inputs)
         if self.model_configs.model_type == "instruct":
             bos_length = 1
-            # FIXME: 5 is <|begin_of_text|><|start_header_id|>user<|end_header_id|> in llama3-8b-instruct tokenizer
+            # Skip BOS
             instruction_tokens = self._verbalise_input(
                 inputs["verbalised_instruction"][0]
-            )[:, 5:]
+            )[:, 1:]
+            # 5 is <|begin_of_text|><|start_header_id|>user<|end_header_id|> in llama3-8b-instruct tokenizer
             print("instruction_tokens: ", instruction_tokens)
             instruction_length = instruction_tokens.shape[-1]
             icl_demo_tokens = self._verbalise_input(inputs["verbalised_icl_demo"][0])[

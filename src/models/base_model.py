@@ -62,6 +62,8 @@ class BaseModel(ABC):
                         else:
                             chat_inputs += [{"role": "assistant", "content": input}]
             else:
+                if type(inputs) in [tuple, list]:
+                    inputs = inputs[0]
                 chat_inputs += [{"role": "user", "content": inputs}]
 
             inputs = tokenizer.apply_chat_template(
