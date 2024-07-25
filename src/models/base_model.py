@@ -89,7 +89,6 @@ class BaseModel(ABC):
         return inputs
 
     def _get_component_lengths(self, inputs, tokenised_inputs):
-        print(inputs)
         if self.model_configs.model_type == "instruct":
             bos_length = 1
             # Skip BOS
@@ -148,8 +147,6 @@ class BaseModel(ABC):
         }
 
     def get_lookback_ratios(self, attentions, component_lengths, new_token_start_from):
-        print(component_lengths)
-
         components = list(component_lengths.keys())
         # Define component order and initialize lookback ratio tensors
         num_layers = len(attentions[0])
