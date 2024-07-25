@@ -19,38 +19,38 @@ class Baseline(BaseModel):
         if self.model_configs.model_type == "instruct":
             bos_length = 1
             # FIXME: 5 is <|begin_of_text|><|start_header_id|>user<|end_header_id|> in llama3-8b-instruct tokenizer
-            answer_prefix_length = self._verbalise_input(
-                inputs["verbalised_answer_prefix"][0]
+            instruction_length = self._verbalise_input(
+                inputs["verbalised_instruction"][0]
             )[:, 5:].shape[-1]
-            question_length = self._verbalise_input(inputs["verbalised_question"][0])[
+            icl_demo_length = self._verbalise_input(inputs["verbalised_icl_demo"][0])[
                 :, 5:
             ].shape[-1]
             contexts_length = self._verbalise_input(inputs["verbalised_contexts"][0])[
                 :, 5:
             ].shape[-1]
-            icl_demo_length = self._verbalise_input(inputs["verbalised_icl_demo"][0])[
+            question_length = self._verbalise_input(inputs["verbalised_question"][0])[
                 :, 5:
             ].shape[-1]
-            instruction_length = self._verbalise_input(
-                inputs["verbalised_instruction"][0]
+            answer_prefix_length = self._verbalise_input(
+                inputs["verbalised_answer_prefix"][0]
             )[:, 5:].shape[-1]
 
         else:
             bos_length = 1
-            answer_prefix_length = self._verbalise_input(
-                inputs["verbalised_answer_prefix"]
-            ).shape[-1]
-            question_length = self._verbalise_input(
-                inputs["verbalised_question"]
-            ).shape[-1]
-            contexts_length = self._verbalise_input(
-                inputs["verbalised_contexts"]
+            instruction_length = self._verbalise_input(
+                inputs["verbalised_instruction"]
             ).shape[-1]
             icl_demo_length = self._verbalise_input(
                 inputs["verbalised_icl_demo"]
             ).shape[-1]
-            instruction_length = self._verbalise_input(
-                inputs["verbalised_instruction"]
+            contexts_length = self._verbalise_input(
+                inputs["verbalised_contexts"]
+            ).shape[-1]
+            question_length = self._verbalise_input(
+                inputs["verbalised_question"]
+            ).shape[-1]
+            answer_prefix_length = self._verbalise_input(
+                inputs["verbalised_answer_prefix"]
             ).shape[-1]
 
         print(f"bos_length: {bos_length}")
@@ -59,6 +59,7 @@ class Baseline(BaseModel):
         print(f"contexts_length: {contexts_length}")
         print(f"icl_demo_length: {icl_demo_length}")
         print(f"instruction_length: {instruction_length}")
+        print(f"tokenised_inputs.size(1): {tokenised_inputs.size(1)}")
         assert (
             bos_length
             + answer_prefix_length
