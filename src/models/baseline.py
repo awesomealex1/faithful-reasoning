@@ -53,6 +53,12 @@ class Baseline(BaseModel):
                 inputs["verbalised_instruction"]
             ).shape[-1]
 
+        print(f"bos_length: {bos_length}")
+        print(f"answer_prefix_length: {answer_prefix_length}")
+        print(f"question_length: {question_length}")
+        print(f"contexts_length: {contexts_length}")
+        print(f"icl_demo_length: {icl_demo_length}")
+        print(f"instruction_length: {instruction_length}")
         assert (
             bos_length
             + answer_prefix_length
