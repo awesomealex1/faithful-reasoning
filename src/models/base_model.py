@@ -46,33 +46,42 @@ class BaseModel(ABC):
         tokenizer: Union[PreTrainedTokenizer, PreTrainedTokenizerFast, None] = None,
         use_system_prompt: bool = True,
         add_generation_prompt: bool = True,
+        use_chat_template: bool = True,
     ) -> torch.Tensor:
         if tokenizer is None:
             tokenizer = self.tokenizer
 
         if self.model_configs.model_type == "instruct":
-            chat_inputs = []
-            if type(inputs) == list:
-                for idx, input in enumerate(inputs):
-                    if type(input) in [tuple, list]:
-                        input = input[0]
-                    if idx == 0 and use_system_prompt:
-                        chat_inputs += [{"role": "system", "content": input}]
-                    else:
-                        if idx % 2 != 0:
-                            chat_inputs += [{"role": "user", "content": input}]
+            if use_chat_template:
+                chat_inputs = []
+                if type(inputs) == list:
+                    for idx, input in enumerate(inputs):
+                        if type(input) in [tuple, list]:
+                            input = input[0]
+                        if idx == 0 and use_system_prompt:
+                            chat_inputs += [{"role": "system", "content": input}]
                         else:
-                            chat_inputs += [{"role": "assistant", "content": input}]
+                            if idx % 2 != 0:
+                                chat_inputs += [{"role": "user", "content": input}]
+                            else:
+                                chat_inputs += [{"role": "assistant", "content": input}]
+                else:
+                    if type(inputs) in [tuple, list]:
+                        inputs = inputs[0]
+                    chat_inputs += [{"role": "user", "content": inputs}]
+
+                    inputs = tokenizer.apply_chat_template(
+                        chat_inputs,
+                        add_generation_prompt=add_generation_prompt,
+                        return_tensors="pt",
+                        max_length=self.max_seq_len,
+                    )
             else:
                 if type(inputs) in [tuple, list]:
                     inputs = inputs[0]
-                chat_inputs += [{"role": "user", "content": inputs}]
-            inputs = tokenizer.apply_chat_template(
-                chat_inputs,
-                add_generation_prompt=add_generation_prompt,
-                return_tensors="pt",
-                max_length=self.max_seq_len,
-            )
+                inputs = tokenizer(
+                    inputs, return_tensors="pt", max_length=self.max_seq_len
+                ).input_ids
 
         elif self.model_configs.model_type == "base":
             inputs = tokenizer(
@@ -102,12 +111,12 @@ class BaseModel(ABC):
             )[:, 5:]
             icl_demo_length = icl_demo_tokens.shape[-1]
             contexts_tokens = self._verbalise_input(
-                inputs["verbalised_contexts"][0], add_generation_prompt=False
-            )[:, 5:]
+                inputs["verbalised_contexts"][0], use_chat_template=False
+            )[:, 1:]
             contexts_length = contexts_tokens.shape[-1]
             question_tokens = self._verbalise_input(
-                inputs["verbalised_question"][0], add_generation_prompt=False
-            )[:, 5:]
+                inputs["verbalised_question"][0], use_chat_template=False
+            )[:, 1:]
             question_length = question_tokens.shape[-1]
             answer_prefix_tokens = self._verbalise_input(
                 inputs["verbalised_answer_prefix"][0]
