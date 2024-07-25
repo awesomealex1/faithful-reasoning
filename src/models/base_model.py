@@ -92,22 +92,27 @@ class BaseModel(ABC):
         if self.model_configs.model_type == "instruct":
             bos_length = 1
             # Skip BOS
-            instruction_length = self._verbalise_input(
+            instruction_tokens = self._verbalise_input(
                 inputs["verbalised_instruction"][0]
-            )[:, 1:].shape[-1]
+            )[:, 1:]
+            instruction_length = instruction_tokens.shape[-1]
             # 5 is <|begin_of_text|><|start_header_id|>user<|end_header_id|> in llama3-8b-instruct tokenizer
-            icl_demo_length = self._verbalise_input(
+            icl_demo_tokens = self._verbalise_input(
                 inputs["verbalised_icl_demo"], use_system_prompt=False
-            )[:, 5:].shape[-1]
-            contexts_length = self._verbalise_input(
+            )[:, 5:]
+            icl_demo_length = icl_demo_tokens.shape[-1]
+            contexts_tokens = self._verbalise_input(
                 inputs["verbalised_contexts"][0], add_generation_prompt=False
-            )[:, 5:].shape[-1]
-            question_length = self._verbalise_input(
+            )[:, 5:]
+            contexts_length = contexts_tokens.shape[-1]
+            question_tokens = self._verbalise_input(
                 inputs["verbalised_question"][0], add_generation_prompt=False
-            )[:, 5:].shape[-1]
-            answer_prefix_length = self._verbalise_input(
+            )[:, 5:]
+            question_length = question_tokens.shape[-1]
+            answer_prefix_tokens = self._verbalise_input(
                 inputs["verbalised_answer_prefix"][0]
-            )[:, 5:].shape[-1]
+            )[:, 5:]
+            answer_prefix_length = answer_prefix_tokens.shape[-1]
         else:
             bos_length = 1
             # Start from 1 to skip the BOS token
@@ -141,6 +146,12 @@ class BaseModel(ABC):
             print(
                 f"Tokenised inputs length does not match the sum of the lengths of the components"
             )
+            print("instruction: ", instruction_tokens.cpu().numpy()[0].tolist())
+            print("icl_demo: ", icl_demo_tokens.cpu().numpy()[0].tolist())
+            print("contexts: ", contexts_tokens.cpu().numpy()[0].tolist())
+            print("question: ", question_tokens.cpu().numpy()[0].tolist())
+            print("answer_prefix: ", answer_prefix_tokens.cpu().numpy()[0].tolist())
+            print("tokenised_inputs: ", tokenised_inputs.cpu().numpy()[0].tolist())
             print(f"bos_length: {bos_length}")
             print(f"instruction_length: {instruction_length}")
             print(f"icl_demo_length: {icl_demo_length}")
