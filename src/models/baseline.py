@@ -15,6 +15,7 @@ class Baseline(BaseModel):
         super().__init__(model_configs, decoder_configs)
 
     def _get_component_lengths(self, inputs, tokenised_inputs):
+        print(inputs)
         if self.model_configs.model_type == "instruct":
             bos_length = 1
             # FIXME: 5 is <|begin_of_text|><|start_header_id|>user<|end_header_id|> in llama3-8b-instruct tokenizer

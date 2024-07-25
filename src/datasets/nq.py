@@ -198,9 +198,10 @@ class NQ(BaseDataset):
                 + [f"{prompted_contexts}{verbalised_question}{answer_prefix}"]
             ]
         else:
+            instruction = instruction[0]
             icl_demo = "\n\n".join(icl_demo)
             input_text_prompt = (
-                instruction[0]
+                instruction
                 + "\n\n"
                 + icl_demo
                 + "\n\n"
