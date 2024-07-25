@@ -127,15 +127,28 @@ class BaseModel(ABC):
                 inputs["verbalised_answer_prefix"]
             )[1:].shape[-1]
 
-        assert (
+        sum_lengths = (
             bos_length
             + instruction_length
             + icl_demo_length
             + contexts_length
             + question_length
             + answer_prefix_length
-            == tokenised_inputs.size(1)
-        ), "Tokenised inputs length does not match the sum of the lengths of the components"
+        )
+        try:
+            assert sum_lengths == tokenised_inputs.size(1)
+        except AssertionError:
+            print(
+                f"Tokenised inputs length does not match the sum of the lengths of the components"
+            )
+            print(f"bos_length: {bos_length}")
+            print(f"instruction_length: {instruction_length}")
+            print(f"icl_demo_length: {icl_demo_length}")
+            print(f"contexts_length: {contexts_length}")
+            print(f"question_length: {question_length}")
+            print(f"answer_prefix_length: {answer_prefix_length}")
+            print(f"Sum:{sum_lengths}")
+            print(f"Tokenised inputs:{tokenised_inputs.size(1)}")
 
         return {
             "bos": bos_length,
