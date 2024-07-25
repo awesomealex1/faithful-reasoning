@@ -23,27 +23,29 @@ class Baseline(BaseModel):
                 inputs["verbalised_instruction"][0]
             )[:, 1:]
             # 5 is <|begin_of_text|><|start_header_id|>user<|end_header_id|> in llama3-8b-instruct tokenizer
-            print("instruction_tokens: ", instruction_tokens)
+            print("instruction_tokens: ", instruction_tokens.cpu().numpy()[0].tolist())
             instruction_length = instruction_tokens.shape[-1]
             icl_demo_tokens = self._verbalise_input(inputs["verbalised_icl_demo"][0])[
                 :, 5:
             ]
-            print("icl_demo_tokens: ", icl_demo_tokens)
+            print("icl_demo_tokens: ", icl_demo_tokens.cpu().numpy()[0].tolist())
             icl_demo_length = icl_demo_tokens.shape[-1]
             contexts_tokens = self._verbalise_input(inputs["verbalised_contexts"][0])[
                 :, 5:
             ]
-            print("contexts_tokens: ", contexts_tokens)
+            print("contexts_tokens: ", contexts_tokens.cpu().numpy()[0].tolist())
             contexts_length = contexts_tokens.shape[-1]
             question_tokens = self._verbalise_input(inputs["verbalised_question"][0])[
                 :, 5:
             ]
-            print("question_tokens: ", question_tokens)
+            print("question_tokens: ", question_tokens.cpu().numpy()[0].tolist())
             question_length = question_tokens.shape[-1]
             answer_prefix_tokens = self._verbalise_input(
                 inputs["verbalised_answer_prefix"][0]
             )[:, 5:]
-            print("answer_prefix_tokens: ", answer_prefix_tokens)
+            print(
+                "answer_prefix_tokens: ", answer_prefix_tokens.cpu().numpy()[0].tolist()
+            )
             answer_prefix_length = answer_prefix_tokens.shape[-1]
         else:
             bos_length = 1
@@ -64,14 +66,14 @@ class Baseline(BaseModel):
                 inputs["verbalised_answer_prefix"]
             )[1:].shape[-1]
 
-        print("tokenised_inputs: ", tokenised_inputs)
+        print("tokenised_inputs: ", tokenised_inputs.cpu().numpy()[0].tolist())
 
         print("bos_length: ", bos_length)
-        print("answer_prefix_length: ", answer_prefix_length)
-        print("question_length: ", question_length)
-        print("contexts_length: ", contexts_length)
-        print("icl_demo_length: ", icl_demo_length)
         print("instruction_length: ", instruction_length)
+        print("icl_demo_length: ", icl_demo_length)
+        print("contexts_length: ", contexts_length)
+        print("question_length: ", question_length)
+        print("answer_prefix_length: ", answer_prefix_length)
         print(
             "sum: ",
             bos_length
