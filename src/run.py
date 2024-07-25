@@ -115,9 +115,6 @@ class Run:
                 batch["attentions"] = prediction["attentions"]
                 attentions_list += [batch]
 
-            if step >= 10:
-                break
-
         torch.save(attentions_list, attentions_filepath)
 
         # Evaluate
