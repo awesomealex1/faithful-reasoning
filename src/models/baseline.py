@@ -61,6 +61,8 @@ class Baseline(BaseModel):
                 # Normalize ratios
                 attn_sum = sum(attn_sums)
                 for comp in lookback_ratios:
+                    print(lookback_ratios[comp])
+                    print(attn_sum)
                     lookback_ratios[comp][l, :, i] /= attn_sum
 
         return lookback_ratios
