@@ -14,112 +14,12 @@ class Baseline(BaseModel):
     ):
         super().__init__(model_configs, decoder_configs)
 
-    def get_lookback_ratios(self, attentions, component_lengths, new_token_start_from):
-        print(component_lengths)
-
-        components = list(component_lengths.keys())
-        # Define component order and initialize lookback ratio tensors
-        num_layers = len(attentions[0])
-        num_heads = attentions[0][0].shape[1]
-        new_token_length = len(attentions)
-
-        # Initialize lookback ratio tensors
-        lookback_ratios = {
-            comp: torch.zeros((num_layers, num_heads, new_token_length))
-            for comp in components
-        }
-        lookback_ratios["new_tokens"] = torch.zeros(
-            (num_layers, num_heads, new_token_length)
-        )
-
-        for i in range(new_token_length):
-            for l in range(num_layers):
-                curr_length = 0
-                attn_sums = []
-
-                # Calculate attention for each component
-                for comp, length in component_lengths.items():
-                    attn = attentions[i][l][
-                        0, :, -1, curr_length : curr_length + length + 1
-                    ].mean(-1)
-                    lookback_ratios[comp][l, :, i] = attn
-                    attn_sums.append(attn)
-                    curr_length += length
-
-                # Validate new token start
-                assert (
-                    new_token_start_from == curr_length
-                ), "Mismatch in the length of the components"
-
-                # Calculate attention for new tokens
-                attn_new_tokens = attentions[i][l][
-                    0, :, -1, new_token_start_from:
-                ].mean(-1)
-                lookback_ratios["new_tokens"][l, :, i] = attn_new_tokens
-                attn_sums.append(attn_new_tokens)
-
-                # Normalize ratios
-                attn_sum = sum(attn_sums)
-                attn_sum = attn_sum.cpu()
-                for comp in lookback_ratios:
-                    print(
-                        "lookback_ratios[comp].size(): ", lookback_ratios[comp].size()
-                    )
-                    print("attn_sum.size(): ", attn_sum.size())
-                    lookback_ratios[comp][l, :, i] /= attn_sum
-            break
-        exit()
-
-        return lookback_ratios
-
     def generate(
         self,
         inputs,
         return_attentions: bool = False,
     ) -> dict:
-        self.model.eval()
-
-        prompt = inputs["prompted_question"][0]
-        tokenised_inputs = self._verbalise_input(prompt).to(self.model.device)
-
-        # Calculate the length of each component
-        component_lengths = self._get_component_lengths(inputs, tokenised_inputs)
-
-        # Predict
-        with torch.inference_mode():
-            input_logits = self.model(
-                input_ids=tokenised_inputs[:, :-1], use_cache=True, return_dict=True
-            )
-            generated_ids = []
-            attentions = []
-            last_input_token = tokenised_inputs[:, -1]
-            past_kv = input_logits.past_key_values
-            for _ in range(self.max_new_tokens):
-                last_input_token = last_input_token.view(1, 1)
-                outputs = self.model(
-                    input_ids=last_input_token,
-                    past_key_values=past_kv,
-                    use_cache=True,
-                    output_attentions=True,
-                    attn_mode="torch",
-                )
-                attentions += [outputs.attentions]
-                past_kv = outputs.past_key_values
-                last_input_token = outputs.logits[0, -1].argmax()
-                generated_ids.append(last_input_token.item())
-                if last_input_token.item() == self.tokenizer.eos_token_id:
-                    break
-            decoded_text = self.tokenizer.decode(
-                generated_ids, skip_special_tokens=True
-            )
-
-        generation_output = {"decoded_text": decoded_text, "attentions": {}}
-        if return_attentions:
-            generation_output["attentions"] = self.get_lookback_ratios(
-                attentions, component_lengths, tokenised_inputs.size(1)
-            )
-
-        return generation_output
+        return self._generate(inputs, return_attentions)
 
     def lm_score(
         self,

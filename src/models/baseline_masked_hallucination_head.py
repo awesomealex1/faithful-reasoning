@@ -62,46 +62,14 @@ class BaselineMaskedHallucinationHead(BaseModel):
             : self.num_hallucination_heads
         ]
 
-    def generate(self, inputs, return_attentions=False) -> dict:
-        self.model.eval()
-
-        prompt = inputs["prompted_question"][0]
-        tokenised_inputs = self._verbalise_input(prompt).to(self.model.device)
-
-        # Predict
-        with torch.inference_mode():
-            input_logits = self.model(
-                input_ids=tokenised_inputs[:, :-1], use_cache=True, return_dict=True
-            )
-            generated_ids = []
-            last_input_token = tokenised_inputs[:, -1]
-            past_kv = input_logits.past_key_values
-            for _ in range(self.max_new_tokens):
-                last_input_token = last_input_token.view(1, 1)
-                outputs = self.model(
-                    input_ids=last_input_token,
-                    past_key_values=past_kv,
-                    use_cache=True,
-                    attn_mode="torch",
-                    block_list=self.hallucination_heads,
-                )
-                past_kv = outputs.past_key_values
-                last_input_token = outputs.logits[0, -1].argmax()
-                generated_ids.append(last_input_token.item())
-                if last_input_token.item() == self.tokenizer.eos_token_id:
-                    break
-            decoded_text = self.tokenizer.decode(
-                generated_ids, skip_special_tokens=True
-            )
-
-        attentions = {
-            "bos_lookback_ratio": 0.0,
-            "context_lookback_ratio": 0.0,
-            "question_lookback_ratio": 0.0,
-            "new_tokens_lookback_ratio": 0.0,
-        }
-
-        return {"decoded_text": decoded_text, "attentions": attentions}
+    def generate(
+        self,
+        inputs,
+        return_attentions: bool = False,
+    ) -> dict:
+        return self._generate(
+            inputs, return_attentions, block_list=self.hallucination_heads
+        )
 
     def lm_score(
         self,
