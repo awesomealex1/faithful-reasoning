@@ -14,6 +14,114 @@ class Baseline(BaseModel):
     ):
         super().__init__(model_configs, decoder_configs)
 
+    def _get_component_lengths(self, inputs, tokenised_inputs):
+        if self.model_configs.model_type == "instruct":
+            bos_length = 1
+            # FIXME: 5 is <|begin_of_text|><|start_header_id|>user<|end_header_id|> in llama3-8b-instruct tokenizer
+            answer_prefix_length = self._verbalise_input(
+                inputs["verbalised_answer_prefix"][0]
+            )[:, 5:].shape[-1]
+            question_length = self._verbalise_input(inputs["verbalised_question"][0])[
+                :, 5:
+            ].shape[-1]
+            contexts_length = self._verbalise_input(inputs["verbalised_contexts"][0])[
+                :, 5:
+            ].shape[-1]
+            icl_demo_length = self._verbalise_input(inputs["verbalised_icl_demo"][0])[
+                :, 5:
+            ].shape[-1]
+            instruction_length = self._verbalise_input(
+                inputs["verbalised_instruction"][0]
+            )[:, 5:].shape[-1]
+
+        else:
+            bos_length = 1
+            answer_prefix_length = self._verbalise_input(
+                inputs["verbalised_answer_prefix"]
+            ).shape[-1]
+            question_length = self._verbalise_input(
+                inputs["verbalised_question"]
+            ).shape[-1]
+            contexts_length = self._verbalise_input(
+                inputs["verbalised_contexts"]
+            ).shape[-1]
+            icl_demo_length = self._verbalise_input(
+                inputs["verbalised_icl_demo"]
+            ).shape[-1]
+            instruction_length = self._verbalise_input(
+                inputs["verbalised_instruction"]
+            ).shape[-1]
+
+        assert (
+            bos_length
+            + answer_prefix_length
+            + question_length
+            + contexts_length
+            + icl_demo_length
+            + instruction_length
+            == tokenised_inputs.size(1)
+        ), "Tokenised inputs length does not match the sum of the lengths of the components"
+
+        return {
+            "bos": bos_length,
+            "instruction": instruction_length,
+            "icl_demo": icl_demo_length,
+            "contexts": contexts_length,
+            "question": question_length,
+            "answer_prefix": answer_prefix_length,
+        }
+
+    def get_lookback_ratios(self, attentions, component_lengths, new_token_start_from):
+        print(component_lengths)
+
+        components = list(component_lengths.keys())
+        # Define component order and initialize lookback ratio tensors
+        num_layers = len(attentions[0])
+        num_heads = attentions[0][0].shape[1]
+        new_token_length = len(attentions)
+
+        # Initialize lookback ratio tensors
+        lookback_ratios = {
+            comp: torch.zeros((num_layers, num_heads, new_token_length))
+            for comp in components
+        }
+        lookback_ratios["new_tokens"] = torch.zeros(
+            (num_layers, num_heads, new_token_length)
+        )
+
+        for i in range(new_token_length):
+            for l in range(num_layers):
+                curr_length = 0
+                attn_sums = []
+
+                # Calculate attention for each component
+                for comp, length in component_lengths.items():
+                    attn = attentions[i][l][
+                        0, :, -1, curr_length : curr_length + length + 1
+                    ].mean(-1)
+                    lookback_ratios[comp][l, :, i] = attn
+                    attn_sums.append(attn)
+                    curr_length += length
+
+                # Validate new token start
+                assert (
+                    new_token_start_from == curr_length
+                ), "Mismatch in the length of the components"
+
+                # Calculate attention for new tokens
+                attn_new_tokens = attentions[i][l][
+                    0, :, -1, new_token_start_from:
+                ].mean(-1)
+                lookback_ratios["new_tokens"][l, :, i] = attn_new_tokens
+                attn_sums.append(attn_new_tokens)
+
+                # Normalize ratios
+                attn_sum = sum(attn_sums)
+                for comp in lookback_ratios:
+                    lookback_ratios[comp][l, :, i] /= attn_sum
+
+        return lookback_ratios
+
     def generate(
         self,
         inputs,
@@ -24,20 +132,8 @@ class Baseline(BaseModel):
         prompt = inputs["prompted_question"][0]
         tokenised_inputs = self._verbalise_input(prompt).to(self.model.device)
 
-        if self.model_configs.model_type == "instruct":
-            bos_length = 1
-            question_length = self._verbalise_input(inputs["verbalised_question"][0])[
-                :, 5:
-            ].shape[
-                -1
-            ]  # FIXME: 5 is <|begin_of_text|><|start_header_id|>user<|end_header_id|> in llama3-8b-instruct tokenizer
-            context_length = tokenised_inputs.size(1) - question_length - bos_length
-        else:
-            bos_length = 1
-            question_length = self._verbalise_input(
-                inputs["verbalised_question"]
-            ).shape[-1]
-            context_length = tokenised_inputs.size(1) - question_length - bos_length
+        # Calculate the length of each component
+        component_lengths = self._get_component_lengths(inputs, tokenised_inputs)
 
         # Predict
         with torch.inference_mode():
@@ -67,70 +163,11 @@ class Baseline(BaseModel):
                 generated_ids, skip_special_tokens=True
             )
 
-        generation_output = {"decoded_text": decoded_text}
+        generation_output = {"decoded_text": decoded_text, "attentions": {}}
         if return_attentions:
-            new_token_length = len(attentions)
-            num_layers = len(attentions[0])
-            num_heads = attentions[0][0].shape[1]
-
-            generation_output["attentions"] = {}
-            bos_lookback_ratio = torch.zeros((num_layers, num_heads, new_token_length))
-            context_lookback_ratio = torch.zeros(
-                (num_layers, num_heads, new_token_length)
+            generation_output["attentions"] = self.get_lookback_ratios(
+                attentions, component_lengths, tokenised_inputs.size(1)
             )
-            question_lookback_ratio = torch.zeros(
-                (num_layers, num_heads, new_token_length)
-            )
-            new_tokens_lookback_ratio = torch.zeros(
-                (num_layers, num_heads, new_token_length)
-            )
-            for i in range(len(attentions)):  # iterating over the new tokens length
-                for l in range(num_layers):
-                    attn_on_bos = attentions[i][l][0, :, -1, 0].mean(-1)
-                    attn_on_context = attentions[i][l][
-                        0, :, -1, bos_length : context_length + 1
-                    ].mean(-1)
-                    attn_on_question = attentions[i][l][
-                        0, :, -1, bos_length + context_length : tokenised_inputs.size(1)
-                    ].mean(-1)
-                    attn_on_new_tokens = attentions[i][l][
-                        0, :, -1, tokenised_inputs.size(1) :
-                    ].mean(-1)
-                    bos_lookback_ratio[l, :, i] = attn_on_bos / (
-                        attn_on_bos
-                        + attn_on_context
-                        + attn_on_question
-                        + attn_on_new_tokens
-                    )
-                    context_lookback_ratio[l, :, i] = attn_on_context / (
-                        attn_on_bos
-                        + attn_on_context
-                        + attn_on_question
-                        + attn_on_new_tokens
-                    )
-                    question_lookback_ratio[l, :, i] = attn_on_question / (
-                        attn_on_bos
-                        + attn_on_context
-                        + attn_on_question
-                        + attn_on_new_tokens
-                    )
-                    new_tokens_lookback_ratio[l, :, i] = attn_on_new_tokens / (
-                        attn_on_bos
-                        + attn_on_context
-                        + attn_on_question
-                        + attn_on_new_tokens
-                    )
-
-            generation_output["attentions"]["bos_lookback_ratio"] = bos_lookback_ratio
-            generation_output["attentions"][
-                "context_lookback_ratio"
-            ] = context_lookback_ratio
-            generation_output["attentions"][
-                "question_lookback_ratio"
-            ] = question_lookback_ratio
-            generation_output["attentions"][
-                "new_tokens_lookback_ratio"
-            ] = new_tokens_lookback_ratio
 
         return generation_output
 

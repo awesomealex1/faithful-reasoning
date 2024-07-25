@@ -68,17 +68,120 @@ class NQ(BaseDataset):
 
         return data
 
+    def create_closed_book_demo_text(self) -> List[str]:
+        questions, answers = [], []
+
+        questions.append("where did they film hot tub time machine")
+        answers.append("Fernie Alpine Resort")
+
+        questions.append("who has the right of way in international waters")
+        answers.append("Neither vessel")
+
+        questions.append("who does annie work for attack on titan")
+        answers.append("Marley")
+
+        questions.append("when was the immigration reform and control act passed")
+        answers.append("November\u00a06, 1986")
+
+        questions.append("when was puerto rico added to the usa")
+        answers.append("1950")
+
+        questions.append(
+            "who has been chosen for best supporting actress in 64 national filmfare award"
+        )
+        answers.append("Zaira Wasim")
+
+        questions.append("which side of the white house is the front")
+        answers.append("North")
+
+        questions.append("who's hosting the super bowl in 2019")
+        answers.append("Atlanta, Georgia")
+
+        "Question: example question\nAnswer: march 2018"
+
+        # Verbalise the demos
+        if self.kwargs["use_chat_template"]:
+            demo_text = []
+            for question, answer in zip(questions, answers):
+                demo_text += [f"Question: {question}\nAnswer: ", answer]
+        else:
+            demo_text = []
+            for question, answer in zip(questions, answers):
+                demo_text += [f"Question: {question}\nAnswer: {answer}"]
+
+        return demo_text
+
+    def create_open_book_demo_text(self) -> List[str]:
+        contexts, questions, answers = [], [], []
+
+        #     contexts.append("")
+        #     questions.append("where did they film hot tub time machine")
+        #     answers.append("Fernie Alpine Resort")
+
+        #     contexts.append("")
+        #     questions.append("who has the right of way in international waters")
+        #     answers.append("Neither vessel")
+
+        #     contexts.append("")
+        #     questions.append("who does annie work for attack on titan")
+        #     answers.append("Marley")
+
+        #     contexts.append("")
+        #     questions.append("when was the immigration reform and control act passed")
+        #     answers.append("November\u00a06, 1986")
+
+        #     contexts.append("")
+        #     questions.append("when was puerto rico added to the usa")
+        #     answers.append("1950")
+
+        #     contexts.append("")
+        #     questions.append("who has been chosen for best supporting actress in 64 national filmfare award")
+        #     answers.append("Zaira Wasim")
+
+        #     contexts.append("")
+        #     questions.append("which side of the white house is the front")
+        #     answers.append("North")
+
+        #     contexts.append("")
+        #     questions.append("who's hosting the super bowl in 2019")
+        #     answers.append("Atlanta, Georgia")
+
+        #     return questions, answers
+        contexts.append("(Title: Example Title) Example Text")
+        questions.append("example question")
+        answers.append("march 2018")
+
+        # Verbalise the demos
+        if self.kwargs["use_chat_template"]:
+            demo_text = []
+            for i, (context, question, answer) in enumerate(
+                zip(contexts, questions, answers)
+            ):
+                demo_text += [
+                    f"Document [{i}]{context}\nQuestion: {question}\nAnswer: ",
+                    answer,
+                ]
+        else:
+            demo_text = []
+            for i, (context, question, answer) in enumerate(
+                zip(contexts, questions, answers)
+            ):
+                demo_text += [
+                    f"Document [{i}]{context}\nQuestion: {question}\nAnswer: {answer}"
+                ]
+
+        return demo_text
+
     def build_prompt(self, contexts, question):
 
         instruction = [
-            "Write a high-quality answer for the given question using only the provided search results (some of which might be irrelevant). Provide the answer in 5 words or less without any explanation.\n\n"
-            + (
-                "Document [1](Title: Example Title) Example Text\n\n"
-                if len(contexts)
-                else ""
-            )
-            + "Question: example question\nAnswer: march 2018"
+            "Write a high-quality answer for the given question using only the provided search results (some of which might be irrelevant). Provide the answer in 5 words or less without any explanation."
         ]
+
+        if self.variation == "closed_book":
+            icl_demo = self.create_closed_book_demo_text()
+        else:
+            icl_demo = self.create_open_book_demo_text()
 
         prompted_contexts = "\n".join(
             [f"Document [{i+1}]{context}" for i, context in enumerate(contexts)]
@@ -86,19 +189,29 @@ class NQ(BaseDataset):
         if prompted_contexts:
             prompted_contexts += "\n\n"
 
+        verbalised_question = f"Question: {question}\n"
+        answer_prefix = "Answer: "
         if self.kwargs["use_chat_template"]:
-            verbalised_question = f"Question: {question}\nAnswer: "
             input_text_prompt = [
-                instruction + [f"{prompted_contexts}{verbalised_question}"]
+                instruction
+                + icl_demo
+                + [f"{prompted_contexts}{verbalised_question}{answer_prefix}"]
             ]
         else:
-            verbalised_question = f"Question: {question}\nAnswer: "
+            icl_demo = "\n\n".join(icl_demo)
             input_text_prompt = (
-                instruction[0] + "\n\n" + (f"{prompted_contexts}{verbalised_question}")
+                instruction[0]
+                + "\n\n"
+                + icl_demo
+                + "\n\n"
+                + (f"{prompted_contexts}{verbalised_question}{answer_prefix}")
             )
         return {
-            "prompted_contexts": prompted_contexts,
+            "verbalised_instruction": instruction,
+            "verbalised_icl_demo": icl_demo,
+            "verbalised_contexts": prompted_contexts,
             "verbalised_question": verbalised_question,
+            "verbalised_answer_prefix": answer_prefix,
             "prompted_question": input_text_prompt,
         }
 
@@ -106,8 +219,11 @@ class NQ(BaseDataset):
         sample = self.data[idx]
 
         prompt = self.build_prompt(sample["contexts"], sample["question"])
+        sample["instruction"] = prompt["instruction"]
+        sample["icl_demo"] = prompt["icl_demo"]
         sample["prompted_contexts"] = prompt["prompted_contexts"]
         sample["verbalised_question"] = prompt["verbalised_question"]
+        sample["answer_prefix"] = prompt["answer_prefix"]
         sample["prompted_question"] = prompt["prompted_question"]
 
         return sample
