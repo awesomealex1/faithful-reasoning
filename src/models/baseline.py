@@ -43,7 +43,6 @@ class Baseline(BaseModel):
                         0, :, -1, curr_length : curr_length + length + 1
                     ].mean(-1)
                     lookback_ratios[comp][l, :, i] = attn
-                    print(comp, attn)
                     attn_sums.append(attn)
                     curr_length += length
 
@@ -57,17 +56,16 @@ class Baseline(BaseModel):
                     0, :, -1, new_token_start_from:
                 ].mean(-1)
                 lookback_ratios["new_tokens"][l, :, i] = attn_new_tokens
-                print("new tokens", attn_new_tokens)
                 attn_sums.append(attn_new_tokens)
-                print("attn_sums: ", attn_sums)
 
                 # Normalize ratios
                 attn_sum = sum(attn_sums)
-                print("attn_sum: ", attn_sum)
                 attn_sum = attn_sum.cpu()
                 for comp in lookback_ratios:
-                    print(lookback_ratios[comp])
-                    print(attn_sum)
+                    print(
+                        "lookback_ratios[comp].size(): ", lookback_ratios[comp].size()
+                    )
+                    print("attn_sum.size(): ", attn_sum.size())
                     lookback_ratios[comp][l, :, i] /= attn_sum
             break
         exit()
