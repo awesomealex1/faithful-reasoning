@@ -68,10 +68,8 @@ class NQSwap(BaseDataset):
         questions.append("who played freddie mercury in the movie bohemian rhapsody")
         answers.append("Erwin Schr\u00f6dinger")
 
+        demo_texts = []
         if self.kwargs["use_chat_template"]:
-            demo_texts = [
-                "Answer the following question based on the provided context:"
-            ]
             for i in range(len(questions)):
                 demo_texts += [
                     f"Context: {contexts[i]}\nQuestion: {questions[i]}\nAnswer:",
@@ -79,9 +77,6 @@ class NQSwap(BaseDataset):
                 ]
         else:
             # Concatenate demonstration examples ...
-            demo_texts = [
-                "Answer the following question based on the provided context:"
-            ]
             for i in range(len(questions)):
                 demo_texts += [
                     f"Context: {contexts[i]}\nQuestion: {questions[i]}\nAnswer: {answers[i]}"
@@ -89,26 +84,36 @@ class NQSwap(BaseDataset):
         return demo_texts
 
     def build_prompt(self, sub_context, question):
+        instruction = ["Answer the following question based on the provided context:"]
+        icl_demo = self.create_demo_text()
+
         prompted_contexts = f"Context: {sub_context}\n"
-        verbalised_question = f"Question: {question}\nAnswer:"
+        verbalised_question = f"Question: {question}\n"
+        answer_prefix = "Answer:"
 
         if self.kwargs["use_chat_template"]:
-            demo = self.create_demo_text()
-            input_text_prompt = [demo + [f"{prompted_contexts}{verbalised_question}"]]
+
+            input_text_prompt = [
+                instruction
+                + icl_demo
+                + [f"{prompted_contexts}{verbalised_question}{answer_prefix}"]
+            ]
         else:
-            demo = self.create_demo_text()
-            demo = "\n\n".join(demo)
+            instruction = instruction[0]
+            icl_demo = "\n\n".join(icl_demo)
             input_text_prompt = (
-                demo
+                instruction
                 + "\n\n"
-                + (
-                    # "Answer the following question based on the provided context:\n\n"
-                    f"{prompted_contexts}{verbalised_question}"
-                )
+                + icl_demo
+                + "\n\n"
+                + f"{prompted_contexts}{verbalised_question}{answer_prefix}"
             )
         return {
-            "prompted_contexts": prompted_contexts,
+            "verbalised_instruction": instruction,
+            "verbalised_icl_demo": icl_demo,
+            "verbalised_contexts": prompted_contexts,
             "verbalised_question": verbalised_question,
+            "verbalised_answer_prefix": answer_prefix,
             "prompted_question": input_text_prompt,
         }
 
@@ -116,8 +121,14 @@ class NQSwap(BaseDataset):
         sample = self.data[idx]
 
         prompt = self.build_prompt(sample["sub_context"], sample["question"])
-        sample["prompted_contexts"] = prompt["prompted_contexts"]
+
+        # For attention analysis
+        sample["verbalised_instruction"] = prompt["verbalised_instruction"]
+        sample["verbalised_icl_demo"] = prompt["verbalised_icl_demo"]
+        sample["verbalised_contexts"] = prompt["verbalised_contexts"]
         sample["verbalised_question"] = prompt["verbalised_question"]
+        sample["verbalised_answer_prefix"] = prompt["verbalised_answer_prefix"]
+
         sample["prompted_question"] = prompt["prompted_question"]
 
         return sample
