@@ -112,6 +112,7 @@ class BaseModel(ABC):
                 # 5 is <|begin_of_text|><|start_header_id|>user<|end_header_id|> in llama3-8b-instruct tokenizer
                 token_to_skip = 5
             else:
+                instruction_tokens = torch.tensor([])
                 instruction_length = 0
                 token_to_skip = 1
 
@@ -123,6 +124,7 @@ class BaseModel(ABC):
                 )[:, token_to_skip:]
                 icl_demo_length = icl_demo_tokens.shape[-1]
             else:
+                icl_demo_tokens = torch.tensor([])
                 icl_demo_length = 0
 
             curr_length += icl_demo_length
@@ -138,6 +140,7 @@ class BaseModel(ABC):
                     )
                     contexts_length = contexts_tokens.shape[-1]
             else:
+                contexts_tokens = torch.tensor([])
                 contexts_length = 0
 
             question_tokens = self._verbalise_input(
