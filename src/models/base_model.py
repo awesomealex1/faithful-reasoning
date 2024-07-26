@@ -272,6 +272,8 @@ class BaseModel(ABC):
     ) -> dict:
         self.model.eval()
 
+        print(inputs)
+
         prompt = inputs["prompted_question"][0]
         tokenised_inputs = self._verbalise_input(prompt).to(self.model.device)
 
