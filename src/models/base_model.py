@@ -150,13 +150,17 @@ class BaseModel(ABC):
             else:
                 question_tokens = self._verbalise_input(
                     inputs["verbalised_question"][0], use_system_prompt=False
-                )[:, 1:]
+                )[:, 1:-5]
             question_length = question_tokens.shape[-1]
 
-            answer_prefix_tokens = self._verbalise_input(
-                inputs["verbalised_answer_prefix"][0]
-            )[:, 5:]
-            answer_prefix_length = answer_prefix_tokens.shape[-1]
+            if inputs["verbalised_answer_prefix"][0]:
+                answer_prefix_tokens = self._verbalise_input(
+                    inputs["verbalised_answer_prefix"][0]
+                )[:, 5:]
+                answer_prefix_length = answer_prefix_tokens.shape[-1]
+            else:
+                answer_prefix_tokens = None
+                answer_prefix_length = 0
         else:
             bos_length = 1
             # Start from 1 to skip the BOS token
