@@ -3,4 +3,5 @@ defaults:
 
 name: MemoTrap
 data_dir: data/MemoTrap
+num_samples: -1
 variation: null
