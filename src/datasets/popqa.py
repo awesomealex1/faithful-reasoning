@@ -52,8 +52,6 @@ class PopQA(BaseDataset):
                 }
             ]
 
-        print(data[:10])
-
         if self.num_samples > 0:
             data = data[: self.num_samples]
 
@@ -62,6 +60,7 @@ class PopQA(BaseDataset):
     def create_demo_text(self, curr_question) -> List[str]:
         questions, answers = [], []
 
+        # First 9 instances from the test set, remove 1 if encountered as the current question
         questions.append("What is George Rankin's occupation?")
         answers.append("politician")
 
