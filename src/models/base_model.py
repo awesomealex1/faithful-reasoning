@@ -98,7 +98,6 @@ class BaseModel(ABC):
         return inputs
 
     def _get_component_lengths(self, inputs, tokenised_inputs):
-        print(inputs)
         if self.model_configs.model_type == "instruct":
             # Skip BOS
 
