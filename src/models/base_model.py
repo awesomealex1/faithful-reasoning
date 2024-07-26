@@ -100,21 +100,47 @@ class BaseModel(ABC):
     def _get_component_lengths(self, inputs, tokenised_inputs):
         print(inputs)
         if self.model_configs.model_type == "instruct":
-            bos_length = 1
             # Skip BOS
-            instruction_tokens = self._verbalise_input(
-                inputs["verbalised_instruction"][0]
-            )[:, 1:]
-            instruction_length = instruction_tokens.shape[-1]
-            # 5 is <|begin_of_text|><|start_header_id|>user<|end_header_id|> in llama3-8b-instruct tokenizer
-            icl_demo_tokens = self._verbalise_input(
-                inputs["verbalised_icl_demo"], use_system_prompt=False
-            )[:, 5:]
-            icl_demo_length = icl_demo_tokens.shape[-1]
-            contexts_tokens = self._verbalise_input(
-                inputs["verbalised_contexts"][0], use_chat_template=False
-            )[:, 1:]
-            contexts_length = contexts_tokens.shape[-1]
+
+            bos_length = 1
+
+            curr_length = 1
+            if inputs["verbalised_instruction"][0]:
+                instruction_tokens = self._verbalise_input(
+                    inputs["verbalised_instruction"][0]
+                )[:, 1:]
+                instruction_length = instruction_tokens.shape[-1]
+                # 5 is <|begin_of_text|><|start_header_id|>user<|end_header_id|> in llama3-8b-instruct tokenizer
+                token_to_skip = 5
+            else:
+                instruction_length = 0
+                token_to_skip = 1
+
+            curr_length += instruction_length
+
+            if inputs["verbalised_icl_demo"][0]:
+                icl_demo_tokens = self._verbalise_input(
+                    inputs["verbalised_icl_demo"], use_system_prompt=False
+                )[:, token_to_skip:]
+                icl_demo_length = icl_demo_tokens.shape[-1]
+            else:
+                icl_demo_length = 0
+
+            curr_length += icl_demo_length
+            if inputs["verbalised_contexts"][0]:
+                if curr_length > 1:
+                    contexts_tokens = self._verbalise_input(
+                        inputs["verbalised_contexts"][0], use_chat_template=False
+                    )[:, 1:]
+                    contexts_length = contexts_tokens.shape[-1]
+                else:
+                    contexts_tokens = self._verbalise_input(
+                        inputs["verbalised_contexts"][0], use_system_prompt=False
+                    )
+                    contexts_length = contexts_tokens.shape[-1]
+            else:
+                contexts_length = 0
+
             question_tokens = self._verbalise_input(
                 inputs["verbalised_question"][0], use_chat_template=False
             )[:, 1:]
