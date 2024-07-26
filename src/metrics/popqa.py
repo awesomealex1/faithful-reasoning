@@ -6,7 +6,7 @@ import numpy as np
 from src.metrics.utils import best_em, best_subspan_em
 
 
-class NQ:
+class PopQA:
     def __init__(self):
         pass
 
