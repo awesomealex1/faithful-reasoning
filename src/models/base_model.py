@@ -150,7 +150,7 @@ class BaseModel(ABC):
             else:
                 question_tokens = self._verbalise_input(
                     inputs["verbalised_question"][0], use_system_prompt=False
-                )[:, 1:-5]
+                )[:, 1:]
             question_length = question_tokens.shape[-1]
 
             if inputs["verbalised_answer_prefix"][0]:
