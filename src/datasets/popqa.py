@@ -48,35 +48,56 @@ class PopQA(BaseDataset):
                     "s_pop": ds[i]["s_pop"],
                     "o_pop": ds[i]["o_pop"],
                     "question": ds[i]["question"],
-                    "possible_answers": ds[i]["possible_answers"],
+                    "answers": ds[i]["possible_answers"],
                 }
             ]
+
+        print(data[:10])
 
         if self.num_samples > 0:
             data = data[: self.num_samples]
 
         return data
 
-    def create_demo_text(self) -> List[str]:
-        def build_prompt_with_answer(sub_context, question, sub_answer):
-            input_text_prompt = (
-                f"Context: {sub_context}\nQuestion: {question}\nAnswer: {sub_answer}"
-            )
-            return input_text_prompt
-
+    def create_demo_text(self, curr_question) -> List[str]:
         questions, answers = [], []
 
-        questions.append("who was the first band to play at woodstock")
-        answers.append("Anna Paquin")
+        questions.append("What is George Rankin's occupation?")
+        answers.append("politician")
 
-        questions.append("when did the vietnam war end what year")
-        answers.append("August")
+        questions.append("What is John Mayne's occupation?")
+        answers.append("journalist")
 
-        questions.append("where did the beatles take the abbey road picture ")
-        answers.append("Spice Girls")
+        questions.append("What is Henry Feilden's occupation?")
+        answers.append("politician")
 
-        questions.append("who played freddie mercury in the movie bohemian rhapsody")
-        answers.append("Erwin Schr\u00f6dinger")
+        questions.append("What is Kathy Saltzman's occupation?")
+        answers.append("politician")
+
+        questions.append("What is Eleanor Davis's occupation?")
+        answers.append("cartoonist")
+
+        questions.append("What is Alexander Rinnooy Kan's occupation?")
+        answers.append("mathematician")
+
+        questions.append("What is Scooter Braun's occupation?")
+        answers.append("talent manager")
+
+        questions.append("What is Leona Detiège's occupation?")
+        answers.append("politician")
+
+        questions.append("What is William Murray, 1st Earl of Mansfield's occupation?")
+        answers.append("politician")
+
+        if curr_question in questions:
+            # Remove current question from the list if it is already in the list
+            idx = questions.index(curr_question)
+            _ = questions.pop(idx)
+            _ = answers.pop(idx)
+        else:
+            # Only take 8 examples
+            _ = questions.pop()
+            _ = answers.pop()
 
         if self.kwargs["use_chat_template"]:
             demo_texts = [
@@ -84,7 +105,7 @@ class PopQA(BaseDataset):
             ]
             for i in range(len(questions)):
                 demo_texts += [
-                    f"Context: {contexts[i]}\nQuestion: {questions[i]}\nAnswer:",
+                    f"Question: {questions[i]}\nAnswer:",
                     answers[i],
                 ]
         else:
@@ -93,37 +114,51 @@ class PopQA(BaseDataset):
                 "Answer the following question based on the provided context:"
             ]
             for i in range(len(questions)):
-                demo_texts += [
-                    f"Context: {contexts[i]}\nQuestion: {questions[i]}\nAnswer: {answers[i]}"
-                ]
+                demo_texts += [f"Question: {questions[i]}\nAnswer: {answers[i]}"]
         return demo_texts
 
-    def build_prompt(self, sub_context, question):
+    def build_prompt(self, question):
+        instruction = ["Answer the given question."]
+
+        icl_demo = self.create_demo_text(question)
+
+        verbalised_question = f"Q: {question}\n"
+        answer_prefix = "A:"
         if self.kwargs["use_chat_template"]:
-            demo = self.create_demo_text()
             input_text_prompt = [
-                demo + [f"Context: {sub_context}\nQuestion: {question}\nAnswer:"]
+                instruction + icl_demo + [f"{verbalised_question}{answer_prefix}"]
             ]
-            return input_text_prompt
         else:
-            demo = self.create_demo_text()
-            demo = "\n\n".join(demo)
+            instruction = instruction[0]
+            icl_demo = "\n\n".join(icl_demo)
             input_text_prompt = (
-                demo
+                instruction
                 + "\n\n"
-                + (
-                    # "Answer the following question based on the provided context:\n\n"
-                    f"Context: {sub_context}\nQuestion: {question}\nAnswer:"
-                )
+                + icl_demo
+                + "\n\n"
+                + (f"{verbalised_question}{answer_prefix}")
             )
-            return input_text_prompt
+        return {
+            "verbalised_instruction": instruction,
+            "verbalised_icl_demo": icl_demo,
+            "verbalised_contexts": "",
+            "verbalised_question": verbalised_question,
+            "verbalised_answer_prefix": answer_prefix,
+            "prompted_question": input_text_prompt,
+        }
 
     def __getitem__(self, idx):
         sample = self.data[idx]
 
-        sample["prompted_question"] = self.build_prompt(
-            sample["sub_context"], sample["question"]
-        )
+        prompt = self.build_prompt(sample["question"])
+
+        sample["verbalised_instruction"] = prompt["verbalised_instruction"]
+        sample["verbalised_icl_demo"] = prompt["verbalised_icl_demo"]
+        sample["verbalised_contexts"] = prompt["verbalised_contexts"]
+        sample["verbalised_question"] = prompt["verbalised_question"]
+        sample["verbalised_answer_prefix"] = prompt["verbalised_answer_prefix"]
+
+        sample["prompted_question"] = prompt["prompted_question"]
 
         return sample
 
