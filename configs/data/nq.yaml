@@ -3,4 +3,5 @@ defaults:
 
 name: NQ
 data_dir: data/NQ
+num_samples: -1
 variation: "oracle"

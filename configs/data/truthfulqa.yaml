@@ -3,4 +3,5 @@ defaults:
 
 name: TruthfulQA
 data_dir: data/TruthfulQA
+num_samples: -1
 variation: null

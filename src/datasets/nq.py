@@ -66,6 +66,9 @@ class NQ(BaseDataset):
                     }
                 ]
 
+        if self.num_samples > 0:
+            data = data[: self.num_samples]
+
         return data
 
     def create_closed_book_demo_text(self) -> List[str]:
