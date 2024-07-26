@@ -112,7 +112,7 @@ class BaseModel(ABC):
                 # 5 is <|begin_of_text|><|start_header_id|>user<|end_header_id|> in llama3-8b-instruct tokenizer
                 token_to_skip = 5
             else:
-                instruction_tokens = torch.tensor([])
+                instruction_tokens = None
                 instruction_length = 0
                 token_to_skip = 1
 
@@ -124,7 +124,7 @@ class BaseModel(ABC):
                 )[:, token_to_skip:]
                 icl_demo_length = icl_demo_tokens.shape[-1]
             else:
-                icl_demo_tokens = torch.tensor([])
+                icl_demo_tokens = None
                 icl_demo_length = 0
 
             curr_length += icl_demo_length
@@ -140,7 +140,7 @@ class BaseModel(ABC):
                     )
                     contexts_length = contexts_tokens.shape[-1]
             else:
-                contexts_tokens = torch.tensor([])
+                contexts_tokens = None
                 contexts_length = 0
 
             question_tokens = self._verbalise_input(
@@ -184,11 +184,16 @@ class BaseModel(ABC):
             print(
                 f"Tokenised inputs length does not match the sum of the lengths of the components"
             )
-            print("instruction: ", instruction_tokens.cpu().numpy()[0].tolist())
-            print("icl_demo: ", icl_demo_tokens.cpu().numpy()[0].tolist())
-            print("contexts: ", contexts_tokens.cpu().numpy()[0].tolist())
-            print("question: ", question_tokens.cpu().numpy()[0].tolist())
-            print("answer_prefix: ", answer_prefix_tokens.cpu().numpy()[0].tolist())
+            if instruction_tokens:
+                print("instruction: ", instruction_tokens.cpu().numpy()[0].tolist())
+            if icl_demo_tokens:
+                print("icl_demo: ", icl_demo_tokens.cpu().numpy()[0].tolist())
+            if contexts_tokens:
+                print("contexts: ", contexts_tokens.cpu().numpy()[0].tolist())
+            if question_tokens:
+                print("question: ", question_tokens.cpu().numpy()[0].tolist())
+            if answer_prefix_tokens:
+                print("answer_prefix: ", answer_prefix_tokens.cpu().numpy()[0].tolist())
             print("tokenised_inputs: ", tokenised_inputs.cpu().numpy()[0].tolist())
             print(f"bos_length: {bos_length}")
             print(f"instruction_length: {instruction_length}")
