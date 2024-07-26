@@ -143,10 +143,16 @@ class BaseModel(ABC):
                 contexts_tokens = None
                 contexts_length = 0
 
-            question_tokens = self._verbalise_input(
-                inputs["verbalised_question"][0], use_chat_template=False
-            )[:, 1:]
+            if curr_length > 1:
+                question_tokens = self._verbalise_input(
+                    inputs["verbalised_question"][0], use_chat_template=False
+                )[:, 1:]
+            else:
+                question_tokens = self._verbalise_input(
+                    inputs["verbalised_question"][0], use_system_prompt=False
+                )[:, 1:]
             question_length = question_tokens.shape[-1]
+
             answer_prefix_tokens = self._verbalise_input(
                 inputs["verbalised_answer_prefix"][0]
             )[:, 5:]
