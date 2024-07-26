@@ -2,5 +2,5 @@ defaults:
   - base_data_config
 
 name: TriviaQA
-data_dir: data/TriviaQA/test
+data_dir: data/TriviaQA/validation
 variation: null
