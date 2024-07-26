@@ -93,7 +93,7 @@ class TruthfulQA(BaseDataset):
         verbalised_question = f"Q: {input_text}\n"
         answer_prefix = "A:"
         if self.kwargs["use_chat_template"]:
-            input_text_prompt = [icl_demo + [verbalised_question]]
+            input_text_prompt = [instruction + icl_demo + [verbalised_question]]
         else:
             instruction = instruction[0]
             icl_demo = "\n\n".join(icl_demo)
