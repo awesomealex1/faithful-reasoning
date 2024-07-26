@@ -103,10 +103,20 @@ class Run:
 
             predictions.append(batch)
 
-            try:
-                batch["idx"] = int(batch["idx"].cpu().numpy()[0])
-            except:
-                batch["idx"] = str(batch["idx"][0])
+            values_to_normalised = ["idx"]
+            if self.configs.data.name == "PopQA":
+                values_to_normalised += [
+                    "subj_id",
+                    "prop_id",
+                    "obj_id",
+                    "s_pop",
+                    "o_pop",
+                ]
+            for key in values_to_normalised:
+                try:
+                    batch[key] = int(batch[key].cpu().numpy()[0])
+                except:
+                    batch[key] = str(batch[key][0])
 
             # Save the predictions to a JSONL file after each batch
             with open(prediction_filepath, "a") as f:
