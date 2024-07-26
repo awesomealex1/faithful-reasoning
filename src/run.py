@@ -80,6 +80,7 @@ class Run:
             # Predict
             prediction = self.model.generate(batch, return_attentions=True)
             batch["predicted_answer"] = prediction["decoded_text"]
+            print(batch)
 
             if self.configs.data.name in ["TruthfulQA", "MemoTrap"]:
                 scores_true = []
@@ -112,7 +113,6 @@ class Run:
                 f.write(json.dumps(batch) + "\n")
 
             if "attentions" in prediction:
-                batch["attentions"] = prediction["attentions"]
                 attentions_list += [batch]
 
         torch.save(attentions_list, attentions_filepath)
