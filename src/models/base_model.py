@@ -184,15 +184,15 @@ class BaseModel(ABC):
             print(
                 f"Tokenised inputs length does not match the sum of the lengths of the components"
             )
-            if instruction_tokens:
+            if instruction_tokens is not None:
                 print("instruction: ", instruction_tokens.cpu().numpy()[0].tolist())
-            if icl_demo_tokens:
+            if icl_demo_tokens is not None:
                 print("icl_demo: ", icl_demo_tokens.cpu().numpy()[0].tolist())
-            if contexts_tokens:
+            if contexts_tokens is not None:
                 print("contexts: ", contexts_tokens.cpu().numpy()[0].tolist())
-            if question_tokens:
+            if question_tokens is not None:
                 print("question: ", question_tokens.cpu().numpy()[0].tolist())
-            if answer_prefix_tokens:
+            if answer_prefix_tokens is not None:
                 print("answer_prefix: ", answer_prefix_tokens.cpu().numpy()[0].tolist())
             print("tokenised_inputs: ", tokenised_inputs.cpu().numpy()[0].tolist())
             print(f"bos_length: {bos_length}")
