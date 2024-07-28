@@ -30,27 +30,20 @@ class PopQA(BaseDataset):
         ds = load_from_disk(self.data_dir)
 
         for i in range(len(ds)):
-            data += [
-                {
-                    "idx": ds[i]["id"],
-                    "subj": ds[i]["subj"],
-                    "prop": ds[i]["prop"],
-                    "obj": ds[i]["obj"],
-                    "subj_id": ds[i]["subj_id"],
-                    "prop_id": ds[i]["prop_id"],
-                    "obj_id": ds[i]["obj_id"],
-                    "s_aliases": ds[i]["s_aliases"],
-                    "o_aliases": ds[i]["o_aliases"],
-                    "s_uri": ds[i]["s_uri"],
-                    "o_uri": ds[i]["o_uri"],
-                    "s_wiki_title": ds[i]["s_wiki_title"],
-                    "o_wiki_title": ds[i]["o_wiki_title"],
-                    "s_pop": ds[i]["s_pop"],
-                    "o_pop": ds[i]["o_pop"],
-                    "question": ds[i]["question"],
-                    "answers": ds[i]["possible_answers"],
-                }
-            ]
+            sample = {
+                "idx": ds[i]["id"],
+                "subj": ds[i]["subj"],
+                "prop": ds[i]["prop"],
+                "obj": ds[i]["obj"],
+                "s_pop": ds[i]["s_pop"],
+                "o_pop": ds[i]["o_pop"],
+                "question": ds[i]["question"],
+                "answers": ds[i]["possible_answers"],
+            }
+            for key, value in sample.items():
+                if value is None:
+                    print(f"Sample {sample['idx']} contains null value for key {key}")
+            data += [sample]
 
         if self.num_samples > 0:
             data = data[: self.num_samples]
