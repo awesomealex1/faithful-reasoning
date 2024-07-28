@@ -3,5 +3,5 @@ defaults:
 
 name: TriviaQA
 data_dir: data/TriviaQA/validation
-num_samples: 2000
+num_samples: -1
 variation: null

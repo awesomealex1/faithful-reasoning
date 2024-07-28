@@ -3,5 +3,5 @@ defaults:
 
 name: PopQA
 data_dir: data/PopQA/test
-num_samples: 2000
+num_samples: -1
 variation: null
