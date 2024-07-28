@@ -105,9 +105,6 @@ class Run:
             values_to_normalised = ["idx"]
             if self.configs.data.name == "PopQA":
                 values_to_normalised += [
-                    "subj_id",
-                    "prop_id",
-                    "obj_id",
                     "s_pop",
                     "o_pop",
                 ]

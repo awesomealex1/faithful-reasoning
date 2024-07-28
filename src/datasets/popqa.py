@@ -32,7 +32,7 @@ class PopQA(BaseDataset):
         for i in range(len(ds)):
             sample = {
                 "idx": ds[i]["id"],
-                "subj": ds[i]["subj"],
+                "subj": ds[i]["subj"] if ds[i]["subj"] else "",
                 "prop": ds[i]["prop"],
                 "obj": ds[i]["obj"],
                 "s_pop": ds[i]["s_pop"],
