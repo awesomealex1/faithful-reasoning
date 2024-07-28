@@ -2,6 +2,7 @@ import gzip
 import json
 import math
 import os
+import ast
 from typing import List, Tuple
 
 import numpy as np
@@ -38,7 +39,11 @@ class PopQA(BaseDataset):
                 "s_pop": ds[i]["s_pop"],
                 "o_pop": ds[i]["o_pop"],
                 "question": ds[i]["question"],
-                "answers": ds[i]["possible_answers"],
+                "answers": (
+                    ast.literal_eval(ds[i]["possible_answers"])
+                    if ds[i]["possible_answers"]
+                    else ""
+                ),
             }
             for key, value in sample.items():
                 if value is None:
