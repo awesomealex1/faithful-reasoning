@@ -19,7 +19,7 @@ class Baseline(BaseModel):
         inputs,
         return_attentions: bool = False,
     ) -> dict:
-        return self._generate(inputs, return_attentions)
+        return self._generate(inputs, return_attentions=return_attentions)
 
     def lm_score(
         self,

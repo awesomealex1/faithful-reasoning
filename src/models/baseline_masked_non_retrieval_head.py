@@ -63,7 +63,9 @@ class BaselineMaskedNonRetrievalHead(BaseModel):
         inputs,
         return_attentions: bool = False,
     ) -> dict:
-        return self._generate(inputs, return_attentions, block_list=self.random_heads)
+        return self._generate(
+            inputs, return_attentions=return_attentions, block_list=self.random_heads
+        )
 
     def lm_score(
         self,

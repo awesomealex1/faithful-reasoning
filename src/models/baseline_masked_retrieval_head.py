@@ -45,7 +45,7 @@ class BaselineMaskedRetrievalHead(BaseModel):
         return_attentions: bool = False,
     ) -> dict:
         return self._generate(
-            inputs, return_attentions, block_list=self.retrieval_heads
+            inputs, return_attentions=return_attentions, block_list=self.retrieval_heads
         )
 
     def lm_score(
