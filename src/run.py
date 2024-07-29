@@ -118,6 +118,8 @@ class Run:
             with open(prediction_filepath, "a") as f:
                 f.write(json.dumps(batch) + "\n")
 
+            print("attentions" in prediction)
+            print(prediction)
             if "attentions" in prediction:
                 attentions_list += [batch]
 
