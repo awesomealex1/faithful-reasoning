@@ -7,5 +7,11 @@ configs:
   hallucination_heads_dir: ./hallucination_heads/
   num_hallucination_heads: 10
   feature_names:
-    - bos
-  aggregation_method: max
+    - BOS
+    - Instruction
+    - ICL Demonstration
+    - Contexts
+    - Question
+    - Answer Prefix
+    - New Tokens
+  aggregation_method: mean
