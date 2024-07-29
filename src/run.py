@@ -118,9 +118,8 @@ class Run:
             with open(prediction_filepath, "a") as f:
                 f.write(json.dumps(batch) + "\n")
 
-            print("attentions" in prediction)
-            print(prediction)
             if "attentions" in prediction:
+                batch["attentions"] = prediction["attentions"]
                 attentions_list += [batch]
 
         torch.save(attentions_list, attentions_filepath)
