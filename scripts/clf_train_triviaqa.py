@@ -135,7 +135,9 @@ class AttentionMapDataset(Dataset):
 
 
 def plot_sequence_length(
-    dataset: AttentionMapDataset, split: str, outputs_dir: str = "./outputs/lr_analyses"
+    dataset: AttentionMapDataset,
+    split: str,
+    outputs_dir: str = "./outputs/lr_analyses/triviaqa",
 ):
     min_ori_length = min(dataset.x_ori_lengths)
     max_ori_length = max(dataset.x_ori_lengths)
@@ -203,7 +205,7 @@ def fit_logreg_all_features(
     regulariser,
     C=1.0,
     cv=5,
-    outputs_dir="./outputs/lr_analyses",
+    outputs_dir="./outputs/lr_analyses/triviaqa",
     random_seed=1234,
 ):
     print(f"Training logistic regression with all features")
@@ -316,7 +318,7 @@ def fit_logreg_per_feature(
     regulariser,
     C=1.0,
     cv=5,
-    outputs_dir="./outputs/lr_analyses",
+    outputs_dir="./outputs/lr_analyses/triviaqa",
     random_seed=1234,
 ):
     assert len(FEATURES_LIST) == train_dataset.x.shape[-1]
@@ -440,7 +442,9 @@ def fit_logreg_per_feature(
 def argument_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument("--data_dir", type=str, default="attention_maps")
-    parser.add_argument("--outputs_dir", type=str, default="outputs/lr_analyses")
+    parser.add_argument(
+        "--outputs_dir", type=str, default="outputs/lr_analyses/triviaqa"
+    )
     parser.add_argument("--max_sequence_length", type=int, default=4)
     parser.add_argument("--regulariser", type=str, default="l1")
     parser.add_argument("--cv", type=int, default=5)

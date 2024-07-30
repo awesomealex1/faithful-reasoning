@@ -134,7 +134,9 @@ class AttentionMapDataset(Dataset):
 
 
 def plot_sequence_length(
-    dataset: AttentionMapDataset, split: str, outputs_dir: str = "./outputs/lr_analyses"
+    dataset: AttentionMapDataset,
+    split: str,
+    outputs_dir: str = "./outputs/lr_analyses/nq",
 ):
     min_ori_length = min(dataset.x_ori_lengths)
     max_ori_length = max(dataset.x_ori_lengths)
@@ -202,7 +204,7 @@ def fit_logreg_all_features(
     regulariser,
     C=1.0,
     cv=5,
-    outputs_dir="./outputs/lr_analyses",
+    outputs_dir="./outputs/lr_analyses/nq",
 ):
     print(f"Training logistic regression with all features")
     assert len(FEATURES_LIST) == train_dataset.x.shape[-1]
@@ -314,7 +316,7 @@ def fit_logreg_per_feature(
     regulariser,
     C=1.0,
     cv=5,
-    outputs_dir="./outputs/lr_analyses",
+    outputs_dir="./outputs/lr_analyses/nq",
 ):
     assert len(FEATURES_LIST) == train_dataset.x.shape[-1]
     assert len(FEATURES_LIST) == test_dataset.x.shape[-1]
