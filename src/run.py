@@ -75,10 +75,16 @@ class Run:
             self.output_dir, f"att_{self.configs.data.name}.pt"
         )
 
+        # To save WandB space, just return attentions for the Baseline model
+        # Mainly for Logistic Regression purposes
+        return_attentions = False
+        if self.configs.decoder.name == "Baseline":
+            return_attentions = True
+
         attentions_list = []
         for step, batch in enumerate(tqdm(self.dataloaders)):
             # Predict
-            prediction = self.model.generate(batch, return_attentions=True)
+            prediction = self.model.generate(batch, return_attentions=return_attentions)
             batch["predicted_answer"] = prediction["decoded_text"]
 
             if self.configs.data.name in ["TruthfulQA", "MemoTrap"]:
@@ -118,11 +124,9 @@ class Run:
             with open(prediction_filepath, "a") as f:
                 f.write(json.dumps(batch) + "\n")
 
-            if "attentions" in prediction:
+            if "attentions" in prediction and return_attentions:
                 batch["attentions"] = prediction["attentions"]
                 attentions_list += [batch]
-
-        torch.save(attentions_list, attentions_filepath)
 
         # Evaluate
         metrics = self.metrics(predictions)
@@ -136,9 +140,11 @@ class Run:
         pred_artifact.add_file(prediction_filepath)
         wandb.log_artifact(pred_artifact)
 
-        attn_artifact = wandb.Artifact(
-            f"attn_{self.configs.data.name}_{self.wandb_run_name}",
-            type="attention_weights",
-        )
-        attn_artifact.add_file(attentions_filepath)
-        wandb.log_artifact(attn_artifact)
+        if return_attentions:
+            torch.save(attentions_list, attentions_filepath)
+            attn_artifact = wandb.Artifact(
+                f"attn_{self.configs.data.name}_{self.wandb_run_name}",
+                type="attention_weights",
+            )
+            attn_artifact.add_file(attentions_filepath)
+            wandb.log_artifact(attn_artifact)
