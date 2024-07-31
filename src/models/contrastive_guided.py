@@ -228,37 +228,38 @@ class ContrastiveGuided(BaseModel):
         prompt,
         answer,
     ):
-        prompt = prompt["prompted_question"][0]
-        with torch.no_grad():
-            if type(prompt) == list:
-                input_text = prompt + [answer]
-            else:
-                input_text = prompt + answer
-            input_ids = self._verbalise_input(input_text).to(self.model.device)
-            prefix_ids = self._verbalise_input(prompt).to(self.model.device)
-            continue_ids = input_ids[0, prefix_ids.shape[-1] :]
+        raise NotImplementedError
+        # prompt = prompt["prompted_question"][0]
+        # with torch.no_grad():
+        #     if type(prompt) == list:
+        #         input_text = prompt + [answer]
+        #     else:
+        #         input_text = prompt + answer
+        #     input_ids = self._verbalise_input(input_text).to(self.model.device)
+        #     prefix_ids = self._verbalise_input(prompt).to(self.model.device)
+        #     continue_ids = input_ids[0, prefix_ids.shape[-1] :]
 
-            base_outputs = self.model(input_ids)[0]
-            hallucinated_outputs = self.model(
-                input_ids, block_list=self.retrieval_heads
-            )[0]
+        #     base_outputs = self.model(input_ids)[0]
+        #     hallucinated_outputs = self.model(
+        #         input_ids, block_list=self.retrieval_heads
+        #     )[0]
 
-            base_logits = base_outputs[0, prefix_ids.shape[-1] - 1 : -1, :]
-            hallucinated_logits = hallucinated_outputs[
-                0, prefix_ids.shape[-1] - 1 : -1, :
-            ]
+        #     base_logits = base_outputs[0, prefix_ids.shape[-1] - 1 : -1, :]
+        #     hallucinated_logits = hallucinated_outputs[
+        #         0, prefix_ids.shape[-1] - 1 : -1, :
+        #     ]
 
-            # base_logits = base_logits.log_softmax(dim=-1)
-            # hallucinated_logits = hallucinated_logits.log_softmax(dim=-1)
-            diff_logits = (
-                (1 + self.decoder_configs.configs.alpha) * base_logits
-                - self.decoder_configs.configs.alpha * hallucinated_logits
-            )
+        #     # base_logits = base_logits.log_softmax(dim=-1)
+        #     # hallucinated_logits = hallucinated_logits.log_softmax(dim=-1)
+        #     diff_logits = (
+        #         (1 + self.decoder_configs.configs.alpha) * base_logits
+        #         - self.decoder_configs.configs.alpha * hallucinated_logits
+        #     )
 
-            diff_logits = diff_logits.log_softmax(dim=-1)
+        #     diff_logits = diff_logits.log_softmax(dim=-1)
 
-            log_probs = (
-                diff_logits[range(diff_logits.shape[0]), continue_ids].sum().item()
-            )
+        #     log_probs = (
+        #         diff_logits[range(diff_logits.shape[0]), continue_ids].sum().item()
+        #     )
 
-        return log_probs
+        # return log_probs

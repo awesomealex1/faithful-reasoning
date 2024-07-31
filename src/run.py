@@ -86,6 +86,9 @@ class Run:
             # Predict
             prediction = self.model.generate(batch, return_attentions=return_attentions)
             batch["predicted_answer"] = prediction["decoded_text"]
+            if "alphas" in prediction:
+                # Handle for DeCoRe guided, to analyse the changes in alpha value throughout generation steps
+                batch["alphas"] = prediction["alphas"]
 
             if self.configs.data.name in ["TruthfulQA", "MemoTrap"]:
                 scores_true = []

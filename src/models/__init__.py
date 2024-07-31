@@ -9,5 +9,6 @@ from .contrastive_guided import ContrastiveGuided
 from .decore_vanilla import DeCoReVanilla
 from .decore_amplified import DeCoReAmplified
 from .decore_plain import DeCoRePlain
+from .decore_guided import DeCoReGuided
 from .dola import DoLa
 from .icd import ICD
