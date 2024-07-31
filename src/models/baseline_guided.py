@@ -16,6 +16,8 @@ class BaselineGuided(BaseModel):
     ):
         super().__init__(model_configs, decoder_configs)
 
+        self._load_classifier()
+
     def _load_classifier(self):
         self.classifier = torch.load(self.decoder_configs.configs.classifier_path)[
             "model"
