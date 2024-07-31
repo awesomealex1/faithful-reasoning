@@ -128,9 +128,6 @@ class Run:
                 batch["attentions"] = prediction["attentions"]
                 attentions_list += [batch]
 
-            if step >= 10:
-                break
-
         # Evaluate
         metrics = self.metrics(predictions)
 
