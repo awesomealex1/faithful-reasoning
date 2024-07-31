@@ -154,6 +154,9 @@ class DeCoReGuided(BaseModel):
                 hallucinated_attention_maps = []
                 hallucinated_last_input_token = last_input_token
                 for _ in range(self.classifier_max_sequence_length):
+                    hallucinated_last_input_token = hallucinated_last_input_token.view(
+                        1, 1
+                    )
                     hallucinated_output = self.model(
                         input_ids=hallucinated_last_input_token,
                         past_key_values=hallucinated_past_kvs[-1],
