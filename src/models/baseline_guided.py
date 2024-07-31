@@ -118,7 +118,7 @@ class BaselineGuided(BaseModel):
                             break
 
                     lookback_ratios = self.get_lookback_ratios(
-                        attentions, component_lengths, generation_start_id
+                        window_attention_maps, component_lengths, generation_start_id
                     )
                     lookback_ratios = self._prepare_lookback_ratios(lookback_ratios)
                     sample_hallucination_probas += [
