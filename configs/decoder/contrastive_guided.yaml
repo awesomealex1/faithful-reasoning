@@ -1,0 +1,10 @@
+defaults:
+  - base_decoder_config
+
+name: ConstrastiveGuided
+method: contrastive_guided
+configs:
+  classifier_path: ./guiding_classifier/nq__lr_l2__seqlen_4.pt
+  classifier_max_sequence_length: 4
+  classifier_num_samples: 4
+  top_p: 0.9
