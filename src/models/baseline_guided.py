@@ -23,7 +23,9 @@ class Baseline(BaseModel):
         self.classifier_max_sequence_length = (
             self.decoder_configs.configs.classifier_max_sequence_length
         )
-        self.classifier_num_samples = self.decoder_configs.configs.num_samples
+        self.classifier_num_samples = (
+            self.decoder_configs.configs.classifier_num_samples
+        )
 
     def _prepare_lookback_ratios(self, lookback_ratios):
         sample = torch.cat(

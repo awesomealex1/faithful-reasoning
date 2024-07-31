@@ -3,4 +3,7 @@ defaults:
 
 name: BaselineGuided
 method: baseline_guided
-configs: null
+configs:
+  classifier_path: ./guiding_classifier/nq__lr_l2__seqlen_4.pt
+  classifier_max_sequence_length: 4
+  classifier_num_samples: 4
