@@ -67,6 +67,21 @@ class BaselineGuided(BaseModel):
             sample = sample[:, :, 1:, :]
 
         # Padding
+        height, width, sequence_length, features = sample.shape
+        if sequence_length < self.classifier_max_sequence_length:
+            padding = np.zeros(
+                (
+                    height,
+                    width,
+                    self.classifier_max_sequence_length - sequence_length,
+                    features,
+                )
+            )
+            sample = np.concatenate((sample, padding), axis=2)
+        elif sequence_length > self.classifier_max_sequence_length:
+            sample = sample[:, :, : self.classifier_max_sequence_length, :]
+
+        return sample
 
     def generate(
         self,
@@ -122,6 +137,7 @@ class BaselineGuided(BaseModel):
                     )
                     lookback_ratios = self._prepare_lookback_ratios(lookback_ratios)
                     print("lookback_ratios: ", lookback_ratios)
+                    print("lookback_ratios.shape: ", lookback_ratios.shape)
                     sample_hallucination_probas += [
                         self.classifier.predict_proba(lookback_ratios)
                     ]
