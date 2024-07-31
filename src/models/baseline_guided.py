@@ -139,8 +139,6 @@ class BaselineGuided(BaseModel):
                         window_attention_maps, component_lengths, generation_start_id
                     )
                     lookback_ratios = self._prepare_lookback_ratios(lookback_ratios)
-                    print("lookback_ratios: ", lookback_ratios)
-                    print("lookback_ratios.shape: ", lookback_ratios.shape)
                     sample_hallucination_probas += [
                         self.classifier.predict_proba(lookback_ratios)
                     ]
@@ -149,6 +147,10 @@ class BaselineGuided(BaseModel):
                 # Get the argmin hallucination probabilities
                 sample_hallucination_probas = np.array(sample_hallucination_probas)
                 min_hallucination_idx = np.argmin(sample_hallucination_probas)
+
+                print("sample_hallucination_probas: ", sample_hallucination_probas)
+                print("min_hallucination_idx: ", min_hallucination_idx)
+                print("len(sample_outputs): ", len(sample_outputs))
 
                 final_outputs = sample_outputs[min_hallucination_idx]
 
