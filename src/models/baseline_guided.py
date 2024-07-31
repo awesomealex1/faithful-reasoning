@@ -121,6 +121,7 @@ class BaselineGuided(BaseModel):
                         window_attention_maps, component_lengths, generation_start_id
                     )
                     lookback_ratios = self._prepare_lookback_ratios(lookback_ratios)
+                    print("lookback_ratios: ", lookback_ratios)
                     sample_hallucination_probas += [
                         self.classifier.predict_proba(lookback_ratios)
                     ]
