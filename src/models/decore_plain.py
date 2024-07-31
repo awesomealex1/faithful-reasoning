@@ -50,7 +50,8 @@ class DeCoRePlain(BaseModel):
         assert not return_attentions, "Return attentions not supported for DeCoRePlain"
         self.model.eval()
 
-        inputs = self._verbalise_input(inputs).to(self.model.device)
+        prompt = inputs["prompted_question"][0]
+        inputs = self._verbalise_input(prompt).to(self.model.device)
 
         # Predict
         with torch.inference_mode():
@@ -102,6 +103,7 @@ class DeCoRePlain(BaseModel):
         prompt,
         answer,
     ):
+        prompt = prompt["prompted_question"][0]
         with torch.no_grad():
             if type(prompt) == list:
                 input_text = prompt + [answer]

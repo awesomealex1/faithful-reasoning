@@ -52,10 +52,7 @@ class DeCoReVanilla(BaseModel):
         ), "Return attentions not supported for DeCoReVanilla"
         self.model.eval()
 
-        print(inputs)
         prompt = inputs["prompted_question"][0]
-        print(prompt)
-
         inputs = self._verbalise_input(prompt).to(self.model.device)
 
         # Predict
@@ -110,6 +107,7 @@ class DeCoReVanilla(BaseModel):
         prompt,
         answer,
     ):
+        prompt = prompt["prompted_question"][0]
         with torch.no_grad():
             if type(prompt) == list:
                 input_text = prompt + [answer]

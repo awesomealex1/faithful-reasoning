@@ -72,6 +72,7 @@ class BaselineMaskedNonRetrievalHead(BaseModel):
         prompt,
         answer,
     ):
+        prompt = prompt["prompted_question"][0]
         with torch.no_grad():
             if type(prompt) == list:
                 input_text = prompt + [answer]
