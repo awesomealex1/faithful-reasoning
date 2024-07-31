@@ -181,7 +181,7 @@ class DeCoReGuided(BaseModel):
 
                 next_token_logits = (1 + alpha) * base_outputs.logits[
                     0, -1
-                ] - alpha * hallucinated_logits[0].logits[0, -1]
+                ] - alpha * hallucinated_logits[0][0, -1]
 
                 base_past_kv = base_outputs.past_key_values
                 hallucinated_past_kv = hallucinated_past_kvs[0]
