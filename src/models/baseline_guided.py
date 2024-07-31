@@ -28,6 +28,7 @@ class BaselineGuided(BaseModel):
         self.classifier_num_samples = (
             self.decoder_configs.configs.classifier_num_samples
         )
+        self.top_p = self.decoder_configs.configs.top_p
 
     def _prepare_lookback_ratios(self, lookback_ratios):
         sample = torch.cat(
@@ -86,6 +87,28 @@ class BaselineGuided(BaseModel):
 
         return np.array([sample])
 
+    def nucleus_sampling(self, logits):
+        # Apply softmax to convert logits to probabilities
+        probs = torch.softmax(logits, dim=-1)
+
+        sorted_probs, sorted_indices = torch.sort(probs, descending=True)
+        cumulative_probs = torch.cumsum(sorted_probs, dim=-1)
+
+        # Identify the cutoff index for top-p sampling
+        cutoff_index = torch.where(cumulative_probs > self.top_p)[0][0].item()
+
+        # Filter out tokens beyond this cutoff
+        sorted_probs = sorted_probs[: cutoff_index + 1]
+        sorted_indices = sorted_indices[: cutoff_index + 1]
+
+        # Normalize the probabilities after the cutoff
+        sorted_probs = sorted_probs / sorted_probs.sum()
+
+        # Sample the next token from the filtered distribution
+        next_token_id = torch.multinomial(sorted_probs, num_samples=1)
+
+        return sorted_indices[next_token_id]
+
     def generate(
         self,
         inputs,
@@ -127,9 +150,12 @@ class BaselineGuided(BaseModel):
                             attn_mode="torch",
                         )
                         sample_past_kv = outputs.past_key_values
-                        last_input_token = outputs.logits[0, -1].argmax()
-
                         window_attention_maps += [outputs.attentions]
+
+                        last_input_token = self.nucleus_sampling(
+                            outputs.logits[0, -1, :]
+                        )
+
                         temp_outputs += [outputs]
 
                         if last_input_token.item() == self.tokenizer.eos_token_id:
