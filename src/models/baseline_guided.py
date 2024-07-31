@@ -8,7 +8,7 @@ from src.configs import DecoderConfigs, ModelConfigs
 from src.models.base_model import BaseModel
 
 
-class Baseline(BaseModel):
+class BaselineGuided(BaseModel):
     def __init__(
         self,
         model_configs: ModelConfigs,
