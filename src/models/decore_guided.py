@@ -35,7 +35,6 @@ class DeCoReGuided(BaseModel):
         self.classifier_num_samples = (
             self.decoder_configs.configs.classifier_num_samples
         )
-        self.top_p = self.decoder_configs.configs.top_p
 
     def _load_retrieval_heads(self):
         self.num_retrieval_heads = self.decoder_configs.configs.num_retrieval_heads
