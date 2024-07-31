@@ -81,7 +81,10 @@ class BaselineGuided(BaseModel):
         elif sequence_length > self.classifier_max_sequence_length:
             sample = sample[:, :, : self.classifier_max_sequence_length, :]
 
-        return sample
+        # Flatten
+        sample = sample.reshape(-1)
+
+        return np.array([sample])
 
     def generate(
         self,
