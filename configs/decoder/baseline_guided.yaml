@@ -1,0 +1,6 @@
+defaults:
+  - base_decoder_config
+
+name: BaselineGuided
+method: baseline_guided
+configs: null

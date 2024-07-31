@@ -1,4 +1,5 @@
 from .baseline import Baseline
+from .baseline_guided import BaselineGuided
 from .baseline_masked_hallucination_head import BaselineMaskedHallucinationHead
 from .baseline_masked_honest_head import BaselineMaskedHonestHead
 from .baseline_masked_retrieval_head import BaselineMaskedRetrievalHead
