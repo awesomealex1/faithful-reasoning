@@ -45,7 +45,11 @@ class DeCoReVanilla(BaseModel):
     def generate(
         self,
         inputs,
+        return_attentions: bool = False,
     ) -> dict:
+        assert (
+            not return_attentions
+        ), "Return attentions not supported for DeCoReVanilla"
         self.model.eval()
 
         inputs = self._verbalise_input(inputs).to(self.model.device)
@@ -95,7 +99,7 @@ class DeCoReVanilla(BaseModel):
                 generated_ids, skip_special_tokens=True
             )
 
-        return {"decoded_text": decoded_text}
+        return {"decoded_text": decoded_text, "attentions": {}}
 
     def lm_score(
         self,
