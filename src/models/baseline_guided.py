@@ -140,7 +140,9 @@ class BaselineGuided(BaseModel):
                     )
                     lookback_ratios = self._prepare_lookback_ratios(lookback_ratios)
                     sample_hallucination_probas += [
-                        self.classifier.predict_proba(lookback_ratios)
+                        self.classifier.predict_proba(lookback_ratios)[
+                            0, 0
+                        ]  # 0 means most likely to be incorrect
                     ]
                     sample_outputs += [temp_outputs]
 
@@ -148,6 +150,9 @@ class BaselineGuided(BaseModel):
                 sample_hallucination_probas = np.array(sample_hallucination_probas)
                 min_hallucination_idx = np.argmin(sample_hallucination_probas)
 
+                for i, output in enumerate(sample_outputs):
+                    print(i)
+                    print([o.logits[0, -1].argmax() for o in output])
                 print("sample_hallucination_probas: ", sample_hallucination_probas)
                 print("min_hallucination_idx: ", min_hallucination_idx)
                 print("len(sample_outputs): ", len(sample_outputs))
