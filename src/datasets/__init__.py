@@ -4,3 +4,5 @@ from .truthfulqa import TruthfulQA
 from .memo_trap import MemoTrap
 from .popqa import PopQA
 from .triviaqa import TriviaQA
+from .ifeval import IFEval
+from .halueval import HaluEval
