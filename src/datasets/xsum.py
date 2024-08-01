@@ -7,14 +7,6 @@ from src.datasets.base_dataset import BaseDataset
 
 
 class XSum(BaseDataset):
-    available_variations = {
-        "oracle": "nq-open-oracle.jsonl.gz",
-        "closed_book": "nq-open-oracle.jsonl.gz",
-        "gold_at_0": "nq-open-10_total_documents_gold_at_0.jsonl.gz",
-        "gold_at_4": "nq-open-10_total_documents_gold_at_4.jsonl.gz",
-        "gold_at_9": "nq-open-10_total_documents_gold_at_9.jsonl.gz",
-    }
-
     def __init__(
         self,
         data_configs: DataConfigs,
