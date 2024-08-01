@@ -45,19 +45,20 @@ class XSum(BaseDataset):
             "Generate a summary comprising of 1 sentence for the given article."
         ]
 
-        prompted_contexts = f"Article: {context}+\n"
-
+        verbalised_question = f"Article: {context}+\n"
         answer_prefix = "Summary: "
         if self.kwargs["use_chat_template"]:
-            input_text_prompt = [instruction + [f"{prompted_contexts}{answer_prefix}"]]
+            input_text_prompt = [
+                instruction + [f"{verbalised_question}{answer_prefix}"]
+            ]
         else:
             instruction = instruction[0] + "\n\n"
-            input_text_prompt = instruction + (f"{prompted_contexts}{answer_prefix}")
+            input_text_prompt = instruction + (f"{verbalised_question}{answer_prefix}")
         return {
             "verbalised_instruction": instruction,
             "verbalised_icl_demo": "",
-            "verbalised_contexts": prompted_contexts,
-            "verbalised_question": "",
+            "verbalised_contexts": "",
+            "verbalised_question": verbalised_question,
             "verbalised_answer_prefix": answer_prefix,
             "prompted_question": input_text_prompt,
         }
