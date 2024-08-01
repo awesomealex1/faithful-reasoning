@@ -79,50 +79,58 @@ class XSum:
             self.bert_score = load("bertscore")
 
     def __call__(self, predictions):
-        completion = predictions["decoded_text"]
+        all_results = []
+        for prediction in predictions:
+            completion = prediction["decoded_text"]
 
-        document = predictions["document"]
-        gold_summary = predictions["summary"]
+            document = prediction["document"]
+            gold_summary = prediction["summary"]
 
-        true_refs = [predictions["summary"]]
-        all_refs = true_refs
+            true_refs = [prediction["summary"]]
+            all_refs = true_refs
 
-        # ROUGE-N
-        rouge_scores = [rouge([ref], [completion]) for ref in all_refs]
-        # ROUGE-1
-        rouge1_scores = [score["rouge1"] for score in rouge_scores]
-        # ROUGE-2
-        rouge2_scores = [score["rouge2"] for score in rouge_scores]
-        # ROUGE-L
-        rougeL_scores = [score["rougeLsum"] for score in rouge_scores]
+            # ROUGE-N
+            rouge_scores = [rouge([ref], [completion]) for ref in all_refs]
+            # ROUGE-1
+            rouge1_scores = [score["rouge1"] for score in rouge_scores]
+            # ROUGE-2
+            rouge2_scores = [score["rouge2"] for score in rouge_scores]
+            # ROUGE-L
+            rougeL_scores = [score["rougeLsum"] for score in rouge_scores]
 
-        self.maybe_init_factkb()
-        input_factkb = [[completion, document]]
-        factkb_tokens = self.factkb_tokenizer(
-            input_factkb, return_tensors="pt", padding="max_length", truncation=True
-        ).to(self.factkb_model.device)
-        factkb_logits = self.factkb_model(**factkb_tokens).logits
-        factkb_res = torch.softmax(factkb_logits, dim=1)
+            self.maybe_init_factkb()
+            input_factkb = [[completion, document]]
+            factkb_tokens = self.factkb_tokenizer(
+                input_factkb, return_tensors="pt", padding="max_length", truncation=True
+            ).to(self.factkb_model.device)
+            factkb_logits = self.factkb_model(**factkb_tokens).logits
+            factkb_res = torch.softmax(factkb_logits, dim=1)
 
-        self.maybe_init_bertscore()
-        bert_score_res = self.bert_score.compute(
-            predictions=[completion],
-            references=[gold_summary],
-            model_type="microsoft/deberta-xlarge-mnli",
-            lang="en",
-        )
+            self.maybe_init_bertscore()
+            bert_score_res = self.bert_score.compute(
+                predictions=[completion],
+                references=[gold_summary],
+                model_type="microsoft/deberta-xlarge-mnli",
+                lang="en",
+            )
 
-        res = {
-            "rouge1": rouge1_scores[0],
-            "rouge2": rouge2_scores[0],
-            "rougeL": rougeL_scores[0],
-            "factKB": float(factkb_res[0][1]),
-            "bertscore_precision": float(bert_score_res["precision"][0]),
-            "bertscore_recall": float(bert_score_res["recall"][0]),
-            "bertscore_f1": float(bert_score_res["f1"][0]),
+            res = {
+                "rouge1": rouge1_scores[0],
+                "rouge2": rouge2_scores[0],
+                "rougeL": rougeL_scores[0],
+                "factKB": float(factkb_res[0][1]),
+                "bertscore_precision": float(bert_score_res["precision"][0]),
+                "bertscore_recall": float(bert_score_res["recall"][0]),
+                "bertscore_f1": float(bert_score_res["f1"][0]),
+            }
+
+            # Get the mean
+            res["aggregate"] = np.mean(list(res.values()))
+
+            all_results.append(res)
+
+        metrics = {
+            key: np.mean([res[key] for res in all_results]) for key in all_results[0]
         }
 
-        # Get the mean
-        res["aggregate"] = np.mean(list(res.values()))
-
-        return res
+        return metrics
