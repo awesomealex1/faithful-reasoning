@@ -18,17 +18,26 @@ class DoLa(BaseModel):
         model_configs: ModelConfigs,
         decoder_configs: DecoderConfigs,
     ):
-        super().__init__(model_configs, decoder_configs)
+        # super().__init__(model_configs, decoder_configs)
 
         self.model = AutoModelForCausalLM.from_pretrained(
             model_configs.configs.model_name_or_path,
             torch_dtype=torch.bfloat16,
             device_map="auto",
         ).eval()
+        self.tokenizer = AutoTokenizer.from_pretrained(
+            model_configs.configs.model_name_or_path
+        )
 
         if self.tokenizer.pad_token_id is None:
             self.tokenizer.pad_token = self.tokenizer.eos_token
             self.tokenizer.pad_token_id = self.tokenizer.eos_token_id
+
+        self.max_seq_len = model_configs.configs.max_seq_len
+        self.max_new_tokens = model_configs.configs.max_new_tokens
+
+        self.model_configs = model_configs
+        self.decoder_configs = decoder_configs
 
         self.dola_layers = self.decoder_configs.configs.dola_layers
 
