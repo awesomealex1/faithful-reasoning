@@ -3,6 +3,11 @@ from typing import List, Optional, Tuple, Union
 import torch
 from torch.nn import functional as F
 
+from transformers import (
+    AutoModelForCausalLM,
+    AutoTokenizer,
+)
+
 from src.configs import DecoderConfigs, ModelConfigs
 from src.models.base_model import BaseModel
 
@@ -14,6 +19,16 @@ class DoLa(BaseModel):
         decoder_configs: DecoderConfigs,
     ):
         super().__init__(model_configs, decoder_configs)
+
+        self.model = AutoModelForCausalLM.from_pretrained(
+            model_configs.configs.model_name_or_path,
+            torch_dtype=torch.bfloat16,
+            device_map="auto",
+        ).eval()
+
+        if self.tokenizer.pad_token_id is None:
+            self.tokenizer.pad_token = self.tokenizer.eos_token
+            self.tokenizer.pad_token_id = self.tokenizer.eos_token_id
 
         self.dola_layers = self.decoder_configs.configs.dola_layers
 
