@@ -123,9 +123,6 @@ class XSum:
                 "bertscore_f1": float(bert_score_res["f1"][0]),
             }
 
-            # Get the mean
-            res["aggregate"] = np.mean(list(res.values()))
-
             all_results.append(res)
 
         metrics = {
