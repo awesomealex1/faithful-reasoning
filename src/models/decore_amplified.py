@@ -158,7 +158,8 @@ class DeCoReAmplified(BaseModel):
             ]
 
             base_logits = base_logits.log_softmax(dim=-1)
-            hallucinated_logits = retrieval_mask_logits.log_softmax(dim=-1)
+            random_mask_logits = random_mask_logits.log_softmax(dim=-1)
+            retrieval_mask_logits = retrieval_mask_logits.log_softmax(dim=-1)
 
             diff_logits = base_logits + self.decoder_configs.configs.alpha * (
                 random_mask_logits - retrieval_mask_logits
