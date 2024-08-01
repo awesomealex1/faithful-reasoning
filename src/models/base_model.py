@@ -200,7 +200,7 @@ class BaseModel(ABC):
             if inputs["verbalised_answer_prefix"]:
                 answer_prefix_tokens = self._verbalise_input(
                     inputs["verbalised_answer_prefix"]
-                )[1:]
+                )[:, 1:]
                 answer_prefix_length = answer_prefix_tokens.shape[-1]
             else:
                 answer_prefix_tokens = None
