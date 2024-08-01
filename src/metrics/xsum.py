@@ -83,14 +83,8 @@ class XSum:
         for prediction in predictions:
             completion = prediction["predicted_answer"]
 
-            print("prediction[document]: ", prediction["document"])
-            print("prediction[summary]: ", prediction["summary"])
-
             document = prediction["document"][0]
             gold_summary = prediction["summary"][0]
-
-            print("document: ", document)
-            print("gold_summary: ", gold_summary)
 
             all_refs = [gold_summary]
 
