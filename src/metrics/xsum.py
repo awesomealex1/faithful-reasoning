@@ -83,11 +83,16 @@ class XSum:
         for prediction in predictions:
             completion = prediction["predicted_answer"]
 
-            document = prediction["document"]
-            gold_summary = prediction["summary"]
+            print("prediction[document]: ", prediction["document"])
+            print("prediction[summary]: ", prediction["summary"])
 
-            true_refs = [prediction["summary"]]
-            all_refs = true_refs
+            document = prediction["document"][0]
+            gold_summary = prediction["summary"][0]
+
+            print("document: ", document)
+            print("gold_summary: ", gold_summary)
+
+            all_refs = [gold_summary]
 
             # ROUGE-N
             rouge_scores = [rouge([ref], [completion]) for ref in all_refs]
