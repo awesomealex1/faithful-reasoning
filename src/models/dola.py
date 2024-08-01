@@ -46,7 +46,9 @@ class DoLa(BaseModel):
                 max_new_tokens=self.max_new_tokens,
                 dola_layers=self.dola_layers,
             )
-            decoded_text = self.tokenizer.decode(outputs, skip_special_tokens=True)
+            decoded_text = self.tokenizer.decode(
+                outputs[0, tokenised_inputs.size(1) :], skip_special_tokens=True
+            )
         return {"decoded_text": decoded_text, "attentions": {}}
 
     def lm_score(
