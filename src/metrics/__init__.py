@@ -6,3 +6,4 @@ from .triviaqa import TriviaQA
 from .popqa import PopQA
 from .ifeval import IFEval
 from .halueval import HaluEval
+from .xsum import XSum
