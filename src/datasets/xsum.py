@@ -51,10 +51,8 @@ class XSum(BaseDataset):
         if self.kwargs["use_chat_template"]:
             input_text_prompt = [instruction + [f"{prompted_contexts}{answer_prefix}"]]
         else:
-            instruction = instruction[0]
-            input_text_prompt = (
-                instruction + "\n\n" + (f"{prompted_contexts}{answer_prefix}")
-            )
+            instruction = instruction[0] + "\n\n"
+            input_text_prompt = instruction + (f"{prompted_contexts}{answer_prefix}")
         return {
             "verbalised_instruction": instruction,
             "verbalised_icl_demo": "",
