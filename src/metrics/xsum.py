@@ -81,7 +81,7 @@ class XSum:
     def __call__(self, predictions):
         all_results = []
         for prediction in predictions:
-            completion = prediction["decoded_text"]
+            completion = prediction["predicted_answer"]
 
             document = prediction["document"]
             gold_summary = prediction["summary"]
