@@ -164,21 +164,47 @@ class BaseModel(ABC):
         else:
             bos_length = 1
             # Start from 1 to skip the BOS token
-            instruction_length = self._verbalise_input(
-                inputs["verbalised_instruction"]
-            )[:, 1:].shape[-1]
-            icl_demo_length = self._verbalise_input(inputs["verbalised_icl_demo"])[
-                :, 1:
-            ].shape[-1]
-            contexts_length = self._verbalise_input(inputs["verbalised_contexts"])[
-                :, 1:
-            ].shape[-1]
-            question_length = self._verbalise_input(inputs["verbalised_question"])[
-                :, 1:
-            ].shape[-1]
-            answer_prefix_length = self._verbalise_input(
-                inputs["verbalised_answer_prefix"]
-            )[1:].shape[-1]
+            if inputs["verbalised_instruction"]:
+                instruction_tokens = self._verbalise_input(
+                    inputs["verbalised_instruction"]
+                )[:, 1:]
+                instruction_length = instruction_tokens.shape[-1]
+            else:
+                instruction_tokens = None
+                instruction_length = 0
+            if inputs["verbalised_icl_demo"]:
+                icl_demo_tokens = self._verbalise_input(inputs["verbalised_icl_demo"])[
+                    :, 1:
+                ]
+                icl_demo_length = icl_demo_tokens.shape[-1]
+            else:
+                icl_demo_tokens = None
+                icl_demo_length = 0
+            if inputs["verbalised_contexts"]:
+                contexts_tokens = self._verbalise_input(inputs["verbalised_contexts"])[
+                    :, 1:
+                ]
+                contexts_length = contexts_tokens.shape[-1]
+            else:
+                contexts_tokens = None
+                contexts_length = 0
+            if inputs["verbalised_question"]:
+                question_tokens = self._verbalise_input(inputs["verbalised_question"])[
+                    :, 1:
+                ]
+                question_length = question_tokens.shape[-1]
+            else:
+                question_tokens = None
+                question_length = 0
+
+            if inputs["verbalised_answer_prefix"]:
+                answer_prefix_tokens = self._verbalise_input(
+                    inputs["verbalised_answer_prefix"]
+                )[1:]
+                answer_prefix_length = answer_prefix_tokens.shape[-1]
+            else:
+                answer_prefix_tokens = None
+                answer_prefix_length = 0
 
         sum_lengths = (
             bos_length
