@@ -7,3 +7,4 @@ configs:
   retrieval_heads_dir: ./retrieval_heads/
   num_retrieval_heads: 50
   alpha: 0.5
+  post_softmax: False

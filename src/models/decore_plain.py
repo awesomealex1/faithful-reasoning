@@ -129,7 +129,8 @@ class DeCoRePlain(BaseModel):
                 base_logits - self.decoder_configs.configs.alpha * hallucinated_logits
             )
 
-            diff_logits = diff_logits.log_softmax(dim=-1)
+            if self.decoder_configs.configs.post_softmax:
+                diff_logits = diff_logits.log_softmax(dim=-1)
 
             log_probs = (
                 diff_logits[range(diff_logits.shape[0]), continue_ids].sum().item()

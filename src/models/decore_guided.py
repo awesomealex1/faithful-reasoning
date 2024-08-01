@@ -139,7 +139,7 @@ class DeCoReGuided(BaseModel):
             base_past_kv = copy.deepcopy(input_logits.past_key_values)
             hallucinated_past_kv = copy.deepcopy(input_logits.past_key_values)
             alphas = []
-            for _ in range(self.max_new_tokens):
+            for new_token_idx in range(self.max_new_tokens):
                 last_input_token = last_input_token.view(1, 1)
 
                 base_outputs = self.model(
@@ -149,35 +149,39 @@ class DeCoReGuided(BaseModel):
                     attn_mode="torch",
                 )
 
-                hallucinated_past_kvs = [hallucinated_past_kv]
-                hallucinated_logits = []
-                hallucinated_attention_maps = []
-                hallucinated_last_input_token = last_input_token
-                for _ in range(self.classifier_max_sequence_length):
-                    hallucinated_last_input_token = hallucinated_last_input_token.view(
-                        1, 1
-                    )
-                    hallucinated_output = self.model(
-                        input_ids=hallucinated_last_input_token,
-                        past_key_values=hallucinated_past_kvs[-1],
-                        use_cache=True,
-                        output_attentions=True,
-                        attn_mode="torch",
-                        block_list=self.retrieval_heads,
-                    )
-                    hallucinated_past_kvs += [hallucinated_output.past_key_values]
-                    hallucinated_logits += [hallucinated_output.logits]
-                    hallucinated_attention_maps += [hallucinated_output.attentions]
-                    hallucinated_last_input_token = hallucinated_output.logits[
-                        0, -1
-                    ].argmax()
+                if new_token_idx == 0:
+                    # Just calculate the
+                    hallucinated_past_kvs = [hallucinated_past_kv]
+                    hallucinated_logits = []
+                    hallucinated_attention_maps = []
+                    hallucinated_last_input_token = last_input_token
+                    for _ in range(self.classifier_max_sequence_length):
+                        hallucinated_last_input_token = (
+                            hallucinated_last_input_token.view(1, 1)
+                        )
+                        hallucinated_output = self.model(
+                            input_ids=hallucinated_last_input_token,
+                            past_key_values=hallucinated_past_kvs[-1],
+                            use_cache=True,
+                            output_attentions=True,
+                            attn_mode="torch",
+                            block_list=self.retrieval_heads,
+                        )
+                        hallucinated_past_kvs += [hallucinated_output.past_key_values]
+                        hallucinated_logits += [hallucinated_output.logits]
+                        hallucinated_attention_maps += [hallucinated_output.attentions]
+                        hallucinated_last_input_token = hallucinated_output.logits[
+                            0, -1
+                        ].argmax()
 
-                lookback_ratios = self.get_lookback_ratios(
-                    hallucinated_attention_maps, component_lengths, generation_start_id
-                )
-                lookback_ratios = self._prepare_lookback_ratios(lookback_ratios)
-                # Get index 0 which means most likely to be incorrect
-                alpha = self.classifier.predict_proba(lookback_ratios)[0, 0]
+                    lookback_ratios = self.get_lookback_ratios(
+                        hallucinated_attention_maps,
+                        component_lengths,
+                        generation_start_id,
+                    )
+                    lookback_ratios = self._prepare_lookback_ratios(lookback_ratios)
+                    # Get index 0 which means most likely to be incorrect
+                    alpha = self.classifier.predict_proba(lookback_ratios)[0, 0]
 
                 next_token_logits = (1 + alpha) * base_outputs.logits[
                     0, -1
@@ -229,7 +233,8 @@ class DeCoReGuided(BaseModel):
                 - self.decoder_configs.configs.alpha * hallucinated_logits
             )
 
-            diff_logits = diff_logits.log_softmax(dim=-1)
+            if self.decoder_configs.configs.post_softmax:
+                diff_logits = diff_logits.log_softmax(dim=-1)
 
             log_probs = (
                 diff_logits[range(diff_logits.shape[0]), continue_ids].sum().item()
