@@ -127,6 +127,9 @@ class DeCoReVanilla(BaseModel):
                 0, prefix_ids.shape[-1] - 1 : -1, :
             ]
 
+            base_logits = base_logits.log_softmax(dim=-1)
+            hallucinated_logits = hallucinated_logits.log_softmax(dim=-1)
+
             # base_logits = base_logits.log_softmax(dim=-1)
             # hallucinated_logits = hallucinated_logits.log_softmax(dim=-1)
             diff_logits = (
