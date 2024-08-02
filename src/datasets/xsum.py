@@ -45,7 +45,7 @@ class XSum(BaseDataset):
             "Generate a summary comprising of 1 sentence for the given article."
         ]
 
-        verbalised_question = f"Article: {context}+\n"
+        verbalised_question = f"Article: {context}\n\n"
         answer_prefix = "Summary: "
         if self.kwargs["use_chat_template"]:
             input_text_prompt = [
