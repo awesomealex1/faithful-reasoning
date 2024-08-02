@@ -1,0 +1,9 @@
+defaults:
+  - base_decoder_config
+
+name: DeCoReVanilla
+method: decore_vanilla
+configs:
+  retrieval_heads_dir: ./retrieval_heads/
+  num_retrieval_heads: 50
+  post_softmax: False

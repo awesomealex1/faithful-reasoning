@@ -10,5 +10,6 @@ from .decore_vanilla import DeCoReVanilla
 from .decore_amplified import DeCoReAmplified
 from .decore_plain import DeCoRePlain
 from .decore_guided import DeCoReGuided
+from .decore_entropy import DeCoReEntropy
 from .dola import DoLa
 from .icd import ICD
