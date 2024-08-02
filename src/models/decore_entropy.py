@@ -130,7 +130,9 @@ class DeCoReEntropy(BaseModel):
                 0, prefix_ids.shape[-1] - 1 : -1, :
             ]
 
-            alpha = self._calculate_entropy(base_logits[0, -1, :])
+            print(base_logits.shape)
+
+            alpha = self._calculate_entropy(base_logits[:, -1])
 
             base_logits = base_logits.log_softmax(dim=-1)
             hallucinated_logits = hallucinated_logits.log_softmax(dim=-1)
