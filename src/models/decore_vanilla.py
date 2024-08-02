@@ -125,7 +125,6 @@ class DeCoReVanilla(BaseModel):
             # initial_past_kv = copy.deepcopy(input_logits.past_key_values)
             for _ in range(self.max_new_tokens):
                 input_tokens = input_tokens.view(1, -1)
-                print(input_tokens.shape)
 
                 base_outputs = self.model(
                     input_ids=input_tokens,
