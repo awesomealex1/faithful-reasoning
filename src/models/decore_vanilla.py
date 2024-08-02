@@ -150,6 +150,8 @@ class DeCoReVanilla(BaseModel):
 
                 last_input_token = next_token_logits.argmax()
                 generated_ids.append(last_input_token.item())
+                print(input_tokens)
+                print(last_input_token)
                 input_tokens = torch.cat(
                     [input_tokens, last_input_token.unsqueeze(0)], dim=-1
                 )
