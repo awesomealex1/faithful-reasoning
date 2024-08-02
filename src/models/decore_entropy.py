@@ -89,8 +89,6 @@ class DeCoReEntropy(BaseModel):
                 base_past_kv = base_outputs.past_key_values
                 hallucinated_past_kv = hallucinated_outputs.past_key_values
 
-                print(base_outputs.logits.shape)
-
                 alpha = self._calculate_entropy(base_outputs.logits[0, -1])
 
                 next_token_logits = (1 + alpha) * base_outputs.logits[
@@ -132,8 +130,7 @@ class DeCoReEntropy(BaseModel):
                 0, prefix_ids.shape[-1] - 1 : -1, :
             ]
 
-            print(base_logits.shape)
-
+            # TODO: Probably should take the mean entropy of all tokens to be fair
             alpha = self._calculate_entropy(base_logits[-1, :])
 
             base_logits = base_logits.log_softmax(dim=-1)
