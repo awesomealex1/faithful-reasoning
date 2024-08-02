@@ -117,25 +117,26 @@ class DeCoReVanilla(BaseModel):
 
         # Predict
         with torch.inference_mode():
-            input_logits = self.model(
-                input_ids=inputs[:, :-1], use_cache=True, return_dict=True
-            )
+            # input_logits = self.model(
+            #     input_ids=inputs[:, :-1], use_cache=True, return_dict=True
+            # )
             generated_ids = []
-            input_tokens = inputs[:, -1]
-            initial_past_kv = copy.deepcopy(input_logits.past_key_values)
+            input_tokens = inputs
+            # initial_past_kv = copy.deepcopy(input_logits.past_key_values)
             for _ in range(self.max_new_tokens):
                 input_tokens = input_tokens.view(1, -1)
+                print(input_tokens.shape)
 
                 base_outputs = self.model(
                     input_ids=input_tokens,
-                    past_key_values=initial_past_kv,
-                    use_cache=True,
+                    # past_key_values=initial_past_kv,
+                    # use_cache=True,
                     attn_mode="torch",
                 )
                 hallucinated_outputs = self.model(
                     input_ids=input_tokens,
-                    past_key_values=initial_past_kv,
-                    use_cache=True,
+                    # past_key_values=initial_past_kv,
+                    # use_cache=True,
                     attn_mode="torch",
                     block_list=self.retrieval_heads,
                 )
