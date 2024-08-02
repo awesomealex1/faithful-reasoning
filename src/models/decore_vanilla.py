@@ -124,7 +124,9 @@ class DeCoReVanilla(BaseModel):
             input_tokens = inputs[:, -1]
             initial_past_kv = copy.deepcopy(input_logits.past_key_values)
             for _ in range(self.max_new_tokens):
+                print(input_tokens)
                 input_tokens = input_tokens.view(1, -1)
+                print(input_tokens)
 
                 base_outputs = self.model(
                     input_ids=input_tokens,
@@ -150,10 +152,8 @@ class DeCoReVanilla(BaseModel):
 
                 last_input_token = next_token_logits.argmax()
                 generated_ids.append(last_input_token.item())
-                print(input_tokens)
-                print(last_input_token)
                 input_tokens = torch.cat(
-                    [input_tokens, last_input_token.unsqueeze(0)], dim=-1
+                    [input_tokens, last_input_token.view(1, 1)], dim=-1
                 )
                 if last_input_token.item() == self.tokenizer.eos_token_id:
                     break
