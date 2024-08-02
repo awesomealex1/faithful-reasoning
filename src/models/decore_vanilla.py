@@ -42,66 +42,6 @@ class DeCoReVanilla(BaseModel):
             [int(ll) for ll in l[0].split("-")] for l in stable_block_list
         ][: self.num_retrieval_heads]
 
-    # def generate(
-    #     self,
-    #     inputs,
-    #     return_attentions: bool = False,
-    # ) -> dict:
-    #     assert (
-    #         not return_attentions
-    #     ), "Return attentions not supported for DeCoReVanilla"
-    #     self.model.eval()
-
-    #     prompt = inputs["prompted_question"][0]
-    #     inputs = self._verbalise_input(prompt).to(self.model.device)
-
-    #     # Predict
-    #     with torch.inference_mode():
-    #         input_logits = self.model(
-    #             input_ids=inputs[:, :-1], use_cache=True, return_dict=True
-    #         )
-    #         generated_ids = []
-    #         last_input_token = inputs[:, -1]
-    #         base_past_kv = copy.deepcopy(input_logits.past_key_values)
-    #         hallucinated_past_kv = copy.deepcopy(input_logits.past_key_values)
-    #         for _ in range(self.max_new_tokens):
-    #             last_input_token = last_input_token.view(1, 1)
-
-    #             base_outputs = self.model(
-    #                 input_ids=last_input_token,
-    #                 past_key_values=base_past_kv,
-    #                 use_cache=True,
-    #                 attn_mode="torch",
-    #             )
-    #             hallucinated_outputs = self.model(
-    #                 input_ids=last_input_token,
-    #                 past_key_values=hallucinated_past_kv,
-    #                 use_cache=True,
-    #                 attn_mode="torch",
-    #                 block_list=self.retrieval_heads,
-    #             )
-
-    #             base_past_kv = base_outputs.past_key_values
-    #             hallucinated_past_kv = hallucinated_outputs.past_key_values
-
-    #             next_token_logits = (
-    #                 1 + self.decoder_configs.configs.alpha
-    #             ) * base_outputs.logits[
-    #                 0, -1
-    #             ] - self.decoder_configs.configs.alpha * hallucinated_outputs.logits[
-    #                 0, -1
-    #             ]
-
-    #             last_input_token = next_token_logits.argmax()
-    #             generated_ids.append(last_input_token.item())
-    #             if last_input_token.item() == self.tokenizer.eos_token_id:
-    #                 break
-    #         decoded_text = self.tokenizer.decode(
-    #             generated_ids, skip_special_tokens=True
-    #         )
-
-    #     return {"decoded_text": decoded_text, "attentions": {}}
-
     def generate(
         self,
         inputs,
@@ -117,28 +57,32 @@ class DeCoReVanilla(BaseModel):
 
         # Predict
         with torch.inference_mode():
-            # input_logits = self.model(
-            #     input_ids=inputs[:, :-1], use_cache=True, return_dict=True
-            # )
+            input_logits = self.model(
+                input_ids=inputs[:, :-1], use_cache=True, return_dict=True
+            )
             generated_ids = []
-            input_tokens = inputs
-            # initial_past_kv = copy.deepcopy(input_logits.past_key_values)
+            last_input_token = inputs[:, -1]
+            base_past_kv = copy.deepcopy(input_logits.past_key_values)
+            hallucinated_past_kv = copy.deepcopy(input_logits.past_key_values)
             for _ in range(self.max_new_tokens):
-                input_tokens = input_tokens.view(1, -1)
+                last_input_token = last_input_token.view(1, 1)
 
                 base_outputs = self.model(
-                    input_ids=input_tokens,
-                    # past_key_values=initial_past_kv,
-                    # use_cache=True,
+                    input_ids=last_input_token,
+                    past_key_values=base_past_kv,
+                    use_cache=True,
                     attn_mode="torch",
                 )
                 hallucinated_outputs = self.model(
-                    input_ids=input_tokens,
-                    # past_key_values=initial_past_kv,
-                    # use_cache=True,
+                    input_ids=last_input_token,
+                    past_key_values=hallucinated_past_kv,
+                    use_cache=True,
                     attn_mode="torch",
                     block_list=self.retrieval_heads,
                 )
+
+                base_past_kv = base_outputs.past_key_values
+                hallucinated_past_kv = hallucinated_outputs.past_key_values
 
                 next_token_logits = (
                     1 + self.decoder_configs.configs.alpha
@@ -150,9 +94,6 @@ class DeCoReVanilla(BaseModel):
 
                 last_input_token = next_token_logits.argmax()
                 generated_ids.append(last_input_token.item())
-                input_tokens = torch.cat(
-                    [input_tokens, last_input_token.view(1, 1)], dim=-1
-                )
                 if last_input_token.item() == self.tokenizer.eos_token_id:
                     break
             decoded_text = self.tokenizer.decode(
