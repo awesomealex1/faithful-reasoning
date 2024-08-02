@@ -41,23 +41,23 @@ class XSum(BaseDataset):
         return data
 
     def build_prompt(self, context):
-        verbalised_contexts = f"Article: {context}\n\n"
-        verbalised_question = (
-            f"Generate a summary comprising of 1 sentence for the article.\n"
-        )
+        instruction = [
+            "Generate a summary comprising of 1 sentence for the given article."
+        ]
+
+        verbalised_question = f"Article: {context}\n\n"
         answer_prefix = "Summary: "
         if self.kwargs["use_chat_template"]:
             input_text_prompt = [
-                [f"{verbalised_contexts}{verbalised_question}{answer_prefix}"]
+                instruction + [f"{verbalised_question}{answer_prefix}"]
             ]
         else:
-            input_text_prompt = (
-                f"{verbalised_contexts}{verbalised_question}{answer_prefix}"
-            )
+            instruction = instruction[0] + "\n\n"
+            input_text_prompt = instruction + (f"{verbalised_question}{answer_prefix}")
         return {
-            "verbalised_instruction": "",
+            "verbalised_instruction": instruction,
             "verbalised_icl_demo": "",
-            "verbalised_contexts": verbalised_contexts,
+            "verbalised_contexts": "",
             "verbalised_question": verbalised_question,
             "verbalised_answer_prefix": answer_prefix,
             "prompted_question": input_text_prompt,
