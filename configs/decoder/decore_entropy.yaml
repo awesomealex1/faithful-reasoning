@@ -1,8 +1,8 @@
 defaults:
   - base_decoder_config
 
-name: DeCoReVanilla
-method: decore_vanilla
+name: DeCoReEntropy
+method: decore_entropy
 configs:
   retrieval_heads_dir: ./retrieval_heads/
   num_retrieval_heads: 50
