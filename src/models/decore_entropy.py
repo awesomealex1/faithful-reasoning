@@ -69,6 +69,7 @@ class DeCoReEntropy(BaseModel):
             last_input_token = inputs[:, -1]
             base_past_kv = copy.deepcopy(input_logits.past_key_values)
             hallucinated_past_kv = copy.deepcopy(input_logits.past_key_values)
+            alphas = []
             for _ in range(self.max_new_tokens):
                 last_input_token = last_input_token.view(1, 1)
 
@@ -91,6 +92,8 @@ class DeCoReEntropy(BaseModel):
 
                 alpha = self._calculate_entropy(base_outputs.logits[0, -1])
 
+                alphas += [alpha.item()]
+
                 next_token_logits = (1 + alpha) * base_outputs.logits[
                     0, -1
                 ] - alpha * hallucinated_outputs.logits[0, -1]
@@ -103,7 +106,7 @@ class DeCoReEntropy(BaseModel):
                 generated_ids, skip_special_tokens=True
             )
 
-        return {"decoded_text": decoded_text, "attentions": {}}
+        return {"decoded_text": decoded_text, "attentions": {}, "alphas": alphas}
 
     def lm_score(
         self,
