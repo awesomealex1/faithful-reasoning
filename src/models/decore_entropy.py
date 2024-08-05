@@ -131,7 +131,12 @@ class DeCoReEntropy(BaseModel):
             ]
 
             # TODO: Probably should take the mean entropy of all tokens to be fair
-            alpha = self._calculate_entropy(base_logits[-1, :])
+            entropies = []
+            for i in range(base_logits.shape[0]):
+                entropies += [self._calculate_entropy(base_logits[i, :])]
+            alpha = torch.mean(torch.stack(entropies))
+
+            print(alpha)
 
             base_logits = base_logits.log_softmax(dim=-1)
             hallucinated_logits = hallucinated_logits.log_softmax(dim=-1)
