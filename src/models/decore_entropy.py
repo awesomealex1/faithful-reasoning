@@ -137,9 +137,7 @@ class DeCoReEntropy(BaseModel):
             entropies = []
             for i in range(base_logits.shape[0]):
                 entropies += [self._calculate_entropy(base_logits[i, :])]
-            alpha = torch.mean(torch.stack(entropies))
-
-            print(alpha)
+            alpha = torch.max(torch.stack(entropies))
 
             base_logits = base_logits.log_softmax(dim=-1)
             hallucinated_logits = hallucinated_logits.log_softmax(dim=-1)
