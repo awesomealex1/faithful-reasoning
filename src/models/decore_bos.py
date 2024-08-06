@@ -170,8 +170,6 @@ class DeCoReBOS(BaseModel):
                     )  # to fit the current function template
                     for out in base_outputs.attentions
                 ]
-
-                base_outputs.attentions[i]
                 lookback_ratios += [
                     self._calculate_bos_lookback_ratio(
                         output_attentions, prefix_ids.shape[-1]
