@@ -45,10 +45,7 @@ class DeCoReBOS(BaseModel):
         ][: self.num_retrieval_heads]
 
     def _calculate_bos_lookback_ratio(self, attentions, context_length):
-        print("attentions: ", attentions)
         num_layers = len(attentions)
-        print("len(attentions): ", len(attentions))
-        print("attentions[0]: ", attentions[0])
         num_heads = attentions[0].shape[1]
 
         # Initialize lookback ratio tensors
@@ -84,7 +81,6 @@ class DeCoReBOS(BaseModel):
             )
             generated_ids = []
             last_input_token = tokenised_inputs[:, -1]
-            generation_start_id = tokenised_inputs.size(1)
             base_past_kv = copy.deepcopy(input_logits.past_key_values)
             hallucinated_past_kv = copy.deepcopy(input_logits.past_key_values)
             alphas = []
@@ -169,12 +165,11 @@ class DeCoReBOS(BaseModel):
             # TODO: Probably should take the mean entropy of all tokens to be fair
             lookback_ratios = []
             for i in range(base_logits.shape[0]):
-                lookback_ratio = self.get_lookback_ratios(
-                    [base_outputs.attentions[i]],
-                    component_lengths,
-                    generation_start_id,
-                )
-                lookback_ratios += [self._calculate_bos_lookback_ratio(lookback_ratio)]
+                lookback_ratios += [
+                    self._calculate_bos_lookback_ratio(
+                        base_outputs.attentions[i], prefix_ids.shape[-1]
+                    )
+                ]
 
             alpha = torch.max(torch.stack(lookback_ratios))
 
