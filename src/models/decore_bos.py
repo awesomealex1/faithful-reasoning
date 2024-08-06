@@ -140,10 +140,10 @@ class DeCoReBOS(BaseModel):
 
     def lm_score(
         self,
-        prompt,
+        inputs,
         answer,
     ):
-        prompt = prompt["prompted_question"][0]
+        prompt = inputs["prompted_question"][0]
         with torch.no_grad():
             if type(prompt) == list:
                 input_text = prompt + [answer]
@@ -153,21 +153,30 @@ class DeCoReBOS(BaseModel):
             prefix_ids = self._verbalise_input(prompt).to(self.model.device)
             continue_ids = input_ids[0, prefix_ids.shape[-1] :]
 
-            base_outputs = self.model(input_ids)[0]
+            component_lengths = self._get_component_lengths(inputs, input_ids)
+            generation_start_id = prefix_ids.shape[-1]
+
+            base_outputs = self.model(input_ids, output_attentions=True)
             hallucinated_outputs = self.model(
                 input_ids, block_list=self.retrieval_heads
             )[0]
 
-            base_logits = base_outputs[0, prefix_ids.shape[-1] - 1 : -1, :]
+            base_logits = base_outputs.logits[0, prefix_ids.shape[-1] - 1 : -1, :]
             hallucinated_logits = hallucinated_outputs[
                 0, prefix_ids.shape[-1] - 1 : -1, :
             ]
 
             # TODO: Probably should take the mean entropy of all tokens to be fair
-            entropies = []
+            lookback_ratios = []
             for i in range(base_logits.shape[0]):
-                entropies += [self._calculate_bos_lookback_ratio(base_logits[i, :])]
-            alpha = torch.max(torch.stack(entropies))
+                lookback_ratio = self.get_lookback_ratios(
+                    [base_outputs.attentions[i]],
+                    component_lengths,
+                    generation_start_id,
+                )
+                lookback_ratios += [self._calculate_bos_lookback_ratio(lookback_ratio)]
+
+            alpha = torch.max(torch.stack(lookback_ratios))
 
             if self.alpha_cap:
                 # If the entropy is too high, cap the alpha with the entropy cap
