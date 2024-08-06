@@ -110,7 +110,7 @@ class DeCoReBOS(BaseModel):
                 hallucinated_past_kv = hallucinated_outputs.past_key_values
 
                 alpha = self._calculate_bos_lookback_ratio(
-                    [base_outputs.attentions], tokenised_inputs.size(1)
+                    base_outputs.attentions, tokenised_inputs.size(1)
                 )
                 # The beginning, the lookback ratio will be nan
                 if torch.isnan(alpha):
