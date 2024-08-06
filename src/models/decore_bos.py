@@ -59,7 +59,7 @@ class DeCoReBOS(BaseModel):
             print("bos_attn.shape: ", bos_attn.shape)
             print("non_bos_context_attn.shape: ", non_bos_context_attn.shape)
 
-            bos_lookback_ratio[l, :] = bos_attn / bos_attn + non_bos_context_attn
+            bos_lookback_ratio[l, :] = bos_attn / (bos_attn + non_bos_context_attn)
             print("bos_lookback_ratio[l, :]: ", bos_lookback_ratio[l, :])
 
         mean_bos_lookback_ratio = torch.mean(bos_lookback_ratio)
