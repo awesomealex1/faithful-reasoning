@@ -52,6 +52,7 @@ class DeCoReBOS(BaseModel):
         bos_lookback_ratio = torch.zeros((num_layers, num_heads))
         for l in range(num_layers):
             # Calculate attention for bos and non bos
+            print(attentions[l].shape)
             bos_attn = attentions[l][0, :, -1, 0]
             non_bos_context_attn = attentions[l][0, :, -1, 1:].mean(-1)
 
