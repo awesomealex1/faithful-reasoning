@@ -165,7 +165,7 @@ class DeCoReBOS(BaseModel):
             lookback_ratios = []
             for i in range(base_logits.shape[0]):
                 output_attentions = [
-                    out[:, :, prefix_ids.shape[-1] + i, :].unsqueese(
+                    out[:, :, prefix_ids.shape[-1] + i, :].unsqueeze(
                         2
                     )  # to fit the current function template
                     for out in base_outputs.attentions
