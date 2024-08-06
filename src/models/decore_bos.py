@@ -104,10 +104,12 @@ class DeCoReBOS(BaseModel):
                 base_past_kv = base_outputs.past_key_values
                 hallucinated_past_kv = hallucinated_outputs.past_key_values
 
-                print(base_outputs.attentions.shape)
+                print(base_outputs.attentions)
+                print(len(base_outputs.attentions))
+                print(base_outputs.attentions[0].shape)
 
                 # lookback_ratios = self.get_lookback_ratios(
-                #     base_outputs.attentions,
+                #     [base_outputs.attentions],
                 #     component_lengths,
                 #     generation_start_id,
                 # )
