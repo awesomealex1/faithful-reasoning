@@ -51,12 +51,10 @@ class DeCoReBOS(BaseModel):
 
     def _calculate_bos_lookback_ratio(self, lookback_ratios):
         bos_lookback_ratio = lookback_ratios["bos"].unsqueeze(-1)
-        print(bos_lookback_ratio.shape)
         if np.isnan(bos_lookback_ratio[:, 0, :]).all():
             bos_lookback_ratio = bos_lookback_ratio[:, 1:, :]
 
         mean_bos_lookback_ratio = torch.mean(bos_lookback_ratio)
-        print(mean_bos_lookback_ratio)
 
         return mean_bos_lookback_ratio
 
@@ -108,21 +106,15 @@ class DeCoReBOS(BaseModel):
                 base_past_kv = base_outputs.past_key_values
                 hallucinated_past_kv = hallucinated_outputs.past_key_values
 
-                print(base_outputs.attentions)
-                print(len(base_outputs.attentions))
-                print(base_outputs.attentions[0].shape)
-
                 lookback_ratios = self.get_lookback_ratios(
                     [base_outputs.attentions],
                     component_lengths,
                     generation_start_id,
                 )
-                print(lookback_ratios)
                 alpha = self._calculate_bos_lookback_ratio(lookback_ratios)
                 # The beginning, the lookback ratio will be nan
                 if torch.isnan(alpha):
                     alpha = torch.tensor(0).to(alpha.device)
-                print(alpha)
 
                 if self.alpha_cap:
                     # If the entropy is too high, cap the alpha with the entropy cap
