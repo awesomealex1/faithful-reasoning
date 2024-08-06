@@ -71,15 +71,19 @@ class DeCoReBOS(BaseModel):
         self.model.eval()
 
         prompt = inputs["prompted_question"][0]
-        inputs = self._verbalise_input(prompt).to(self.model.device)
+        tokenised_inputs = self._verbalise_input(prompt).to(self.model.device)
+
+        # Calculate the length of each component
+        component_lengths = self._get_component_lengths(inputs, tokenised_inputs)
 
         # Predict
         with torch.inference_mode():
             input_logits = self.model(
-                input_ids=inputs[:, :-1], use_cache=True, return_dict=True
+                input_ids=tokenised_inputs[:, :-1], use_cache=True, return_dict=True
             )
             generated_ids = []
-            last_input_token = inputs[:, -1]
+            last_input_token = tokenised_inputs[:, -1]
+            generation_start_id = tokenised_inputs.size(1)
             base_past_kv = copy.deepcopy(input_logits.past_key_values)
             hallucinated_past_kv = copy.deepcopy(input_logits.past_key_values)
             alphas = []
@@ -108,14 +112,15 @@ class DeCoReBOS(BaseModel):
                 print(len(base_outputs.attentions))
                 print(base_outputs.attentions[0].shape)
 
-                # lookback_ratios = self.get_lookback_ratios(
-                #     [base_outputs.attentions],
-                #     component_lengths,
-                #     generation_start_id,
-                # )
+                lookback_ratios = self.get_lookback_ratios(
+                    [base_outputs.attentions],
+                    component_lengths,
+                    generation_start_id,
+                )
+                print(lookback_ratios)
+                alpha = self._calculate_bos_lookback_ratio(base_outputs.logits[0, -1])
+                print(alpha)
                 exit()
-
-                # alpha = self._calculate_bos_lookback_ratio(base_outputs.logits[0, -1])
 
                 if self.alpha_cap:
                     # If the entropy is too high, cap the alpha with the entropy cap
