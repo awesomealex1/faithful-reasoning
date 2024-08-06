@@ -53,7 +53,7 @@ class DeCoReBOS(BaseModel):
         for l in range(num_layers):
             # Calculate attention for bos and non bos
             bos_attn = attentions[l][0, :, -1, 0]
-            non_bos_context_attn = attentions[l][0, :, -1, 1:context_length].mean(-1)
+            non_bos_context_attn = attentions[l][0, :, -1, 1:].mean(-1)
 
             bos_lookback_ratio[l, :] = bos_attn / bos_attn + non_bos_context_attn
 
