@@ -121,7 +121,7 @@ class DeCoReBOS(BaseModel):
                 alpha = self._calculate_bos_lookback_ratio(lookback_ratios)
                 # The beginning, the lookback ratio will be nan
                 if torch.isnan(alpha):
-                    alpha = 0
+                    alpha = torch.tensor(0).to(alpha.device)
                 print(alpha)
 
                 if self.alpha_cap:
