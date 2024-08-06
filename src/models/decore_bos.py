@@ -164,6 +164,8 @@ class DeCoReBOS(BaseModel):
             # TODO: Probably should take the mean entropy of all tokens to be fair
             lookback_ratios = []
             for i in range(base_logits.shape[0]):
+                print(base_outputs.attentions.shape)
+                print(base_outputs.attentions[i].shape)
                 lookback_ratios += [
                     self._calculate_bos_lookback_ratio(
                         base_outputs.attentions[i], prefix_ids.shape[-1]
