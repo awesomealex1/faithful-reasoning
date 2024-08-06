@@ -119,8 +119,10 @@ class DeCoReBOS(BaseModel):
                 )
                 print(lookback_ratios)
                 alpha = self._calculate_bos_lookback_ratio(lookback_ratios)
+                # The beginning, the lookback ratio will be nan
+                if torch.isnan(alpha):
+                    alpha = 0
                 print(alpha)
-                exit()
 
                 if self.alpha_cap:
                     # If the entropy is too high, cap the alpha with the entropy cap
