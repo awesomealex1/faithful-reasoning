@@ -44,15 +44,18 @@ class DeCoReBOS(BaseModel):
             [int(ll) for ll in l[0].split("-")] for l in stable_block_list
         ][: self.num_retrieval_heads]
 
-    # def _calculate_entropy(self, logits):
-    #     probs = torch.softmax(logits, dim=-1)
-    #     entropy = -torch.sum(probs * torch.log(probs + 1e-12), dim=-1)
-    #     return entropy
+    def _calculate_bos_lookback_ratio(self, attentions, context_length):
+        num_layers = len(attentions)
+        num_heads = attentions[0].shape[1]
 
-    def _calculate_bos_lookback_ratio(self, lookback_ratios):
-        bos_lookback_ratio = lookback_ratios["bos"].unsqueeze(-1)
-        if np.isnan(bos_lookback_ratio[:, 0, :]).all():
-            bos_lookback_ratio = bos_lookback_ratio[:, 1:, :]
+        # Initialize lookback ratio tensors
+        bos_lookback_ratio = torch.zeros((num_layers, num_heads))
+        for l in range(num_layers):
+            # Calculate attention for bos and non bos
+            bos_attn = attentions[l][0, :, -1, 0]
+            non_bos_context_attn = attentions[l][0, :, -1, 1:context_length].mean(-1)
+
+            bos_lookback_ratio[l, :] = bos_attn / bos_attn + non_bos_context_attn
 
         mean_bos_lookback_ratio = torch.mean(bos_lookback_ratio)
 
@@ -70,9 +73,6 @@ class DeCoReBOS(BaseModel):
 
         prompt = inputs["prompted_question"][0]
         tokenised_inputs = self._verbalise_input(prompt).to(self.model.device)
-
-        # Calculate the length of each component
-        component_lengths = self._get_component_lengths(inputs, tokenised_inputs)
 
         # Predict
         with torch.inference_mode():
@@ -106,12 +106,9 @@ class DeCoReBOS(BaseModel):
                 base_past_kv = base_outputs.past_key_values
                 hallucinated_past_kv = hallucinated_outputs.past_key_values
 
-                lookback_ratios = self.get_lookback_ratios(
-                    [base_outputs.attentions],
-                    component_lengths,
-                    generation_start_id,
+                alpha = self._calculate_bos_lookback_ratio(
+                    [base_outputs.attentions], tokenised_inputs.size(1)
                 )
-                alpha = self._calculate_bos_lookback_ratio(lookback_ratios)
                 # The beginning, the lookback ratio will be nan
                 if torch.isnan(alpha):
                     alpha = torch.tensor(0).to(alpha.device)
