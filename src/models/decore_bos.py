@@ -149,7 +149,9 @@ class DeCoReBOS(BaseModel):
             prefix_ids = self._verbalise_input(prompt).to(self.model.device)
             continue_ids = input_ids[0, prefix_ids.shape[-1] :]
 
-            base_outputs = self.model(input_ids, output_attentions=True)
+            base_outputs = self.model(
+                input_ids, output_attentions=True, attn_mode="torch"
+            )
             hallucinated_outputs = self.model(
                 input_ids, block_list=self.retrieval_heads
             )[0]
