@@ -118,7 +118,7 @@ class DeCoReBOS(BaseModel):
                     generation_start_id,
                 )
                 print(lookback_ratios)
-                alpha = self._calculate_bos_lookback_ratio(base_outputs.logits[0, -1])
+                alpha = self._calculate_bos_lookback_ratio(lookback_ratios)
                 print(alpha)
                 exit()
 
