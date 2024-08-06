@@ -45,7 +45,10 @@ class DeCoReBOS(BaseModel):
         ][: self.num_retrieval_heads]
 
     def _calculate_bos_lookback_ratio(self, attentions, context_length):
+        print("attentions: ", attentions)
         num_layers = len(attentions)
+        print("len(attentions): ", len(attentions))
+        print("attentions[0]: ", attentions[0])
         num_heads = attentions[0].shape[1]
 
         # Initialize lookback ratio tensors
