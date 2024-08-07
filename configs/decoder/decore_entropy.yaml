@@ -8,3 +8,4 @@ configs:
   num_retrieval_heads: 50
   post_softmax: True
   alpha_cap: null
+  scale_alpha: False

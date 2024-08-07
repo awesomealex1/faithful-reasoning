@@ -25,6 +25,8 @@ class DeCoReEntropy(BaseModel):
 
         self.alpha_cap = decoder_configs.configs.get("alpha_cap", None)
 
+        self.scale_alpha = decoder_configs.configs.get("scale_alpha", False)
+
     def _load_retrieval_heads(self):
         self.num_retrieval_heads = self.decoder_configs.configs.num_retrieval_heads
 
@@ -47,6 +49,10 @@ class DeCoReEntropy(BaseModel):
     def _calculate_entropy(self, logits):
         probs = torch.softmax(logits, dim=-1)
         entropy = -torch.sum(probs * torch.log(probs + 1e-12), dim=-1)
+
+        if self.scale_alpha:
+            entropy = entropy / np.log(probs.shape[-1])
+
         return entropy
 
     def generate(
