@@ -341,7 +341,7 @@ class BaseModel(ABC):
                     block_list=block_list,
                 )
                 attentions += [outputs.attentions]
-                entropies += [self._calculate_entropy(outputs.logits[0, -1])]
+                entropies += [self._calculate_entropy(outputs.logits[0, -1]).item()]
                 past_kv = outputs.past_key_values
                 last_input_token = outputs.logits[0, -1].argmax()
                 generated_ids.append(last_input_token.item())
