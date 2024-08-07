@@ -300,6 +300,12 @@ class BaseModel(ABC):
 
         return lookback_ratios
 
+    def _calculate_entropy(self, logits):
+        probs = torch.softmax(logits, dim=-1)
+        entropy = -torch.sum(probs * torch.log(probs + 1e-12), dim=-1)
+
+        return entropy
+
     def _generate(
         self,
         inputs,
@@ -321,6 +327,7 @@ class BaseModel(ABC):
             )
             generated_ids = []
             attentions = []
+            entropies = []
             last_input_token = tokenised_inputs[:, -1]
             past_kv = input_logits.past_key_values
             for _ in range(self.max_new_tokens):
@@ -334,6 +341,7 @@ class BaseModel(ABC):
                     block_list=block_list,
                 )
                 attentions += [outputs.attentions]
+                entropies += [self._calculate_entropy(outputs.logits[0, -1])]
                 past_kv = outputs.past_key_values
                 last_input_token = outputs.logits[0, -1].argmax()
                 generated_ids.append(last_input_token.item())
@@ -343,7 +351,11 @@ class BaseModel(ABC):
                 generated_ids, skip_special_tokens=True
             )
 
-        generation_output = {"decoded_text": decoded_text, "attentions": {}}
+        generation_output = {
+            "decoded_text": decoded_text,
+            "alphas": entropies,
+            "attentions": {},
+        }
         if return_attentions:
             generation_output["attentions"] = self.get_lookback_ratios(
                 attentions, component_lengths, tokenised_inputs.size(1)
