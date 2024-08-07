@@ -84,7 +84,10 @@ class TruthfulQAGeneration:
         answers = []
         for sample in predictions:
             questions += [sample["question"][0].strip()]
+            # Remove the answer after newline as they are usually generation artifacts
             answer = sample["predicted_answer"].split("\n", 1)[0].strip()
+            # Remove unfinished sentence
+            answer = ".".join(answer.split(".")[:-1]).strip() + "."
             answers += [answer]
 
         judge_scores, judge_accs, rejects = self.compute_metrics(
@@ -93,6 +96,10 @@ class TruthfulQAGeneration:
         info_scores, info_accs, rejects = self.compute_metrics(
             questions, answers, self.info_name, info=True
         )
+
+        not_rejects = [0 if r else 1 for r in rejects]
+
+        assert sum(not_rejects) + sum(rejects) == len(rejects)
 
         # compute confidence scores
         avg_judge_score = sum(judge_scores) / len(judge_scores)
@@ -103,6 +110,19 @@ class TruthfulQAGeneration:
 
         # compute the rate of "I have no comment"
         avg_rej = sum(rejects) / len(rejects)
+
+        avg_judge_not_rejects_acc = sum(
+            [judge_accs[i] * not_rejects[i] for i in range(len(not_rejects))]
+        ) / sum(not_rejects)
+        avg_info_not_rejects_acc = sum(
+            [info_accs[i] * not_rejects[i] for i in range(len(not_rejects))]
+        ) / sum(not_rejects)
+        avg_both_not_rejects_acc = sum(
+            [
+                judge_accs[i] * info_accs[i] * not_rejects[i]
+                for i in range(len(not_rejects))
+            ]
+        ) / sum(not_rejects)
 
         # compute the rate of "yes"
         avg_judge_acc = sum(judge_accs) / len(judge_accs)
@@ -120,18 +140,26 @@ class TruthfulQAGeneration:
             "Average judge/info accuracy:\n"
             + f"{avg_judge_acc:.10f}, {avg_info_acc:.10f}, {avg_both_acc:.10f}"
         )
+        print(
+            "Average not rejected judge/info accuracy:\n"
+            + f"{avg_judge_not_rejects_acc:.10f}, {avg_info_not_rejects_acc:.10f}, {avg_both_not_rejects_acc:.10f}"
+        )
 
         eval_metrics = {
             "judge_scores": judge_scores,
             "info_scores": info_scores,
             "judge_accs": judge_accs,
             "info_accs": info_accs,
+            "rejects": rejects,
             "avg_judge_score": avg_judge_score,
             "avg_judge_acc": avg_judge_acc,
+            "avg_judge_not_rejects_acc": avg_judge_not_rejects_acc,
             "avg_info_score": avg_info_score,
             "avg_info_acc": avg_info_acc,
+            "avg_info_not_rejects_acc": avg_info_not_rejects_acc,
             "avg_both_acc": avg_both_acc,
             "avg_both_score": avg_both_score,
+            "avg_both_not_rejects_acc": avg_both_not_rejects_acc,
             "avg_rej": avg_rej,
         }
 
@@ -168,5 +196,6 @@ if __name__ == "__main__":
 
     gen_metrics = tfqa_metrics(predictions)
 
-    with open(args.pred_filepath + ".gen_metrics.json", "w") as f:
-        json.dump(gen_metrics, f)
+    if not args.debug:
+        with open(args.pred_filepath.replace(".json", ".gen_metrics.json"), "w") as f:
+            json.dump(gen_metrics, f)
