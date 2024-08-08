@@ -13,5 +13,6 @@ from .decore_bos import DeCoReBOS
 from .decore_guided import DeCoReGuided
 from .decore_entropy import DeCoReEntropy
 from .decore_jsd import DeCoReJSD
+from .decore_wasserstein import DeCoReWasserstein
 from .dola import DoLa
 from .icd import ICD
