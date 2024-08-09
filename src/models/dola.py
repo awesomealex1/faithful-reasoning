@@ -35,8 +35,7 @@ class DoLa(BaseModel):
         self.mature_layer = self.candidate_premature_layers[-1]
 
     def _calculate_entropy(self, logits):
-        print(logits)
-        # probs = torch.softmax(logits, dim=-1)
+        probs = torch.softmax(logits, dim=-1)
         entropy = -torch.sum(probs * torch.log(probs + 1e-12), dim=-1)
 
         return entropy
@@ -56,13 +55,15 @@ class DoLa(BaseModel):
                 tokenised_inputs,
                 do_sample=False,
                 max_new_tokens=self.max_new_tokens,
+                output_scores=True,
                 dola_layers=self.dola_layers,
             )
             decoded_text = self.tokenizer.decode(
                 outputs[0, tokenised_inputs.size(1) :], skip_special_tokens=True
             )
+        logits = torch.stack(outputs.scores, dim=1)[0, tokenised_inputs.size(1) :]
 
-        entropies = self._calculate_entropy(outputs[0, tokenised_inputs.size(1) :])
+        entropies = self._calculate_entropy(logits)
         entropies = entropies.cpu().numpy().tolist()
 
         return {"decoded_text": decoded_text, "alphas": entropies, "attentions": {}}
