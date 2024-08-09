@@ -99,10 +99,8 @@ class TriviaQA(BaseDataset):
         if self.kwargs["use_chat_template"]:
             input_text_prompt = [icl_demo + [f"{verbalised_question}{answer_prefix}"]]
         else:
-            icl_demo = "\n\n".join(icl_demo)
-            input_text_prompt = (
-                icl_demo + "\n\n" + (f"{verbalised_question}{answer_prefix}")
-            )
+            icl_demo = "\n\n".join(icl_demo) + "\n\n"
+            input_text_prompt = icl_demo + (f"{verbalised_question}{answer_prefix}")
         return {
             "verbalised_instruction": "",
             "verbalised_icl_demo": icl_demo,
