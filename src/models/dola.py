@@ -35,7 +35,8 @@ class DoLa(BaseModel):
         self.mature_layer = self.candidate_premature_layers[-1]
 
     def _calculate_entropy(self, logits):
-        probs = torch.softmax(logits, dim=-1)
+        print(logits)
+        # probs = torch.softmax(logits, dim=-1)
         entropy = -torch.sum(probs * torch.log(probs + 1e-12), dim=-1)
 
         return entropy
