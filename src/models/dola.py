@@ -64,9 +64,6 @@ class DoLa(BaseModel):
                 skip_special_tokens=True,
             )
         logits = torch.stack(outputs.scores, dim=1)
-        print(logits.shape)
-        logits = logits[0, tokenised_inputs.size(1) :]
-        print(logits.shape)
 
         entropies = self._calculate_entropy(logits)
         entropies = entropies.cpu().numpy().tolist()
