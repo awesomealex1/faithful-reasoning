@@ -34,6 +34,12 @@ class DoLa(BaseModel):
             ]  # FIXME: 16,32 is hard-coded for llama3-8b
         self.mature_layer = self.candidate_premature_layers[-1]
 
+    def _calculate_entropy(self, logits):
+        probs = torch.softmax(logits, dim=-1)
+        entropy = -torch.sum(probs * torch.log(probs + 1e-12), dim=-1)
+
+        return entropy
+
     def generate(
         self,
         inputs,
@@ -54,7 +60,11 @@ class DoLa(BaseModel):
             decoded_text = self.tokenizer.decode(
                 outputs[0, tokenised_inputs.size(1) :], skip_special_tokens=True
             )
-        return {"decoded_text": decoded_text, "attentions": {}}
+
+        entropies = self._calculate_entropy(outputs[0, tokenised_inputs.size(1) :])
+        entropies = entropies.cpu().numpy().tolist()
+
+        return {"decoded_text": decoded_text, "alphas": entropies, "attentions": {}}
 
     def lm_score(
         self,
