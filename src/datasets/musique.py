@@ -45,7 +45,8 @@ class MuSiQue(BaseDataset):
                             "idx": sample_id,
                             "type": sample_type,
                             "question": instance["question"],
-                            "answer": [instance["answer"]] + instance["answer_aliases"],
+                            "answers": [instance["answer"]]
+                            + instance["answer_aliases"],
                         }
                     ]
 
