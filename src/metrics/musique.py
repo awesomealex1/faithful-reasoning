@@ -48,11 +48,8 @@ class MuSiQue:
 
             # Extract answer from the CoT reasonings
             prediction = self.answer_extractor(sample["predicted_answer"])
-            print("refs: ", refs)
-            print("prediction: ", prediction)
 
             scores = self.compute_metrics(prediction, refs)
-            print("scores: ", scores)
 
             subspan_em_scores += [scores["Subspan_EM"]]
 
