@@ -39,7 +39,6 @@ class MuSiQue:
         return 0.0
 
     def __call__(self, predictions) -> Dict[str, float]:
-        em_scores = []
         subspan_em_scores = []
         for sample in predictions:
             refs = [
@@ -55,11 +54,9 @@ class MuSiQue:
             scores = self.compute_metrics(prediction, refs)
             print("scores: ", scores)
 
-            em_scores += [scores["EM"]]
             subspan_em_scores += [scores["Subspan_EM"]]
 
         metrics = {
-            "EM": np.mean(em_scores),
             "Subspan_EM": np.mean(subspan_em_scores),
         }
         return metrics
