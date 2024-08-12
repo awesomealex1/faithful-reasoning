@@ -21,7 +21,6 @@ class XSum(BaseDataset):
         self.data = self.parse_data()
 
     def parse_data(self) -> List[dict]:
-        # Open the gz file, and read the jsonl file
         data = []
 
         with open(self.data_filename, "r") as f:

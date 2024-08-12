@@ -117,39 +117,6 @@ class NQ(BaseDataset):
     def create_open_book_demo_text(self) -> List[str]:
         contexts, questions, answers = [], [], []
 
-        #     contexts.append("")
-        #     questions.append("where did they film hot tub time machine")
-        #     answers.append("Fernie Alpine Resort")
-
-        #     contexts.append("")
-        #     questions.append("who has the right of way in international waters")
-        #     answers.append("Neither vessel")
-
-        #     contexts.append("")
-        #     questions.append("who does annie work for attack on titan")
-        #     answers.append("Marley")
-
-        #     contexts.append("")
-        #     questions.append("when was the immigration reform and control act passed")
-        #     answers.append("November\u00a06, 1986")
-
-        #     contexts.append("")
-        #     questions.append("when was puerto rico added to the usa")
-        #     answers.append("1950")
-
-        #     contexts.append("")
-        #     questions.append("who has been chosen for best supporting actress in 64 national filmfare award")
-        #     answers.append("Zaira Wasim")
-
-        #     contexts.append("")
-        #     questions.append("which side of the white house is the front")
-        #     answers.append("North")
-
-        #     contexts.append("")
-        #     questions.append("who's hosting the super bowl in 2019")
-        #     answers.append("Atlanta, Georgia")
-
-        #     return questions, answers
         contexts.append("(Title: Example Title) Example Text")
         questions.append("example question")
         answers.append("march 2018")
