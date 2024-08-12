@@ -55,8 +55,8 @@ class MuSiQue(BaseDataset):
 
         return data
 
-    def create_demo_text(self) -> List[str]:
-        # 8 Train QA Pairs: https://github.com/StonyBrookNLP/ircot/blob/main/prompts/musique/no_context_cot_qa_flan_t5.txt
+    def create_closed_book_demo_text(self) -> List[str]:
+        # Train QA Pairs: https://github.com/StonyBrookNLP/ircot/blob/main/prompts/musique/no_context_cot_qa_flan_t5.txt
         questions, answers = [], []
 
         questions.append("When was Neville A. Stanton's employer founded?")
@@ -199,41 +199,33 @@ class MuSiQue(BaseDataset):
         if self.kwargs["use_chat_template"]:
             for i in range(len(questions)):
                 demo_texts += [
-                    f"Q: Answer the following question by reasoning step-by-step.\n{questions[i]}\nA:",
+                    f"Q: {questions[i]}\nA:",
                     answers[i],
                 ]
         else:
             for i in range(len(questions)):
-                demo_texts += [
-                    f"Q: Answer the following question by reasoning step-by-step.\n{questions[i]}\nA: {answers[i]}"
-                ]
+                demo_texts += [f"Q: {questions[i]}\nA: {answers[i]}"]
         return demo_texts
 
     def build_prompt(self, question):
-        # instruction = ["Answer the following question by reasoning step-by-step."]
+        instruction = ["Answer the following question by reasoning step-by-step."]
 
-        icl_demo = self.create_demo_text()
+        icl_demo = self.create_closed_book_demo_text()
 
-        verbalised_question = (
-            f"Q: Answer the following question by reasoning step-by-step.\n{question}\n"
-        )
+        verbalised_question = f"Q: {question}\n"
         answer_prefix = "Answer:"
         if self.kwargs["use_chat_template"]:
             input_text_prompt = [
-                # instruction + icl_demo + [f"{verbalised_question}{answer_prefix}"]
-                icl_demo
-                + [f"{verbalised_question}{answer_prefix}"]
+                instruction + icl_demo + [f"{verbalised_question}{answer_prefix}"]
             ]
         else:
-            # instruction = instruction[0]
+            instruction = instruction[0]
             icl_demo = "\n\n".join(icl_demo) + "\n\n"
             input_text_prompt = (
-                # instruction + icl_demo + (f"{verbalised_question}{answer_prefix}")
-                icl_demo
-                + (f"{verbalised_question}{answer_prefix}")
+                instruction + icl_demo + (f"{verbalised_question}{answer_prefix}")
             )
         return {
-            "verbalised_instruction": "",
+            "verbalised_instruction": instruction,
             "verbalised_icl_demo": icl_demo,
             "verbalised_contexts": "",
             "verbalised_question": verbalised_question,
