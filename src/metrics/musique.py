@@ -46,8 +46,11 @@ class MuSiQue:
             prediction = re.split("\n|\.|\,", sample["predicted_answer"])[0]
             # Extract answer from the CoT reasonings
             prediction = self.answer_extractor(prediction)
+            print("refs: ", refs)
+            print("prediction: ", prediction)
 
             scores = self.compute_metrics(prediction, refs)
+            print("scores: ", scores)
 
             em_scores += [scores["EM"]]
             subspan_em_scores += [scores["Subspan_EM"]]
