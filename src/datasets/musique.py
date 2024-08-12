@@ -53,8 +53,6 @@ class MuSiQue(BaseDataset):
         if self.num_samples > 0:
             data = data[: self.num_samples]
 
-        print(data)
-
         return data
 
     def create_demo_text(self) -> List[str]:
