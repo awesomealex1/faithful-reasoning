@@ -8,8 +8,7 @@ class MuSiQue:
     def __init__(self):
         pass
 
-    @staticmethod
-    def compute_metrics(prediction: str, refs: List[str]):
+    def compute_metrics(self, prediction: str, refs: List[str]):
         scores = {}
         scores["Subspan_EM"] = self.unnormalised_best_subspan_em(prediction, refs)
 
