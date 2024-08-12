@@ -3,8 +3,6 @@ from typing import Dict, List
 import regex as re
 import numpy as np
 
-from src.metrics.utils import best_em, best_subspan_em
-
 
 class MuSiQue:
     def __init__(self):
@@ -13,8 +11,7 @@ class MuSiQue:
     @staticmethod
     def compute_metrics(prediction: str, refs: List[str]):
         scores = {}
-        scores["EM"] = best_em(prediction, refs)
-        scores["Subspan_EM"] = best_subspan_em(prediction, refs)
+        scores["Subspan_EM"] = self.unnormalised_best_subspan_em(prediction, refs)
 
         return scores
 
@@ -33,6 +30,15 @@ class MuSiQue:
 
         return output
 
+    @staticmethod
+    def unnormalised_best_subspan_em(
+        prediction: str, ground_truths: List[str]
+    ) -> float:
+        for ground_truth in ground_truths:
+            if ground_truth.lower() in prediction.lower():
+                return 1.0
+        return 0.0
+
     def __call__(self, predictions) -> Dict[str, float]:
         em_scores = []
         subspan_em_scores = []
@@ -42,10 +48,8 @@ class MuSiQue:
                 for ans in sample["answers"]
             ]
 
-            # Only consider until \n
-            prediction = re.split("\n", sample["predicted_answer"])[0]
             # Extract answer from the CoT reasonings
-            prediction = self.answer_extractor(prediction)
+            prediction = self.answer_extractor(sample["predicted_answer"])
             print("refs: ", refs)
             print("prediction: ", prediction)
 
