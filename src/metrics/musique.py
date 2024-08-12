@@ -42,8 +42,8 @@ class MuSiQue:
                 for ans in sample["answers"]
             ]
 
-            # Only consider until \n, ., or ,
-            prediction = re.split("\n|\.|\,", sample["predicted_answer"])[0]
+            # Only consider until \n
+            prediction = re.split("\n", sample["predicted_answer"])[0]
             # Extract answer from the CoT reasonings
             prediction = self.answer_extractor(prediction)
             print("refs: ", refs)
