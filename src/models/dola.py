@@ -55,7 +55,7 @@ class DoLa(BaseModel):
                 tokenised_inputs,
                 do_sample=False,
                 max_new_tokens=self.max_new_tokens,
-                output_scores=True,
+                output_logits=True,
                 dola_layers=self.dola_layers,
                 return_dict_in_generate=True,
             )
@@ -63,7 +63,7 @@ class DoLa(BaseModel):
                 outputs.sequences[0, tokenised_inputs.size(1) :],
                 skip_special_tokens=True,
             )
-        logits = torch.stack(outputs.scores, dim=1)
+        logits = torch.stack(outputs.logits, dim=1)
 
         entropies = self._calculate_entropy(logits)
         entropies = entropies.cpu().numpy().tolist()
