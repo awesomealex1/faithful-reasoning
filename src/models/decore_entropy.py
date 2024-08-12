@@ -100,13 +100,13 @@ class DeCoReEntropy(BaseModel):
 
                 alpha = self._calculate_entropy(base_outputs.logits[0, -1])
 
+                alphas += [alpha.item()]
+
                 if self.alpha_cap:
                     # If the entropy is too high, cap the alpha with the entropy cap
                     alpha = torch.min(
                         alpha, torch.tensor(self.alpha_cap).to(alpha.device)
                     )
-
-                alphas += [alpha.item()]
 
                 next_token_logits = (1 + alpha) * base_outputs.logits[
                     0, -1
@@ -148,10 +148,11 @@ class DeCoReEntropy(BaseModel):
             ]
 
             # TODO: Probably should take the mean entropy of all tokens to be fair
-            entropies = []
-            for i in range(base_logits.shape[0]):
-                entropies += [self._calculate_entropy(base_logits[i, :])]
-            alpha = torch.max(torch.stack(entropies))
+            # entropies = []
+            # for i in range(base_logits.shape[0]):
+            #     entropies += [self._calculate_entropy(base_logits[i, :])]
+            # alpha = torch.max(torch.stack(entropies))
+            alpha = self._calculate_entropy(base_logits[0, :])
 
             if self.alpha_cap:
                 # If the entropy is too high, cap the alpha with the entropy cap
