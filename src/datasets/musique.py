@@ -73,7 +73,7 @@ class MuSiQue(BaseDataset):
             answers.append(
                 "The employer of Neville A. Stanton is University of Southampton. The University of Southampton was founded in 1862. So the answer is: 1862."
             )
-        else:
+        elif self.variation.startswith("direct_"):
             answers.append("1862")
 
         questions.append(
@@ -83,7 +83,7 @@ class MuSiQue(BaseDataset):
             answers.append(
                 "The standards for ISO 21500 were set by International Organization for Standardization. The International Organization for Standardization has headquarters in Geneva. So the answer is: Geneva."
             )
-        else:
+        elif self.variation.startswith("direct_"):
             answers.append("Geneva")
 
         questions.append(
@@ -93,7 +93,7 @@ class MuSiQue(BaseDataset):
             answers.append(
                 "Guy Shepherdson was born in Jakarta. SMA Negeri 68 Jakarta is located in Central Jakarta. So the answer is: Central Jakarta."
             )
-        else:
+        elif self.variation.startswith("direct_"):
             answers.append("Central Jakarta")
 
         questions.append(
@@ -103,7 +103,7 @@ class MuSiQue(BaseDataset):
             answers.append(
                 "Marie Adelaide Leprosy Centre is located in Karachi. The first railway line between Kotri and Karachi was constructed in April 1858. So the answer is: April 1858."
             )
-        else:
+        elif self.variation.startswith("direct_"):
             answers.append("April 1858")
 
         questions.append(
@@ -113,7 +113,7 @@ class MuSiQue(BaseDataset):
             answers.append(
                 "Heritage Places Protection Act applies to the jurisdiction of Prince Edward Island. Hebron, Prince Edward Island is located in the Prince County. So the answer is: Prince County."
             )
-        else:
+        elif self.variation.startswith("direct_"):
             answers.append("Prince County")
 
         questions.append(
@@ -123,7 +123,7 @@ class MuSiQue(BaseDataset):
             answers.append(
                 "CIMI-FM is licensed to broadcast in Quebec City. The first large winter carnival in Quebec City took place in 1894. So the answer is: 1894."
             )
-        else:
+        elif self.variation.startswith("direct_"):
             answers.append("1894")
 
         questions.append(
@@ -133,7 +133,7 @@ class MuSiQue(BaseDataset):
             answers.append(
                 "Olivier Robitaille was born in Quebec City. The first large winter carnival in Quebec City happened in the 1894. So the answer is: 1894."
             )
-        else:
+        elif self.variation.startswith("direct_"):
             answers.append("1894")
 
         questions.append("When did Britain withdraw from the country containing Hoora?")
@@ -141,7 +141,7 @@ class MuSiQue(BaseDataset):
             answers.append(
                 "Hoora is in the country of Bahrain. Britain withdrew from Bahrain in 1971. So the answer is: 1971."
             )
-        else:
+        elif self.variation.startswith("direct_"):
             answers.append("1971")
 
         questions.append(
@@ -151,7 +151,7 @@ class MuSiQue(BaseDataset):
             answers.append(
                 "Wadyan is in the country of Bahrain. Britain withdraw from Bahrain in 1971. So the answer is: 1971."
             )
-        else:
+        elif self.variation.startswith("direct_"):
             answers.append("1971")
 
         questions.append(
@@ -161,7 +161,7 @@ class MuSiQue(BaseDataset):
             answers.append(
                 "The publisher of Banjo-Tooie is Nintendo. Nintendo relied primarily for its support on first-party games. So the answer is: first-party games."
             )
-        else:
+        elif self.variation.startswith("direct_"):
             answers.append("first-party games")
 
         questions.append(
@@ -171,7 +171,7 @@ class MuSiQue(BaseDataset):
             answers.append(
                 "WRSU-FM was licensed to broadcast to New Brunswick. Rivière-Verte, New Brunswick shares border with Edmundston. So the answer is: Edmundston."
             )
-        else:
+        elif self.variation.startswith("direct_"):
             answers.append("Edmundston")
 
         questions.append(
@@ -181,7 +181,7 @@ class MuSiQue(BaseDataset):
             answers.append(
                 "The Senate is in the country of Kenya. The state of emergency was declared in Kenya on 20 October 1952. So the answer is: 20 October 1952."
             )
-        else:
+        elif self.variation.startswith("direct_"):
             answers.append("20 October 1952")
 
         # Commented out because it's weird :/ The second reasoning step is very unrelated.
@@ -192,7 +192,7 @@ class MuSiQue(BaseDataset):
         # answers.append(
         #     "Raphael Tuju is a citizen of Kenya. The crying stone in Kenya is found along the highway towards Kisumu. So the answer is: along the highway towards Kisumu."
         # )
-        # else:
+        # elif self.variation.startswith("direct_"):
         #     answers.append("along the highway towards Kisumu")
 
         questions.append(
@@ -202,7 +202,7 @@ class MuSiQue(BaseDataset):
             answers.append(
                 "Lima Mountain is located in the state of Minnesota. The snake river in Minnesota starts in southern Aitkin County. So the answer is: southern Aitkin County."
             )
-        else:
+        elif self.variation.startswith("direct_"):
             answers.append("southern Aitkin County")
 
         # Commented out because it's weird :/ The question is not answerable upon checking the evidence
@@ -213,7 +213,7 @@ class MuSiQue(BaseDataset):
         # answers.append(
         #     "The performer of So Long, See You Tomorrow is Bombay Bicycle Club. The record label of Bombay Bicycle Club is Island Records. The genre of Island Records is jazz. So the answer is: jazz."
         # )
-        # else:
+        # elif self.variation.startswith("direct_"):
         #     answers.append("jazz")
 
         questions.append(
@@ -223,7 +223,7 @@ class MuSiQue(BaseDataset):
             answers.append(
                 "The performer of Smoke in tha City is MC Eiht. MC Eiht's birthplace is Compton. Compton is located in the county of Los Angeles County. So the answer is: Los Angeles County."
             )
-        else:
+        elif self.variation.startswith("direct_"):
             answers.append("Los Angeles County")
 
         # Commented out because it's weird :/ The question is not answerable upon checking the evidence
@@ -234,7 +234,7 @@ class MuSiQue(BaseDataset):
         # answers.append(
         #     "The Crush Tour is performed by the band Bon Jovi. The record label of Bon Jovi is Island Records. The genre of Island Records is jazz. So the answer is: jazz."
         # )
-        # else:
+        # elif self.variation.startswith("direct_"):
         #     answers.append("jazz")
 
         questions.append(
@@ -244,7 +244,7 @@ class MuSiQue(BaseDataset):
             answers.append(
                 "Finding Dory is supposed to take place in California. The country that shares a border with California is Mexico. The length of the us border with Mexico is 1,989 mi. So the answer is: 1,989 mi."
             )
-        else:
+        elif self.variation.startswith("direct_"):
             answers.append("1,989 mi")
 
         questions.append(
@@ -254,7 +254,7 @@ class MuSiQue(BaseDataset):
             answers.append(
                 "The author of America-Lite: How Imperial Academia Dismantled Our Culture is David Gelernter. David Gelernter was educated at the Yale University. The city in Connecticut that has the highest number of Zagat-rated restaurants is New Haven. The weekly publication in New Haven that is issued by Yale University is Yale Herald. So the answer is: Yale Herald."
             )
-        else:
+        elif self.variation.startswith("direct_"):
             answers.append("Yale Herald")
 
         questions.append(
@@ -264,7 +264,7 @@ class MuSiQue(BaseDataset):
             answers.append(
                 "Pacific National University is located in Khabarovsk, Russia Khabarovsk, Russian is in the continent of Asia. The entity that mediated the truce which ended the Iran-Iraq War is the UN. The number of member states that UN recognises in Asia is 53. So the answer is: 53."
             )
-        else:
+        elif self.variation.startswith("direct_"):
             answers.append("53")
 
         demo_texts = []
@@ -310,7 +310,7 @@ class MuSiQue(BaseDataset):
             answers.append(
                 "The employer of Neville A. Stanton is University of Southampton. The University of Southampton was founded in 1862. So the answer is: 1862."
             )
-        else:
+        elif self.variation.startswith("direct_"):
             answers.append("1862")
 
         contexts.append(
@@ -332,7 +332,7 @@ class MuSiQue(BaseDataset):
             answers.append(
                 "The standards for ISO 21500 were set by International Organization for Standardization. The International Organization for Standardization has headquarters in Geneva. So the answer is: Geneva."
             )
-        else:
+        elif self.variation.startswith("direct_"):
             answers.append("Geneva")
 
         contexts.append(
@@ -354,7 +354,7 @@ class MuSiQue(BaseDataset):
             answers.append(
                 "Guy Shepherdson was born in Jakarta. SMA Negeri 68 Jakarta is located in Central Jakarta. So the answer is: Central Jakarta."
             )
-        else:
+        elif self.variation.startswith("direct_"):
             answers.append("Central Jakarta")
 
         contexts.append(
@@ -376,7 +376,7 @@ class MuSiQue(BaseDataset):
             answers.append(
                 "Marie Adelaide Leprosy Centre is located in Karachi. The first railway line between Kotri and Karachi was constructed in April 1858. So the answer is: April 1858."
             )
-        else:
+        elif self.variation.startswith("direct_"):
             answers.append("April 1858")
 
         contexts.append(
@@ -398,7 +398,7 @@ class MuSiQue(BaseDataset):
             answers.append(
                 "Heritage Places Protection Act applies to the jurisdiction of Prince Edward Island. Hebron, Prince Edward Island is located in the Prince County. So the answer is: Prince County."
             )
-        else:
+        elif self.variation.startswith("direct_"):
             answers.append("Prince County")
 
         contexts.append(
@@ -420,7 +420,7 @@ class MuSiQue(BaseDataset):
             answers.append(
                 "CIMI-FM is licensed to broadcast in Quebec City. The first large winter carnival in Quebec City took place in 1894. So the answer is: 1894."
             )
-        else:
+        elif self.variation.startswith("direct_"):
             answers.append("1894")
 
         contexts.append(
@@ -442,7 +442,7 @@ class MuSiQue(BaseDataset):
             answers.append(
                 "Olivier Robitaille was born in Quebec City. The first large winter carnival in Quebec City happened in the 1894. So the answer is: 1894."
             )
-        else:
+        elif self.variation.startswith("direct_"):
             answers.append("1894")
 
         contexts.append(
@@ -462,7 +462,7 @@ class MuSiQue(BaseDataset):
             answers.append(
                 "Hoora is in the country of Bahrain. Britain withdrew from Bahrain in 1971. So the answer is: 1971."
             )
-        else:
+        elif self.variation.startswith("direct_"):
             answers.append("1971")
 
         contexts.append(
@@ -484,7 +484,7 @@ class MuSiQue(BaseDataset):
             answers.append(
                 "Wadyan is in the country of Bahrain. Britain withdraw from Bahrain in 1971. So the answer is: 1971."
             )
-        else:
+        elif self.variation.startswith("direct_"):
             answers.append("1971")
 
         contexts.append(
@@ -506,7 +506,7 @@ class MuSiQue(BaseDataset):
             answers.append(
                 "The publisher of Banjo-Tooie is Nintendo. Nintendo relied primarily for its support on first-party games. So the answer is: first-party games."
             )
-        else:
+        elif self.variation.startswith("direct_"):
             answers.append("first-party games")
 
         contexts.append(
@@ -528,7 +528,7 @@ class MuSiQue(BaseDataset):
             answers.append(
                 "WRSU-FM was licensed to broadcast to New Brunswick. Rivière-Verte, New Brunswick shares border with Edmundston. So the answer is: Edmundston."
             )
-        else:
+        elif self.variation.startswith("direct_"):
             answers.append("Edmundston")
 
         contexts.append(
@@ -550,7 +550,7 @@ class MuSiQue(BaseDataset):
             answers.append(
                 "The Senate is in the country of Kenya. The state of emergency was declared in Kenya on 20 October 1952. So the answer is: 20 October 1952."
             )
-        else:
+        elif self.variation.startswith("direct_"):
             answers.append("20 October 1952")
 
         # Commented out because it's weird :/ The second reasoning step is very unrelated.
@@ -567,7 +567,7 @@ class MuSiQue(BaseDataset):
         # answers.append(
         #     "Raphael Tuju is a citizen of Kenya. The crying stone in Kenya is found along the highway towards Kisumu. So the answer is: along the highway towards Kisumu."
         # )
-        # else:
+        # elif self.variation.startswith("direct_"):
         #     answers.append("along the highway towards Kisumu")
 
         contexts.append(
@@ -589,7 +589,7 @@ class MuSiQue(BaseDataset):
             answers.append(
                 "Lima Mountain is located in the state of Minnesota. The snake river in Minnesota starts in southern Aitkin County. So the answer is: southern Aitkin County."
             )
-        else:
+        elif self.variation.startswith("direct_"):
             answers.append("southern Aitkin County")
 
         # Commented out because it's weird :/ The question is not answerable upon checking the evidence
@@ -607,7 +607,7 @@ class MuSiQue(BaseDataset):
         # answers.append(
         #     "The performer of So Long, See You Tomorrow is Bombay Bicycle Club. The record label of Bombay Bicycle Club is Island Records. The genre of Island Records is jazz. So the answer is: jazz."
         # )
-        # else:
+        # elif self.variation.startswith("direct_"):
         #     answers.append("jazz")
 
         contexts.append(
@@ -633,7 +633,7 @@ class MuSiQue(BaseDataset):
             answers.append(
                 "The performer of Smoke in tha City is MC Eiht. MC Eiht's birthplace is Compton. Compton is located in the county of Los Angeles County. So the answer is: Los Angeles County."
             )
-        else:
+        elif self.variation.startswith("direct_"):
             answers.append("Los Angeles County")
 
         # Commented out because it's weird :/ The question is not answerable upon checking the evidence
@@ -651,7 +651,7 @@ class MuSiQue(BaseDataset):
         # answers.append(
         #     "The Crush Tour is performed by the band Bon Jovi. The record label of Bon Jovi is Island Records. The genre of Island Records is jazz. So the answer is: jazz."
         # )
-        # else:
+        # elif self.variation.startswith("direct_"):
         #     answers.append("jazz")
 
         contexts.append(
@@ -677,7 +677,7 @@ class MuSiQue(BaseDataset):
             answers.append(
                 "Finding Dory is supposed to take place in California. The country that shares a border with California is Mexico. The length of the us border with Mexico is 1,989 mi. So the answer is: 1,989 mi."
             )
-        else:
+        elif self.variation.startswith("direct_"):
             answers.append("1,989 mi")
 
         contexts.append(
@@ -707,7 +707,7 @@ class MuSiQue(BaseDataset):
             answers.append(
                 "The author of America-Lite: How Imperial Academia Dismantled Our Culture is David Gelernter. David Gelernter was educated at the Yale University. The city in Connecticut that has the highest number of Zagat-rated restaurants is New Haven. The weekly publication in New Haven that is issued by Yale University is Yale Herald. So the answer is: Yale Herald."
             )
-        else:
+        elif self.variation.startswith("direct_"):
             answers.append("Yale Herald")
 
         contexts.append(
@@ -737,7 +737,7 @@ class MuSiQue(BaseDataset):
             answers.append(
                 "Pacific National University is located in Khabarovsk, Russia Khabarovsk, Russian is in the continent of Asia. The entity that mediated the truce which ended the Iran-Iraq War is the UN. The number of member states that UN recognises in Asia is 53. So the answer is: 53."
             )
-        else:
+        elif self.variation.startswith("direct_"):
             answers.append("53")
 
         demo_texts = []
@@ -755,13 +755,13 @@ class MuSiQue(BaseDataset):
     def build_prompt(self, contexts, question):
         if self.variation.startswith("cot_"):
             instruction = ["Answer the following question by reasoning step-by-step."]
-        else:
+        elif self.variation.startswith("direct_"):
             instruction = ["Answer the following question."]
 
-        if self.variation == "closed_book":
+        if self.variation.endswith("closed_book"):
             icl_demo = self.create_closed_book_demo_text()
             verbalised_contexts = ""
-        else:
+        elif self.variation.endswith("open_book"):
             icl_demo = self.create_open_book_demo_text()
 
             verbalised_contexts = self._prepare_contexts(contexts)
