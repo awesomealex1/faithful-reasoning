@@ -147,12 +147,10 @@ class DeCoReEntropy(BaseModel):
                 0, prefix_ids.shape[-1] - 1 : -1, :
             ]
 
-            # TODO: Probably should take the mean entropy of all tokens to be fair
-            # entropies = []
-            # for i in range(base_logits.shape[0]):
-            #     entropies += [self._calculate_entropy(base_logits[i, :])]
-            # alpha = torch.max(torch.stack(entropies))
-            alpha = self._calculate_entropy(base_logits[0, :])
+            entropies = []
+            for i in range(base_logits.shape[0]):
+                entropies += [self._calculate_entropy(base_logits[i, :])]
+            alpha = torch.max(torch.stack(entropies))
 
             if self.alpha_cap:
                 # If the entropy is too high, cap the alpha with the entropy cap
