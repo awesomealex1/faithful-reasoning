@@ -153,6 +153,9 @@ class DeCoReEntropy(BaseModel):
             entropies = torch.stack(entropies)
             alpha = torch.max(entropies)
 
+            print("base_logits: ", base_logits)
+            print("hallucinated_logits: ", hallucinated_logits)
+            print("entropies: ", entropies)
             print("base_logits.shape: ", base_logits.shape)
             print("hallucinated_logits.shape: ", hallucinated_logits.shape)
             print("entropies.shape: ", entropies.shape)
