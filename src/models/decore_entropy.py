@@ -137,10 +137,14 @@ class DeCoReEntropy(BaseModel):
             prefix_ids = self._verbalise_input(prompt).to(self.model.device)
             continue_ids = input_ids[0, prefix_ids.shape[-1] :]
 
-            base_outputs = self.model(input_ids)[0]
+            base_outputs = self.model(input_ids)
+            print("base_outputs: ", base_outputs)
+            base_outputs = base_outputs[0]
             hallucinated_outputs = self.model(
                 input_ids, block_list=self.retrieval_heads
             )[0]
+
+            print("base_outputs: ", base_outputs)
 
             base_logits = base_outputs[0, prefix_ids.shape[-1] - 1 : -1, :]
             hallucinated_logits = hallucinated_outputs[
