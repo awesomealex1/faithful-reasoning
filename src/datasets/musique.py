@@ -25,6 +25,7 @@ class MuSiQue(BaseDataset):
         **kwargs,
     ):
         super().__init__(data_configs, **kwargs)
+        self.variation = data_configs.variation
 
         self.data_filename = os.path.join(self.data_dir, "musique_ans_v1.0_dev.jsonl")
 
