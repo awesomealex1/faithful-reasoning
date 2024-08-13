@@ -150,7 +150,6 @@ class DeCoReEntropy(BaseModel):
             ]
 
             alpha = self._calculate_entropy(prefix_outputs[0, -1, :])
-            print(alpha)
             # entropies = []
             # for i in range(base_logits.shape[0]):
             #     entropies += [self._calculate_entropy(base_logits[i, :])]
