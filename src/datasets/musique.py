@@ -46,7 +46,10 @@ class MuSiQue(BaseDataset):
                             "idx": sample_id,
                             "type": sample_type,
                             "paragraphs": [
-                                para
+                                {
+                                    "title": para["title"],
+                                    "paragraph_text": para["paragraph_text"],
+                                }
                                 for para in instance["paragraphs"]
                                 if para["is_supporting"]
                             ],
