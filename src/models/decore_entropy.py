@@ -139,12 +139,12 @@ class DeCoReEntropy(BaseModel):
                 input_text = prompted_question + [answer]
             else:
                 input_text = prompted_question + answer
-            input_ids = self._verbalise_input(input_text, use_system_prompt).to(
-                self.model.device
-            )
-            prefix_ids = self._verbalise_input(prompted_question, use_system_prompt).to(
-                self.model.device
-            )
+            input_ids = self._verbalise_input(
+                input_text, use_system_prompt=use_system_prompt
+            ).to(self.model.device)
+            prefix_ids = self._verbalise_input(
+                prompted_question, use_system_prompt=use_system_prompt
+            ).to(self.model.device)
             continue_ids = input_ids[0, prefix_ids.shape[-1] :]
 
             print("input_ids: ", input_ids)
