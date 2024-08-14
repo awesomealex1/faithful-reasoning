@@ -139,14 +139,26 @@ class DeCoReBOS(BaseModel):
         inputs,
         answer,
     ):
-        prompt = inputs["prompted_question"][0]
+        prompted_question = prompt["prompted_question"][0]
+
+        if len(prompt["verbalised_instruction"][0]):
+            use_system_prompt = True
+        else:
+            use_system_prompt = False
+
         with torch.no_grad():
-            if type(prompt) == list:
-                input_text = prompt + [answer]
+            if type(prompted_question) == list:
+                input_text = prompted_question + [answer]
             else:
-                input_text = prompt + answer
-            input_ids = self._verbalise_input(input_text).to(self.model.device)
-            prefix_ids = self._verbalise_input(prompt).to(self.model.device)
+                input_text = prompted_question + answer
+            input_ids = self._verbalise_input(
+                input_text,
+                use_system_prompt=use_system_prompt,
+                add_generation_prompt=False,
+            ).to(self.model.device)
+            prefix_ids = self._verbalise_input(
+                prompted_question, use_system_prompt=use_system_prompt
+            ).to(self.model.device)
             continue_ids = input_ids[0, prefix_ids.shape[-1] :]
 
             base_outputs = self.model(
@@ -176,7 +188,7 @@ class DeCoReBOS(BaseModel):
                     )
                 ]
 
-            alpha = torch.max(torch.stack(lookback_ratios))
+            alpha = torch.stack(lookback_ratios)
 
             if self.alpha_cap:
                 # If the entropy is too high, cap the alpha with the entropy cap

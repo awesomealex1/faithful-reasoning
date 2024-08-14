@@ -151,13 +151,6 @@ class DeCoReEntropy(BaseModel):
             ).to(self.model.device)
             continue_ids = input_ids[0, prefix_ids.shape[-1] :]
 
-            print("input_ids: ", input_ids)
-            print("input_ids.shape: ", input_ids.shape)
-            print("prefix_ids: ", prefix_ids)
-            print("prefix_ids.shape: ", prefix_ids.shape)
-            print("continue_ids: ", continue_ids)
-            print("continue_ids.shape: ", continue_ids.shape)
-
             base_outputs = self.model(input_ids)[0]
             hallucinated_outputs = self.model(
                 input_ids, block_list=self.retrieval_heads
@@ -168,29 +161,17 @@ class DeCoReEntropy(BaseModel):
                 0, prefix_ids.shape[-1] - 1 : -1, :
             ]
 
-            print("base_logits.shape: ", base_logits.shape)
-            print("hallucinated_logits.shape: ", hallucinated_logits.shape)
-
             entropies = []
             for i in range(base_logits.shape[0]):
                 entropies += [self._calculate_entropy(base_logits[i, :])]
             alpha = torch.stack(entropies).unsqueeze(1)
 
-            print(alpha)
-            print("alpha.shape: ", alpha.shape)
-
             if self.alpha_cap:
                 # If the entropy is too high, cap the alpha with the entropy cap
-                alpha = torch.min(
-                    alpha, torch.tensor(self.alpha_cap).to(alpha.device), dim=-1
-                )
+                alpha = torch.min(alpha, torch.tensor(self.alpha_cap).to(alpha.device))
 
             base_logits = base_logits.log_softmax(dim=-1)
             hallucinated_logits = hallucinated_logits.log_softmax(dim=-1)
-
-            print("alpha.shape: ", alpha.shape)
-            print("base_logits.shape: ", base_logits.shape)
-            print("hallucinated_logits.shape: ", hallucinated_logits.shape)
 
             diff_logits = (1 + alpha) * base_logits - alpha * hallucinated_logits
 
