@@ -59,6 +59,7 @@ class BaseModel(ABC):
                     for idx, input in enumerate(inputs):
                         if type(input) in [tuple, list]:
                             input = input[0]
+                        print(f"{idx} -> {input}")
                         if idx == 0 and use_system_prompt:
                             chat_inputs += [{"role": "system", "content": input}]
                         else:
@@ -66,6 +67,7 @@ class BaseModel(ABC):
                                 chat_inputs += [{"role": "user", "content": input}]
                             else:
                                 chat_inputs += [{"role": "assistant", "content": input}]
+                    print(chat_inputs)
                 else:
                     if type(inputs) in [tuple, list]:
                         inputs = inputs[0]
