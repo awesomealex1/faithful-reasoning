@@ -129,6 +129,7 @@ class DeCoReEntropy(BaseModel):
     ):
         prompted_question = prompt["prompted_question"][0]
 
+        # Only relevant for instruct model
         if prompt["verbalised_instruction"]:
             use_system_prompt = True
         else:
@@ -139,6 +140,8 @@ class DeCoReEntropy(BaseModel):
                 input_text = prompted_question + [answer]
             else:
                 input_text = prompted_question + answer
+
+            print(input_text)
             input_ids = self._verbalise_input(
                 input_text, use_system_prompt=use_system_prompt
             ).to(self.model.device)
