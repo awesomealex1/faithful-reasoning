@@ -127,18 +127,13 @@ class DeCoReEntropy(BaseModel):
         prompt,
         answer,
     ):
-        print(prompt["prompted_question"])
         prompted_question = prompt["prompted_question"][0]
-        print(prompted_question)
 
-        print(prompt["verbalised_instruction"])
         # Only relevant for instruct model
         if len(prompt["verbalised_instruction"][0]):
             use_system_prompt = True
         else:
             use_system_prompt = False
-
-        print(use_system_prompt)
 
         with torch.no_grad():
             if type(prompted_question) == list:
@@ -146,7 +141,6 @@ class DeCoReEntropy(BaseModel):
             else:
                 input_text = prompted_question + answer
 
-            print(input_text)
             input_ids = self._verbalise_input(
                 input_text,
                 use_system_prompt=use_system_prompt,
@@ -169,10 +163,11 @@ class DeCoReEntropy(BaseModel):
                 input_ids, block_list=self.retrieval_heads
             )[0]
 
-            base_logits = base_outputs[0, prefix_ids.shape[-1] - 1 : -1, :]
-            hallucinated_logits = hallucinated_outputs[
-                0, prefix_ids.shape[-1] - 1 : -1, :
-            ]
+            base_logits = base_outputs[0, prefix_ids.shape[-1] : -1, :]
+            hallucinated_logits = hallucinated_outputs[0, prefix_ids.shape[-1] : -1, :]
+
+            print("base_logits.shape: ", base_logits.shape)
+            print("hallucinated_logits.shape: ", hallucinated_logits.shape)
 
             entropies = []
             for i in range(base_logits.shape[0]):
