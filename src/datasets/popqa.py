@@ -127,12 +127,11 @@ class PopQA(BaseDataset):
             ]
         else:
             instruction = instruction[0]
-            icl_demo = "\n\n".join(icl_demo)
+            icl_demo = "\n\n".join(icl_demo) + "\n\n"
             input_text_prompt = (
                 instruction
                 + "\n\n"
                 + icl_demo
-                + "\n\n"
                 + (f"{verbalised_question}{answer_prefix}")
             )
         return {
