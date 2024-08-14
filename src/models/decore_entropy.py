@@ -138,6 +138,8 @@ class DeCoReEntropy(BaseModel):
         else:
             use_system_prompt = False
 
+        print(use_system_prompt)
+
         with torch.no_grad():
             if type(prompted_question) == list:
                 input_text = prompted_question + [answer]
@@ -146,7 +148,9 @@ class DeCoReEntropy(BaseModel):
 
             print(input_text)
             input_ids = self._verbalise_input(
-                input_text, use_system_prompt=use_system_prompt
+                input_text,
+                use_system_prompt=use_system_prompt,
+                add_generation_prompt=False,
             ).to(self.model.device)
             prefix_ids = self._verbalise_input(
                 prompted_question, use_system_prompt=use_system_prompt
