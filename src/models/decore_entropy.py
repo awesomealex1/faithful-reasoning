@@ -172,7 +172,7 @@ class DeCoReEntropy(BaseModel):
             entropies = []
             for i in range(base_logits.shape[0]):
                 entropies += [self._calculate_entropy(base_logits[i, :])]
-            alpha = torch.stack(entropies)
+            alpha = torch.stack(entropies).unsqueeze(1)
 
             print(alpha)
             print("alpha.shape: ", alpha.shape)
@@ -189,6 +189,10 @@ class DeCoReEntropy(BaseModel):
             print("alpha.shape: ", alpha.shape)
             print("base_logits.shape: ", base_logits.shape)
             print("hallucinated_logits.shape: ", hallucinated_logits.shape)
+
+            print("alpha: ", alpha)
+            print("hallucinated_logits: ", hallucinated_logits)
+            print("alpha * hallucinated_logits: ", alpha * hallucinated_logits)
             print("1+alpha: ", 1 + alpha)
 
             diff_logits = (1 + alpha) * base_logits - alpha * hallucinated_logits
