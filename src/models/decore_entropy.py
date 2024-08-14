@@ -137,8 +137,9 @@ class DeCoReEntropy(BaseModel):
             prefix_ids = self._verbalise_input(prompt).to(self.model.device)
             continue_ids = input_ids[0, prefix_ids.shape[-1] :]
 
-            print(input_ids)
-            print(prefix_ids)
+            print("input_ids: ", input_ids)
+            print("prefix_ids: ", prefix_ids)
+            print("continue_ids: ", continue_ids)
 
             prefix_outputs = self.model(prefix_ids)[0]
 
