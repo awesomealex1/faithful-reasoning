@@ -92,17 +92,27 @@ class TriviaQA(BaseDataset):
         return demo_texts
 
     def build_prompt(self, question):
+        instruction = ["Answer the given question."]
+
         icl_demo = self.create_demo_text()
 
         verbalised_question = f"Question: {question}\n"
         answer_prefix = "Answer:"
         if self.kwargs["use_chat_template"]:
-            input_text_prompt = [icl_demo + [f"{verbalised_question}{answer_prefix}"]]
+            input_text_prompt = [
+                instruction + icl_demo + [f"{verbalised_question}{answer_prefix}"]
+            ]
         else:
+            instruction = instruction[0]
             icl_demo = "\n\n".join(icl_demo) + "\n\n"
-            input_text_prompt = icl_demo + (f"{verbalised_question}{answer_prefix}")
+            input_text_prompt = (
+                instruction
+                + "\n\n"
+                + icl_demo
+                + (f"{verbalised_question}{answer_prefix}")
+            )
         return {
-            "verbalised_instruction": "",
+            "verbalised_instruction": instruction,
             "verbalised_icl_demo": icl_demo,
             "verbalised_contexts": "",
             "verbalised_question": verbalised_question,
