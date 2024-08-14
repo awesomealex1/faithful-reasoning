@@ -21,9 +21,8 @@ class BaselineMaskedNonRetrievalHead(BaseModel):
         self._load_retrieval_heads()
         self.num_retrieval_heads = self.decoder_configs.configs.num_retrieval_heads
         assert (
-            self.num_retrieval_heads < 0,
-            "Number of retrieval heads should be negative",
-        )  # negative number of retrieval heads to signify selecting random heads
+            self.num_retrieval_heads < 0
+        ), "Number of retrieval heads should be negative"  # negative number of retrieval heads to signify selecting random heads
         self.random_heads = self._construct_random_head(-self.num_retrieval_heads)
         print("Random heads: ", self.random_heads)
 
