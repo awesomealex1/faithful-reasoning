@@ -149,7 +149,7 @@ class DeCoReEntropy(BaseModel):
             prefix_ids = self._verbalise_input(
                 prompted_question, use_system_prompt=use_system_prompt
             ).to(self.model.device)
-            continue_ids = input_ids[0, prefix_ids.shape[-1] :]
+            continue_ids = input_ids[0, prefix_ids.shape[-1] : -1]
 
             print("input_ids: ", input_ids)
             print("input_ids.shape: ", input_ids.shape)
@@ -189,11 +189,6 @@ class DeCoReEntropy(BaseModel):
             print("alpha.shape: ", alpha.shape)
             print("base_logits.shape: ", base_logits.shape)
             print("hallucinated_logits.shape: ", hallucinated_logits.shape)
-
-            print("alpha: ", alpha)
-            print("hallucinated_logits: ", hallucinated_logits)
-            print("alpha * hallucinated_logits: ", alpha * hallucinated_logits)
-            print("1+alpha: ", 1 + alpha)
 
             diff_logits = (1 + alpha) * base_logits - alpha * hallucinated_logits
 
