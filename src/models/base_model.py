@@ -55,6 +55,7 @@ class BaseModel(ABC):
             if use_chat_template:
                 chat_inputs = []
                 if type(inputs) == list:
+                    print("inputs: ", inputs)
                     for idx, input in enumerate(inputs):
                         if type(input) in [tuple, list]:
                             input = input[0]
