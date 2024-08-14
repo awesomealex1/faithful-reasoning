@@ -74,7 +74,11 @@ class MemoTrap(BaseDataset):
         sample["verbalised_question"] = sample["question"]
         sample["verbalised_answer_prefix"] = ""
 
-        sample["prompted_question"] = [[sample["question"]]]
+        sample["prompted_question"] = (
+            [[sample["question"]]]
+            if self.kwargs["use_chat_template"]  # Use list for chat template
+            else sample["question"]
+        )
         sample["prompted_ref_true"] = sample["classes"][true_idx]
         sample["prompted_ref_false"] = sample["classes"][false_idx]
 
