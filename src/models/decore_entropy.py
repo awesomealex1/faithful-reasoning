@@ -176,12 +176,12 @@ class DeCoReEntropy(BaseModel):
                 0, prefix_ids.shape[-1] - 1 : -1, :
             ]
 
-            alpha = self._calculate_entropy(prefix_outputs[0, -1, :])
-            # entropies = []
-            # for i in range(base_logits.shape[0]):
-            #     entropies += [self._calculate_entropy(base_logits[i, :])]
-            # entropies = torch.stack(entropies)
-            # alpha = torch.max(entropies)
+            entropies = []
+            for i in range(base_logits.shape[0]):
+                entropies += [self._calculate_entropy(base_logits[i, :])]
+            alphas = torch.stack(entropies)
+
+            print(alphas)
 
             if self.alpha_cap:
                 # If the entropy is too high, cap the alpha with the entropy cap
