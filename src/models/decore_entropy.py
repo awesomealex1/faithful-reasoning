@@ -127,7 +127,9 @@ class DeCoReEntropy(BaseModel):
         prompt,
         answer,
     ):
+        print(prompt["prompted_question"])
         prompted_question = prompt["prompted_question"][0]
+        print(prompted_question)
 
         # Only relevant for instruct model
         if prompt["verbalised_instruction"]:
