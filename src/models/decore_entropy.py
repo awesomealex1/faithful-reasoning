@@ -164,8 +164,6 @@ class DeCoReEntropy(BaseModel):
             print("continue_ids: ", continue_ids)
             print("continue_ids.shape: ", continue_ids.shape)
 
-            prefix_outputs = self.model(prefix_ids)[0]
-
             base_outputs = self.model(input_ids)[0]
             hallucinated_outputs = self.model(
                 input_ids, block_list=self.retrieval_heads
@@ -179,13 +177,15 @@ class DeCoReEntropy(BaseModel):
             entropies = []
             for i in range(base_logits.shape[0]):
                 entropies += [self._calculate_entropy(base_logits[i, :])]
-            alphas = torch.stack(entropies)
+            alpha = torch.stack(entropies)
 
-            print(alphas)
+            print(alpha)
 
             if self.alpha_cap:
                 # If the entropy is too high, cap the alpha with the entropy cap
-                alpha = torch.min(alpha, torch.tensor(self.alpha_cap).to(alpha.device))
+                alpha = torch.min(
+                    alpha, torch.tensor(self.alpha_cap).to(alpha.device), dim=-1
+                )
 
             base_logits = base_logits.log_softmax(dim=-1)
             hallucinated_logits = hallucinated_logits.log_softmax(dim=-1)
