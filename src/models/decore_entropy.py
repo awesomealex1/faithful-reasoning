@@ -175,6 +175,7 @@ class DeCoReEntropy(BaseModel):
             alpha = torch.stack(entropies)
 
             print(alpha)
+            print("alpha.shape: ", alpha.shape)
 
             if self.alpha_cap:
                 # If the entropy is too high, cap the alpha with the entropy cap
@@ -184,6 +185,11 @@ class DeCoReEntropy(BaseModel):
 
             base_logits = base_logits.log_softmax(dim=-1)
             hallucinated_logits = hallucinated_logits.log_softmax(dim=-1)
+
+            print("alpha.shape: ", alpha.shape)
+            print("base_logits.shape: ", base_logits.shape)
+            print("hallucinated_logits.shape: ", hallucinated_logits.shape)
+            print("1+alpha: ", 1 + alpha)
 
             diff_logits = (1 + alpha) * base_logits - alpha * hallucinated_logits
 
