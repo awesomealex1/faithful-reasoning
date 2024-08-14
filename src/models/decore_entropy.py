@@ -133,7 +133,7 @@ class DeCoReEntropy(BaseModel):
 
         print(prompt["verbalised_instruction"])
         # Only relevant for instruct model
-        if len(prompt["verbalised_instruction"]):
+        if len(prompt["verbalised_instruction"][0]):
             use_system_prompt = True
         else:
             use_system_prompt = False
