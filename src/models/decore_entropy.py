@@ -65,7 +65,9 @@ class DeCoReEntropy(BaseModel):
         ), "Return attentions not supported for DeCoReVanilla"
         self.model.eval()
 
+        print(inputs)
         prompt = inputs["prompted_question"][0]
+        print(prompt)
         inputs = self._verbalise_input(prompt).to(self.model.device)
 
         # Predict
