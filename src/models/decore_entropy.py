@@ -69,6 +69,7 @@ class DeCoReEntropy(BaseModel):
         prompt = inputs["prompted_question"][0]
         print(prompt)
         inputs = self._verbalise_input(prompt).to(self.model.device)
+        print(inputs)
 
         # Predict
         with torch.inference_mode():
