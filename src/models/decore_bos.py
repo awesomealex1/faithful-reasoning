@@ -136,11 +136,12 @@ class DeCoReBOS(BaseModel):
 
     def lm_score(
         self,
-        inputs,
+        prompt,
         answer,
     ):
         prompted_question = prompt["prompted_question"][0]
 
+        # Only relevant for instruct model
         if len(prompt["verbalised_instruction"][0]):
             use_system_prompt = True
         else:
@@ -151,6 +152,7 @@ class DeCoReBOS(BaseModel):
                 input_text = prompted_question + [answer]
             else:
                 input_text = prompted_question + answer
+
             input_ids = self._verbalise_input(
                 input_text,
                 use_system_prompt=use_system_prompt,
