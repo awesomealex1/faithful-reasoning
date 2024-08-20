@@ -24,14 +24,17 @@ class DoLa(BaseModel):
 
         self.post_softmax = self.decoder_configs.configs.post_softmax
 
+        self.num_layers = len(self.model.model.layers)
+        mid_point = self.num_layers // 2
+
         if self.dola_layers == "low":
-            self.candidate_premature_layers = list(range(0, 16, 2)) + [
-                32
-            ]  # FIXME: 16,32 is hard-coded for llama3-8b
+            self.candidate_premature_layers = list(range(0, mid_point, 2)) + [
+                self.num_layers
+            ]
         elif self.dola_layers == "high":
-            self.candidate_premature_layers = list(range(16, 32, 2)) + [
-                32
-            ]  # FIXME: 16,32 is hard-coded for llama3-8b
+            self.candidate_premature_layers = list(
+                range(mid_point, self.num_layers, 2)
+            ) + [self.num_layers]
         self.mature_layer = self.candidate_premature_layers[-1]
 
     def _calculate_entropy(self, logits):
