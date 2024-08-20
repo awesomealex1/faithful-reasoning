@@ -190,7 +190,11 @@ class DeCoReBOS(BaseModel):
                     )
                 ]
 
+            print("base_logits.shape: ", base_logits.shape)
+            print("hallucinated_logits.shape: ", hallucinated_logits.shape)
+
             alpha = torch.stack(lookback_ratios)
+            print(alpha)
 
             if self.alpha_cap:
                 # If the entropy is too high, cap the alpha with the entropy cap
