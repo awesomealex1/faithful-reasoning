@@ -190,7 +190,7 @@ class DeCoReBOS(BaseModel):
                     )
                 ]
 
-            alpha = torch.stack(lookback_ratios).unsqueeze(1)
+            alpha = torch.stack(lookback_ratios).unsqueeze(1).to(self.model.device)
 
             if self.alpha_cap:
                 # If the entropy is too high, cap the alpha with the entropy cap
