@@ -32,15 +32,18 @@ class BaseModel(ABC):
         elif "mistral" in model_configs.name.lower():
             self.model = MistralForCausalLM.from_pretrained(
                 model_configs.configs.model_name_or_path,
+                use_flash_attention_2="flash_attention_2",
                 attn_implementation="flash_attention_2",
-                torch_dtype=torch.bfloat16,
+                torch_dtype="auto",
                 device_map="auto",
+                trust_remote_code=True,
             ).eval()
         elif "qwen2" in model_configs.name.lower():
             self.model = Qwen2ForCausalLM.from_pretrained(
                 model_configs.configs.model_name_or_path,
+                use_flash_attention_2="flash_attention_2",
                 attn_implementation="flash_attention_2",
-                torch_dtype=torch.bfloat16,
+                torch_dtype="auto",
                 device_map="auto",
             ).eval()
 
@@ -74,11 +77,17 @@ class BaseModel(ABC):
                 chat_inputs = []
                 if type(inputs) == list:
                     if "mistral" in self.model_configs.name.lower():
+                        print("use_system_prompt: ", use_system_prompt)
+                        print("inputs: ", inputs)
                         if use_system_prompt:
-                            system_prompt = inputs[0]
+                            system_prompt = inputs[0] + "\n"
                             if type(system_prompt) in [tuple, list]:
                                 system_prompt = system_prompt[0]
                             inputs = inputs[1:]
+                        else:
+                            system_prompt = ""
+                        print("system_prompt: ", system_prompt)
+                        print("inputs: ", inputs)
                     for idx, input in enumerate(inputs):
                         if type(input) in [tuple, list]:
                             input = input[0]
@@ -103,7 +112,7 @@ class BaseModel(ABC):
                                     chat_inputs += [
                                         {
                                             "role": "user",
-                                            "content": system_prompt + "\n" + input,
+                                            "content": system_prompt + input,
                                         }
                                     ]
                                 else:
