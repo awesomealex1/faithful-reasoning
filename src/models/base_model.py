@@ -102,6 +102,7 @@ class BaseModel(ABC):
                     return_tensors="pt",
                     max_length=self.max_seq_len,
                 )
+                print(inputs)
             else:
                 if type(inputs) in [tuple, list]:
                     inputs = inputs[0]
