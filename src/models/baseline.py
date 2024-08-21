@@ -26,6 +26,7 @@ class Baseline(BaseModel):
         prompt,
         answer,
     ):
+        print(prompt)
         prompted_question = prompt["prompted_question"][0]
 
         if len(prompt["verbalised_instruction"][0]):
