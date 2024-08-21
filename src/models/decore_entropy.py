@@ -127,13 +127,17 @@ class DeCoReEntropy(BaseModel):
         prompt,
         answer,
     ):
+        print("prompt: ", prompt)
         prompted_question = prompt["prompted_question"][0]
+        print("prompted_question: ", prompted_question)
 
         # Only relevant for instruct model
         if len(prompt["verbalised_instruction"][0]):
             use_system_prompt = True
         else:
             use_system_prompt = False
+
+        print("use_system_prompt: ", use_system_prompt)
 
         with torch.no_grad():
             if type(prompted_question) == list:
