@@ -1,7 +1,7 @@
 defaults:
   - base_model_config
 
-name: Mistral-7b
+name: Mistral-7b-Instruct
 model_type: instruct
 configs:
   model_name_or_path: mistralai/Mistral-7B-Instruct-v0.3
