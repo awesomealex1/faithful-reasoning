@@ -1167,7 +1167,6 @@ class MistralModel(MistralPreTrainedModel):
             kwargs={"block_list":block_list}
         else:
             kwargs={}
-        print("block_list: ", block_list)
         for decoder_layer in self.layers:
             if output_hidden_states:
                 all_hidden_states += (hidden_states,)
