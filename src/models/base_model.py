@@ -80,9 +80,10 @@ class BaseModel(ABC):
                         print("use_system_prompt: ", use_system_prompt)
                         print("inputs: ", inputs)
                         if use_system_prompt:
-                            system_prompt = inputs[0] + "\n"
+                            system_prompt = inputs[0]
                             if type(system_prompt) in [tuple, list]:
                                 system_prompt = system_prompt[0]
+                            system_prompt = system_prompt + "\n"
                             inputs = inputs[1:]
                         else:
                             system_prompt = ""
