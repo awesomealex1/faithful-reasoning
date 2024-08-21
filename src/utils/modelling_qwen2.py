@@ -1195,7 +1195,7 @@ class Qwen2Model(Qwen2PreTrainedModel):
             kwargs={"block_list":block_list}
         else:
             kwargs={}
-        print(block_list)
+        print("[Model] block_list: ", block_list)
         for decoder_layer in self.layers:
             if output_hidden_states:
                 all_hidden_states += (hidden_states,)
@@ -1331,6 +1331,7 @@ class Qwen2ForCausalLM(Qwen2PreTrainedModel):
         return_dict = return_dict if return_dict is not None else self.config.use_return_dict
 
         # decoder outputs consists of (dec_features, layer_state, dec_hidden, dec_attn)
+        print("[CausalLM] block_list: ", block_list)
         outputs = self.model(
             input_ids=input_ids,
             attention_mask=attention_mask,
