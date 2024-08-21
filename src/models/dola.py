@@ -51,7 +51,15 @@ class DoLa(BaseModel):
         self.model.eval()
 
         prompt = inputs["prompted_question"][0]
-        tokenised_inputs = self._verbalise_input(prompt).to(self.model.device)
+
+        if len(inputs["verbalised_instruction"][0]):
+            use_system_prompt = True
+        else:
+            use_system_prompt = False
+
+        tokenised_inputs = self._verbalise_input(
+            prompt, use_system_prompt=use_system_prompt
+        ).to(self.model.device)
 
         with torch.inference_mode():
             outputs = self.model.generate(

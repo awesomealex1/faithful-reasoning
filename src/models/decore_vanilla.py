@@ -53,15 +53,23 @@ class DeCoReVanilla(BaseModel):
         self.model.eval()
 
         prompt = inputs["prompted_question"][0]
-        inputs = self._verbalise_input(prompt).to(self.model.device)
+
+        if len(inputs["verbalised_instruction"][0]):
+            use_system_prompt = True
+        else:
+            use_system_prompt = False
+
+        tokenised_inputs = self._verbalise_input(
+            prompt, use_system_prompt=use_system_prompt
+        ).to(self.model.device)
 
         # Predict
         with torch.inference_mode():
             input_logits = self.model(
-                input_ids=inputs[:, :-1], use_cache=True, return_dict=True
+                input_ids=tokenised_inputs[:, :-1], use_cache=True, return_dict=True
             )
             generated_ids = []
-            last_input_token = inputs[:, -1]
+            last_input_token = tokenised_inputs[:, -1]
             base_past_kv = copy.deepcopy(input_logits.past_key_values)
             hallucinated_past_kv = copy.deepcopy(input_logits.past_key_values)
             for _ in range(self.max_new_tokens):

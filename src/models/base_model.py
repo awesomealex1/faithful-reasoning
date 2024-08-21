@@ -77,8 +77,6 @@ class BaseModel(ABC):
                 chat_inputs = []
                 if type(inputs) == list:
                     if "mistral" in self.model_configs.name.lower():
-                        print("use_system_prompt: ", use_system_prompt)
-                        print("inputs: ", inputs)
                         if use_system_prompt:
                             system_prompt = inputs[0]
                             if type(system_prompt) in [tuple, list]:
@@ -87,8 +85,6 @@ class BaseModel(ABC):
                             inputs = inputs[1:]
                         else:
                             system_prompt = ""
-                        print("system_prompt: ", system_prompt)
-                        print("inputs: ", inputs)
                     for idx, input in enumerate(inputs):
                         if type(input) in [tuple, list]:
                             input = input[0]
@@ -376,7 +372,15 @@ class BaseModel(ABC):
         self.model.eval()
 
         prompt = inputs["prompted_question"][0]
-        tokenised_inputs = self._verbalise_input(prompt).to(self.model.device)
+
+        if len(inputs["verbalised_instruction"][0]):
+            use_system_prompt = True
+        else:
+            use_system_prompt = False
+
+        tokenised_inputs = self._verbalise_input(
+            prompt, use_system_prompt=use_system_prompt
+        ).to(self.model.device)
 
         # Predict
         with torch.inference_mode():
