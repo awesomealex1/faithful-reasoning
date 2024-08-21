@@ -73,10 +73,18 @@ class BaseModel(ABC):
             if use_chat_template:
                 chat_inputs = []
                 if type(inputs) == list:
+                    if "mistral" in self.model_configs.name:
+                        if use_system_prompt:
+                            system_prompt = inputs[0]
+                            inputs = inputs[1:]
                     for idx, input in enumerate(inputs):
                         if type(input) in [tuple, list]:
                             input = input[0]
-                        if use_system_prompt:
+                        # Mistral can't handle system prompt
+                        if (
+                            use_system_prompt
+                            and "mistral" not in self.model_configs.name
+                        ):
                             if idx == 0:
                                 chat_inputs += [{"role": "system", "content": input}]
                             else:
@@ -87,10 +95,26 @@ class BaseModel(ABC):
                                         {"role": "assistant", "content": input}
                                     ]
                         else:
-                            if idx % 2 == 0:
-                                chat_inputs += [{"role": "user", "content": input}]
+                            # Mistral can't handle system prompt
+                            if "mistral" in self.model_configs.name:
+                                if idx % 2 == 0:
+                                    chat_inputs += [
+                                        {
+                                            "role": "user",
+                                            "content": system_prompt + "\n" + input,
+                                        }
+                                    ]
+                                else:
+                                    chat_inputs += [
+                                        {"role": "assistant", "content": input}
+                                    ]
                             else:
-                                chat_inputs += [{"role": "assistant", "content": input}]
+                                if idx % 2 == 0:
+                                    chat_inputs += [{"role": "user", "content": input}]
+                                else:
+                                    chat_inputs += [
+                                        {"role": "assistant", "content": input}
+                                    ]
                 else:
                     if type(inputs) in [tuple, list]:
                         inputs = inputs[0]
@@ -344,9 +368,6 @@ class BaseModel(ABC):
         prompt = inputs["prompted_question"][0]
         tokenised_inputs = self._verbalise_input(prompt).to(self.model.device)
 
-        # Calculate the length of each component
-        component_lengths = self._get_component_lengths(inputs, tokenised_inputs)
-
         # Predict
         with torch.inference_mode():
             input_logits = self.model(
@@ -384,6 +405,7 @@ class BaseModel(ABC):
             "attentions": {},
         }
         if return_attentions:
+            component_lengths = self._get_component_lengths(inputs, tokenised_inputs)
             generation_output["attentions"] = self.get_lookback_ratios(
                 attentions, component_lengths, tokenised_inputs.size(1)
             )

@@ -78,8 +78,8 @@ class Run:
         # To save WandB space, just return attentions for the Baseline model
         # Mainly for Logistic Regression purposes
         return_attentions = False
-        if self.configs.decoder.name == "Baseline":
-            return_attentions = True
+        # if self.configs.decoder.name == "Baseline":
+        #     return_attentions = True
 
         attentions_list = []
         for step, batch in enumerate(tqdm(self.dataloaders)):
