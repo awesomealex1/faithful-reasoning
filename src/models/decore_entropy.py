@@ -108,6 +108,10 @@ class DeCoReEntropy(BaseModel):
                         alpha, torch.tensor(self.alpha_cap).to(alpha.device)
                     )
 
+                print("base_outputs: ", base_outputs.logits[0, -1])
+                print("hallucinated_outputs: ", hallucinated_outputs.logits[0, -1])
+                print("alpha: ", alpha)
+
                 next_token_logits = (1 + alpha) * base_outputs.logits[
                     0, -1
                 ] - alpha * hallucinated_outputs.logits[0, -1]
@@ -173,6 +177,10 @@ class DeCoReEntropy(BaseModel):
 
             base_logits = base_logits.log_softmax(dim=-1)
             hallucinated_logits = hallucinated_logits.log_softmax(dim=-1)
+
+            print("base_logits: ", base_logits)
+            print("hallucinated_logits: ", hallucinated_logits)
+            print("alpha: ", alpha)
 
             diff_logits = (1 + alpha) * base_logits - alpha * hallucinated_logits
 
