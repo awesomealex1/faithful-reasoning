@@ -10,7 +10,9 @@ from transformers import (
 )
 
 from src.configs import DecoderConfigs, ModelConfigs
-from src.utils.modelling_llama import LlamaConfig, LlamaForCausalLM
+from src.utils.modelling_llama import LlamaForCausalLM
+from src.utils.modelling_mistral import MistralForCausalLM
+from src.utils.modelling_qwen2 import Qwen2ForCausalLM
 
 
 class BaseModel(ABC):
@@ -19,13 +21,27 @@ class BaseModel(ABC):
         model_configs: ModelConfigs,
         decoder_configs: DecoderConfigs,
     ):
-        self.model = LlamaForCausalLM.from_pretrained(
-            model_configs.configs.model_name_or_path,
-            use_flash_attention_2="flash_attention_2",
-            attn_implementation="flash_attention_2",
-            torch_dtype=torch.bfloat16,
-            device_map="auto",
-        ).eval()
+        if "llama" in model_configs.name.lower():
+            self.model = LlamaForCausalLM.from_pretrained(
+                model_configs.configs.model_name_or_path,
+                use_flash_attention_2="flash_attention_2",
+                attn_implementation="flash_attention_2",
+                torch_dtype=torch.bfloat16,
+                device_map="auto",
+            ).eval()
+        elif "mistral" in model_configs.name.lower():
+            self.model = MistralForCausalLM.from_pretrained(
+                model_configs.configs.model_name_or_path,
+                torch_dtype=torch.bfloat16,
+                device_map="auto",
+            ).eval()
+        elif "qwen2" in model_configs.name.lower():
+            self.model = Qwen2ForCausalLM.from_pretrained(
+                model_configs.configs.model_name_or_path,
+                torch_dtype=torch.bfloat16,
+                device_map="auto",
+            ).eval()
+
         self.tokenizer = AutoTokenizer.from_pretrained(
             model_configs.configs.model_name_or_path
         )
