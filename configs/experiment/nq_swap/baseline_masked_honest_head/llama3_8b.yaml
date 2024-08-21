@@ -1,5 +1,0 @@
-# @package _global_
-defaults:
-  - override /model: llama3_8b
-  - override /data: nq_swap
-  - override /decoder: baseline_masked_honest_head

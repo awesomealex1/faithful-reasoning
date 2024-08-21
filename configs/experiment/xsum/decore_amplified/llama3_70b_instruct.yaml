@@ -1,9 +1,0 @@
-# @package _global_
-defaults:
-  - override /model: llama3_70b_instruct
-  - override /data: xsum
-  - override /decoder: decore_amplified
-
-model:
-  configs:
-    max_new_tokens: 128

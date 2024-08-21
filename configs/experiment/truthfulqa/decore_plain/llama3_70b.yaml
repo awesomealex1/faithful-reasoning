@@ -1,9 +1,0 @@
-# @package _global_
-defaults:
-  - override /model: llama3_70b
-  - override /data: truthfulqa
-  - override /decoder: decore_plain
-
-model:
-  configs:
-    max_new_tokens: 64
