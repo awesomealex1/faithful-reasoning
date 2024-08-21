@@ -127,9 +127,7 @@ class DeCoReEntropy(BaseModel):
         prompt,
         answer,
     ):
-        print("prompt: ", prompt)
         prompted_question = prompt["prompted_question"][0]
-        print("prompted_question: ", prompted_question)
 
         # Only relevant for instruct model
         if len(prompt["verbalised_instruction"][0]):
@@ -137,49 +135,36 @@ class DeCoReEntropy(BaseModel):
         else:
             use_system_prompt = False
 
-        print("use_system_prompt: ", use_system_prompt)
-
         with torch.no_grad():
             if type(prompted_question) == list:
                 input_text = prompted_question + [answer]
             else:
                 input_text = prompted_question + answer
 
-            print("input_ids")
             input_ids = self._verbalise_input(
                 input_text,
                 use_system_prompt=use_system_prompt,
                 add_generation_prompt=False,
             ).to(self.model.device)
-            print("prefix_ids")
             prefix_ids = self._verbalise_input(
                 prompted_question, use_system_prompt=use_system_prompt
             ).to(self.model.device)
             continue_ids = input_ids[0, prefix_ids.shape[-1] :]
-
-            print("continue_ids: ", continue_ids)
 
             base_outputs = self.model(input_ids)[0]
             hallucinated_outputs = self.model(
                 input_ids, block_list=self.retrieval_heads
             )[0]
 
-            print("base_outputs.shape: ", base_outputs.shape)
-            print("hallucinated_outputs.shape: ", hallucinated_outputs.shape)
-
             base_logits = base_outputs[0, prefix_ids.shape[-1] - 1 : -1, :]
             hallucinated_logits = hallucinated_outputs[
                 0, prefix_ids.shape[-1] - 1 : -1, :
             ]
 
-            print("base_logits.shape: ", base_logits.shape)
-            print("hallucinated_logits.shape: ", hallucinated_logits.shape)
-
             entropies = []
             for i in range(base_logits.shape[0]):
                 entropies += [self._calculate_entropy(base_logits[i, :])]
 
-            print("entropies: ", entropies)
             alpha = torch.stack(entropies).unsqueeze(1)
 
             if self.alpha_cap:

@@ -121,14 +121,12 @@ class BaseModel(ABC):
                     if type(inputs) in [tuple, list]:
                         inputs = inputs[0]
                     chat_inputs += [{"role": "user", "content": inputs}]
-                print(chat_inputs)
                 inputs = tokenizer.apply_chat_template(
                     chat_inputs,
                     add_generation_prompt=add_generation_prompt,
                     return_tensors="pt",
                     max_length=self.max_seq_len,
                 )
-                print(inputs)
             else:
                 if type(inputs) in [tuple, list]:
                     inputs = inputs[0]
