@@ -73,7 +73,7 @@ class BaseModel(ABC):
             if use_chat_template:
                 chat_inputs = []
                 if type(inputs) == list:
-                    if "mistral" in self.model_configs.name:
+                    if "mistral" in self.model_configs.name.lower():
                         if use_system_prompt:
                             system_prompt = inputs[0]
                             inputs = inputs[1:]
@@ -83,7 +83,7 @@ class BaseModel(ABC):
                         # Mistral can't handle system prompt
                         if (
                             use_system_prompt
-                            and "mistral" not in self.model_configs.name
+                            and "mistral" not in self.model_configs.name.lower()
                         ):
                             if idx == 0:
                                 chat_inputs += [{"role": "system", "content": input}]
@@ -96,7 +96,7 @@ class BaseModel(ABC):
                                     ]
                         else:
                             # Mistral can't handle system prompt
-                            if "mistral" in self.model_configs.name:
+                            if "mistral" in self.model_configs.name.lower():
                                 if idx % 2 == 0:
                                     chat_inputs += [
                                         {
