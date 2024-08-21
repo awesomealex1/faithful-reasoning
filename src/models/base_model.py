@@ -76,6 +76,8 @@ class BaseModel(ABC):
                     if "mistral" in self.model_configs.name.lower():
                         if use_system_prompt:
                             system_prompt = inputs[0]
+                            if type(system_prompt) in [tuple, list]:
+                                system_prompt = system_prompt[0]
                             inputs = inputs[1:]
                     for idx, input in enumerate(inputs):
                         if type(input) in [tuple, list]:
