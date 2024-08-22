@@ -137,9 +137,9 @@ class DeCoReVanilla(BaseModel):
             ).to(self.model.device)
             continue_ids = input_ids[0, prefix_ids.shape[-1] :]
 
-            base_outputs = self.model(input_ids)[0]
+            base_outputs = self.model(input_ids, attn_mode="torch")[0]
             hallucinated_outputs = self.model(
-                input_ids, block_list=self.retrieval_heads
+                input_ids, block_list=self.retrieval_heads, attn_mode="torch"
             )[0]
 
             base_logits = base_outputs[0, prefix_ids.shape[-1] - 1 : -1, :]
