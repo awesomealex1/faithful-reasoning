@@ -578,7 +578,6 @@ class Qwen2FlashAttention2(Qwen2Attention):
                     f"Attention mask should be of size {(bsz, 1, q_len, kv_seq_len)}, but is {attention_mask.size()}"
                 )
             attn_weights = attn_weights + attention_mask
-        print("[FlashAttention2] kwargs: ", kwargs)
         if 'block_list' in kwargs:
             for h in kwargs['block_list']:
                 if self.layer_idx==h[0]:
@@ -593,7 +592,6 @@ class Qwen2FlashAttention2(Qwen2Attention):
                     attn_weights[:, h[1], :, :] = attn_weights[:, target_head, :, :]
                     '''
                     attn_weights[:, h[1], :, :] = 0 
-                print("[FlashAttention2] attn_weights[:, h[1], :, :] : ", attn_weights[:, h[1], :, :])
         # upcast attention to fp32
         attn_weights = nn.functional.softmax(attn_weights, dim=-1, dtype=torch.float32).to(query_states.dtype)
         attn_weights = nn.functional.dropout(attn_weights, p=self.attention_dropout, training=self.training)
