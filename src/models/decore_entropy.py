@@ -178,7 +178,7 @@ class DeCoReEntropy(BaseModel):
             print("base_logits: ", base_logits)
             print("hallucinated_logits: ", hallucinated_logits)
 
-            assert not torch.all(base_logits, hallucinated_logits)
+            assert not torch.all(base_logits == hallucinated_logits)
 
             entropies = []
             for i in range(base_logits.shape[0]):
