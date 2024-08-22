@@ -159,15 +159,26 @@ class DeCoReEntropy(BaseModel):
             ).to(self.model.device)
             continue_ids = input_ids[0, prefix_ids.shape[-1] :]
 
-            base_outputs = self.model(input_ids)[0]
-            hallucinated_outputs = self.model(
-                input_ids, block_list=self.retrieval_heads
-            )[0]
+            if "qwen2" in self.model_configs.name.lower():
+                base_outputs = self.model(input_ids, attn_mode="torch")[0]
+                hallucinated_outputs = self.model(
+                    input_ids, block_list=self.retrieval_heads, attn_mode="torch"
+                )[0]
+            else:
+                base_outputs = self.model(input_ids)[0]
+                hallucinated_outputs = self.model(
+                    input_ids, block_list=self.retrieval_heads
+                )[0]
 
             base_logits = base_outputs[0, prefix_ids.shape[-1] - 1 : -1, :]
             hallucinated_logits = hallucinated_outputs[
                 0, prefix_ids.shape[-1] - 1 : -1, :
             ]
+
+            print("base_logits: ", base_logits)
+            print("hallucinated_logits: ", hallucinated_logits)
+
+            assert not torch.all(base_logits, hallucinated_logits)
 
             entropies = []
             for i in range(base_logits.shape[0]):
