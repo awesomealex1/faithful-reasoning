@@ -1,8 +1,8 @@
 # @package _global_
 defaults:
-  - override /model: qwen2_7b_instruct
+  - override /model: iti_llama3_70b_instruct
   - override /data: xsum
-  - override /decoder: dola
+  - override /decoder: baseline
 
 model:
   configs:

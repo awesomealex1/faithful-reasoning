@@ -3,7 +3,3 @@ defaults:
   - override /model: mistral_7b_instruct
   - override /data: triviaqa
   - override /decoder: decore_entropy
-
-model:
-  configs:
-    max_new_tokens: 64
