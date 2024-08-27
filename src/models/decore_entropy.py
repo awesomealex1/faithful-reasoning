@@ -62,7 +62,7 @@ class DeCoReEntropy(BaseModel):
     ) -> dict:
         assert (
             not return_attentions
-        ), "Return attentions not supported for DeCoReVanilla"
+        ), "Return attentions not supported for DeCoReEntropy"
         self.model.eval()
 
         prompt = inputs["prompted_question"][0]
