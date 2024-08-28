@@ -21,26 +21,26 @@ class ContrastiveDecoding(BaseModel):
     ):
         super().__init__(model_configs, decoder_configs)
 
-        if "llama" in model_configs.name.lower():
+        if "llama" in decoder_configs.configs.amateur_model_name_or_path.lower():
             self.amateur_model = LlamaForCausalLM.from_pretrained(
-                model_configs.configs.amateur_model_name_or_path,
+                decoder_configs.configs.amateur_model_name_or_path,
                 use_flash_attention_2="flash_attention_2",
                 attn_implementation="flash_attention_2",
                 torch_dtype=torch.bfloat16,
                 device_map="auto",
             ).eval()
-        elif "mistral" in model_configs.name.lower():
+        elif "mistral" in decoder_configs.configs.amateur_model_name_or_path.lower():
             self.amateur_model = MistralForCausalLM.from_pretrained(
-                model_configs.configs.amateur_model_name_or_path,
+                decoder_configs.configs.amateur_model_name_or_path,
                 use_flash_attention_2="flash_attention_2",
                 attn_implementation="flash_attention_2",
                 torch_dtype="auto",
                 device_map="auto",
                 trust_remote_code=True,
             ).eval()
-        elif "qwen2" in model_configs.name.lower():
+        elif "qwen2" in decoder_configs.configs.amateur_model_name_or_path.lower():
             self.amateur_model = Qwen2ForCausalLM.from_pretrained(
-                model_configs.configs.amateur_model_name_or_path,
+                decoder_configs.configs.amateur_model_name_or_path,
                 use_flash_attention_2="flash_attention_2",
                 attn_implementation="flash_attention_2",
                 torch_dtype="auto",
@@ -48,7 +48,7 @@ class ContrastiveDecoding(BaseModel):
             ).eval()
 
         self.amateur_tokenizer = AutoTokenizer.from_pretrained(
-            model_configs.configs.amateur_model_name_or_path
+            decoder_configs.configs.amateur_model_name_or_path
         )
 
     def generate(
