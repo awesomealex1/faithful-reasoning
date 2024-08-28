@@ -48,7 +48,7 @@ class ContrastiveDecoding(BaseModel):
             ).eval()
 
         self.amateur_tokenizer = AutoTokenizer.from_pretrained(
-            decoder_configs.configs.amateur_model_name_or_path
+            model_configs.configs.amateur_model_name_or_path
         )
 
     def generate(
