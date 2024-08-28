@@ -2,7 +2,11 @@ from typing import List, Optional, Tuple
 
 import copy
 import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoTokenizer
+
+from src.utils.modelling_llama import LlamaForCausalLM
+from src.utils.modelling_mistral import MistralForCausalLM
+from src.utils.modelling_qwen2 import Qwen2ForCausalLM
 
 from src.configs import DecoderConfigs, ModelConfigs
 
@@ -17,12 +21,32 @@ class ContrastiveDecoding(BaseModel):
     ):
         super().__init__(model_configs, decoder_configs)
 
-        self.amateur_model = AutoModelForCausalLM.from_pretrained(
-            decoder_configs.configs.amateur_model_name_or_path,
-            torch_dtype=torch.bfloat16,
-            device_map="auto",
-            low_cpu_mem_usage=True,
-        )
+        if "llama" in model_configs.name.lower():
+            self.amateur_model = LlamaForCausalLM.from_pretrained(
+                model_configs.configs.amateur_model_name_or_path,
+                use_flash_attention_2="flash_attention_2",
+                attn_implementation="flash_attention_2",
+                torch_dtype=torch.bfloat16,
+                device_map="auto",
+            ).eval()
+        elif "mistral" in model_configs.name.lower():
+            self.amateur_model = MistralForCausalLM.from_pretrained(
+                model_configs.configs.amateur_model_name_or_path,
+                use_flash_attention_2="flash_attention_2",
+                attn_implementation="flash_attention_2",
+                torch_dtype="auto",
+                device_map="auto",
+                trust_remote_code=True,
+            ).eval()
+        elif "qwen2" in model_configs.name.lower():
+            self.amateur_model = Qwen2ForCausalLM.from_pretrained(
+                model_configs.configs.amateur_model_name_or_path,
+                use_flash_attention_2="flash_attention_2",
+                attn_implementation="flash_attention_2",
+                torch_dtype="auto",
+                device_map="auto",
+            ).eval()
+
         self.amateur_tokenizer = AutoTokenizer.from_pretrained(
             decoder_configs.configs.amateur_model_name_or_path
         )
