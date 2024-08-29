@@ -290,6 +290,10 @@ class DeCoReEntropy(BaseModel):
             ).to(self.model.device)
             continue_ids = input_ids[0, prefix_ids.shape[-1] :]
 
+            print("input_ids: ", input_ids)
+            print("prefix_ids: ", prefix_ids)
+            print("input_ids: ", input_ids)
+
             base_outputs = self.model(input_ids, attn_mode=self.attn_mode)[0]
             hallucinated_outputs = self.model(
                 input_ids, block_list=self.retrieval_heads, attn_mode=self.attn_mode
