@@ -79,13 +79,13 @@ class DeCoReVanilla(BaseModel):
                     input_ids=last_input_token,
                     past_key_values=base_past_kv,
                     use_cache=True,
-                    attn_mode="torch",
+                    attn_mode=self.attn_mode,
                 )
                 hallucinated_outputs = self.model(
                     input_ids=last_input_token,
                     past_key_values=hallucinated_past_kv,
                     use_cache=True,
-                    attn_mode="torch",
+                    attn_mode=self.attn_mode,
                     block_list=self.retrieval_heads,
                 )
 
@@ -139,9 +139,9 @@ class DeCoReVanilla(BaseModel):
             ).to(self.model.device)
             continue_ids = input_ids[0, prefix_ids.shape[-1] :]
 
-            base_outputs = self.model(input_ids, attn_mode="torch")[0]
+            base_outputs = self.model(input_ids, attn_mode=self.attn_mode)[0]
             hallucinated_outputs = self.model(
-                input_ids, block_list=self.retrieval_heads, attn_mode="torch"
+                input_ids, block_list=self.retrieval_heads, attn_mode=self.attn_mode
             )[0]
 
             base_logits = base_outputs[0, prefix_ids.shape[-1] - 1 : -1, :]

@@ -119,7 +119,7 @@ class DoLa(BaseModel):
                 output_attentions=False,
                 output_hidden_states=False,
                 early_exit_layers=self.candidate_premature_layers + [self.mature_layer],
-                attn_mode="torch",
+                attn_mode=self.attn_mode,
             )
 
             for seq_i in range(prefix_ids.shape[-1] - 1, input_ids.shape[-1] - 1):
