@@ -51,6 +51,8 @@ class ContrastiveDecoding(BaseModel):
             decoder_configs.configs.amateur_model_name_or_path
         )
 
+        self.alpha = self.decoder_configs.configs.alpha
+
     def generate(
         self,
         inputs,
@@ -68,7 +70,7 @@ class ContrastiveDecoding(BaseModel):
         else:
             use_system_prompt = False
 
-        tokenised_inputs = self._verbalise_input(
+        expert_tokenised_inputs = self._verbalise_input(
             prompt, use_system_prompt=use_system_prompt
         ).to(self.model.device)
 
@@ -80,8 +82,10 @@ class ContrastiveDecoding(BaseModel):
 
         # Predict
         with torch.inference_mode():
-            input_logits = self.model(
-                input_ids=tokenised_inputs[:, :-1], use_cache=True, return_dict=True
+            expert_input_logits = self.model(
+                input_ids=expert_tokenised_inputs[:, :-1],
+                use_cache=True,
+                return_dict=True,
             )
             amateur_input_logits = self.amateur_model(
                 input_ids=amateur_tokenised_inputs[:, :-1],
@@ -89,14 +93,14 @@ class ContrastiveDecoding(BaseModel):
                 return_dict=True,
             )
             generated_ids = []
-            last_input_token = tokenised_inputs[:, -1]
-            past_kv = copy.deepcopy(input_logits.past_key_values)
+            last_input_token = expert_tokenised_inputs[:, -1]
+            expert_past_kv = copy.deepcopy(expert_input_logits.past_key_values)
             amateur_past_kv = copy.deepcopy(amateur_input_logits.past_key_values)
             for _ in range(self.max_new_tokens):
                 last_input_token = last_input_token.view(1, 1)
-                lm_output = self.model(
+                expert_lm_output = self.model(
                     input_ids=last_input_token,
-                    past_key_values=past_kv,
+                    past_key_values=expert_past_kv,
                     use_cache=True,
                     attn_mode="torch",
                 )
@@ -109,13 +113,14 @@ class ContrastiveDecoding(BaseModel):
                     attn_mode="torch",
                 )
 
-                past_kv = lm_output.past_key_values
+                expert_past_kv = expert_lm_output.past_key_values
                 amateur_past_kv = amateur_lm_output.past_key_values
 
+                expert_logits = expert_lm_output.logits[0, -1]
+                amateur_logits = amateur_lm_output.logits[0, -1]
+
                 # Contrast expert LM and amateur LM scores
-                next_token_logits = (
-                    lm_output.logits[0, -1] - amateur_lm_output.logits[0, -1]
-                )
+                next_token_logits = expert_logits - self.alpha * amateur_logits
 
                 last_input_token = next_token_logits.argmax()
                 generated_ids.append(last_input_token.item())
@@ -178,7 +183,7 @@ class ContrastiveDecoding(BaseModel):
             base_logits = base_logits.log_softmax(dim=-1)
             amateur_logits = amateur_logits.log_softmax(dim=-1)
 
-            diff_logits = base_logits - amateur_logits
+            diff_logits = base_logits - self.alpha * amateur_logits
 
             if self.decoder_configs.configs.post_softmax:
                 diff_logits = diff_logits.log_softmax(dim=-1)
