@@ -15,7 +15,7 @@ def get_model(
     model_configs: ModelConfigs,
     decoder_configs: DecoderConfigs,
 ):
-    return getattr(models, decoder_configs.name)(
+    return getattr(models, decoder_configs.method)(
         model_configs=model_configs,
         decoder_configs=decoder_configs,
     )

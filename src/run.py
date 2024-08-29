@@ -68,8 +68,10 @@ class Run:
     def test(self):
         predictions = []
 
+        prediction_filename = f"pred_{self.configs.data.name}_{self.wandb_run_name}"
+
         prediction_filepath = os.path.join(
-            self.output_dir, f"pred_{self.configs.data.name}.json"
+            self.output_dir, f"{prediction_filename}.json"
         )
         attentions_filepath = os.path.join(
             self.output_dir, f"att_{self.configs.data.name}.pt"
@@ -137,9 +139,7 @@ class Run:
         # Log
         wandb.log(metrics)
 
-        pred_artifact = wandb.Artifact(
-            f"pred_{self.configs.data.name}_{self.wandb_run_name}", type="prediction"
-        )
+        pred_artifact = wandb.Artifact(prediction_filename, type="prediction")
         pred_artifact.add_file(prediction_filepath)
         wandb.log_artifact(pred_artifact)
 
