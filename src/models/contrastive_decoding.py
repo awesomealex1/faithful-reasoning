@@ -102,7 +102,7 @@ class ContrastiveDecoding(BaseModel):
                     input_ids=last_input_token,
                     past_key_values=expert_past_kv,
                     use_cache=True,
-                    attn_mode="torch",
+                    attn_mode=self.attn_mode,
                 )
 
                 # Forward pass
@@ -110,7 +110,7 @@ class ContrastiveDecoding(BaseModel):
                     input_ids=last_input_token,
                     past_key_values=amateur_past_kv,
                     use_cache=True,
-                    attn_mode="torch",
+                    attn_mode=self.attn_mode,
                 )
 
                 expert_past_kv = expert_lm_output.past_key_values
@@ -174,8 +174,10 @@ class ContrastiveDecoding(BaseModel):
                 tokenizer=self.amateur_tokenizer,
             ).to(self.amateur_model.device)
 
-            lm_output = self.model(input_ids, attn_mode="torch")[0]
-            amateur_output = self.amateur_model(amateur_input_ids, attn_mode="torch")[0]
+            lm_output = self.model(input_ids, attn_mode=self.attn_mode)[0]
+            amateur_output = self.amateur_model(
+                amateur_input_ids, attn_mode=self.attn_mode
+            )[0]
 
             base_logits = lm_output[0, prefix_ids.shape[-1] - 1 : -1, :]
             amateur_logits = amateur_output[0, amateur_prefix_ids.shape[-1] - 1 : -1, :]
