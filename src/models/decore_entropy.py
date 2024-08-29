@@ -259,7 +259,7 @@ class DeCoReEntropy(BaseModel):
         else:
             return self.generate_self_contrast(inputs, return_attentions)
 
-    def lm_score(
+    def lm_score_self_contrast(
         self,
         prompt,
         answer,
@@ -321,3 +321,88 @@ class DeCoReEntropy(BaseModel):
             )
 
         return log_probs
+
+    def lm_score_amateur_contrast(
+        self,
+        prompt,
+        answer,
+    ):
+        prompted_question = prompt["prompted_question"][0]
+
+        # Only relevant for instruct model
+        if len(prompt["verbalised_instruction"][0]):
+            use_system_prompt = True
+        else:
+            use_system_prompt = False
+
+        with torch.no_grad():
+            if type(prompted_question) == list:
+                input_text = prompted_question + [answer]
+            else:
+                input_text = prompted_question + answer
+
+            expert_input_ids = self._verbalise_input(
+                input_text,
+                use_system_prompt=use_system_prompt,
+                add_generation_prompt=False,
+            ).to(self.model.device)
+            expert_prefix_ids = self._verbalise_input(
+                prompted_question, use_system_prompt=use_system_prompt
+            ).to(self.model.device)
+            continue_ids = expert_input_ids[0, expert_prefix_ids.shape[-1] :]
+
+            amateur_input_ids = self._verbalise_input(
+                input_text,
+                use_system_prompt=use_system_prompt,
+                add_generation_prompt=False,
+                tokenizer=self.amateur_tokenizer,
+            ).to(self.amateur_model.device)
+            amateur_prefix_ids = self._verbalise_input(
+                prompted_question,
+                use_system_prompt=use_system_prompt,
+                tokenizer=self.amateur_tokenizer,
+            ).to(self.amateur_model.device)
+
+            expert_outputs = self.model(expert_input_ids, attn_mode="torch")[0]
+            amateur_outputs = self.amateur_model(
+                amateur_input_ids, block_list=self.retrieval_heads, attn_mode="torch"
+            )[0]
+
+            expert_logits = expert_outputs[0, expert_prefix_ids.shape[-1] - 1 : -1, :]
+            amateur_logits = amateur_outputs[
+                0, amateur_prefix_ids.shape[-1] - 1 : -1, :
+            ]
+
+            entropies = []
+            for i in range(expert_logits.shape[0]):
+                entropies += [self._calculate_entropy(expert_logits[i, :])]
+
+            alpha = torch.stack(entropies).unsqueeze(1)
+
+            if self.alpha_cap:
+                # If the entropy is too high, cap the alpha with the entropy cap
+                alpha = torch.min(alpha, torch.tensor(self.alpha_cap).to(alpha.device))
+
+            expert_logits = expert_logits.log_softmax(dim=-1)
+            amateur_logits = amateur_logits.log_softmax(dim=-1)
+
+            diff_logits = (1 + alpha) * expert_logits - alpha * amateur_logits
+
+            if self.decoder_configs.configs.post_softmax:
+                diff_logits = diff_logits.log_softmax(dim=-1)
+
+            log_probs = (
+                diff_logits[range(diff_logits.shape[0]), continue_ids].sum().item()
+            )
+
+        return log_probs
+
+    def lm_score(
+        self,
+        prompt,
+        answer,
+    ):
+        if self.amateur_model is not None:
+            return self.lm_score_amateur_contrast(prompt, answer)
+        else:
+            return self.lm_score_self_contrast(prompt, answer)
