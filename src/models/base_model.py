@@ -39,7 +39,7 @@ class BaseModel(ABC):
                 device_map="auto",
                 trust_remote_code=True,
             ).eval()
-            self.attn_mode = "torch"
+            self.attn_mode = "flash"
         elif "qwen2" in model_configs.name.lower():
             self.model = Qwen2ForCausalLM.from_pretrained(
                 model_configs.configs.model_name_or_path,
@@ -48,7 +48,7 @@ class BaseModel(ABC):
                 torch_dtype="auto",
                 device_map="auto",
             ).eval()
-            self.attn_mode = "torch"
+            self.attn_mode = "flash"
 
         self.tokenizer = AutoTokenizer.from_pretrained(
             model_configs.configs.model_name_or_path
