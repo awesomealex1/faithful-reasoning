@@ -116,8 +116,8 @@ class ContrastiveDecoding(BaseModel):
                 expert_past_kv = expert_lm_output.past_key_values
                 amateur_past_kv = amateur_lm_output.past_key_values
 
-                expert_logits = expert_lm_output.logits[0, -1]
-                amateur_logits = amateur_lm_output.logits[0, -1]
+                expert_logits = expert_lm_output.logits[0, -1].log_softmax(dim=-1)
+                amateur_logits = amateur_lm_output.logits[0, -1].log_softmax(dim=-1)
 
                 # Contrast expert LM and amateur LM scores
                 next_token_logits = expert_logits - self.alpha * amateur_logits
