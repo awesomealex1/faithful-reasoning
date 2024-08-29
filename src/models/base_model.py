@@ -29,6 +29,7 @@ class BaseModel(ABC):
                 torch_dtype=torch.bfloat16,
                 device_map="auto",
             ).eval()
+            self.attn_mode = "flash"
         elif "mistral" in model_configs.name.lower():
             self.model = MistralForCausalLM.from_pretrained(
                 model_configs.configs.model_name_or_path,
@@ -38,6 +39,7 @@ class BaseModel(ABC):
                 device_map="auto",
                 trust_remote_code=True,
             ).eval()
+            self.attn_mode = "torch"
         elif "qwen2" in model_configs.name.lower():
             self.model = Qwen2ForCausalLM.from_pretrained(
                 model_configs.configs.model_name_or_path,
@@ -46,6 +48,7 @@ class BaseModel(ABC):
                 torch_dtype="auto",
                 device_map="auto",
             ).eval()
+            self.attn_mode = "torch"
 
         self.tokenizer = AutoTokenizer.from_pretrained(
             model_configs.configs.model_name_or_path
@@ -399,7 +402,7 @@ class BaseModel(ABC):
                     past_key_values=past_kv,
                     use_cache=True,
                     output_attentions=True,
-                    attn_mode="torch",
+                    attn_mode=self.attn_mode,
                     block_list=block_list,
                 )
                 attentions += [outputs.attentions]

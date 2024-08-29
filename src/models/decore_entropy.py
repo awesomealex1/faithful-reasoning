@@ -21,6 +21,11 @@ class DeCoReEntropy(BaseModel):
     ):
         super().__init__(model_configs, decoder_configs)
 
+        if "llama" in model_configs.configs.model_name_or_path:
+            self.attn_mode = "flash"
+        else:
+            self.attn_mode = "torch"
+
         if decoder_configs.configs.amateur_model_name_or_path is not None:
             if "llama" in decoder_configs.configs.amateur_model_name_or_path.lower():
                 self.amateur_model = LlamaForCausalLM.from_pretrained(
@@ -30,6 +35,7 @@ class DeCoReEntropy(BaseModel):
                     torch_dtype=torch.bfloat16,
                     device_map="auto",
                 ).eval()
+                self.amateur_attn_mode = "flash"
             else:
                 raise NotImplementedError(
                     "Amateur model other than Llama3-8b-Instruct is not supported yet"
@@ -115,13 +121,13 @@ class DeCoReEntropy(BaseModel):
                     input_ids=last_input_token,
                     past_key_values=base_past_kv,
                     use_cache=True,
-                    attn_mode="torch",
+                    attn_mode=self.attn_mode,
                 )
                 hallucinated_outputs = self.model(
                     input_ids=last_input_token,
                     past_key_values=hallucinated_past_kv,
                     use_cache=True,
-                    attn_mode="torch",
+                    attn_mode=self.attn_mode,
                     block_list=self.retrieval_heads,
                 )
 
@@ -210,13 +216,13 @@ class DeCoReEntropy(BaseModel):
                     input_ids=last_input_token,
                     past_key_values=expert_past_kv,
                     use_cache=True,
-                    attn_mode="torch",
+                    attn_mode=self.attn_mode,
                 )
                 amateur_outputs = self.amateur_model(
                     input_ids=last_input_token,
                     past_key_values=amateur_past_kv,
                     use_cache=True,
-                    attn_mode="torch",
+                    attn_mode=self.attn_mode,
                     block_list=self.retrieval_heads,
                 )
 
@@ -289,9 +295,9 @@ class DeCoReEntropy(BaseModel):
             ).to(self.model.device)
             continue_ids = input_ids[0, prefix_ids.shape[-1] :]
 
-            base_outputs = self.model(input_ids, attn_mode="torch")[0]
+            base_outputs = self.model(input_ids, attn_mode=self.attn_mode)[0]
             hallucinated_outputs = self.model(
-                input_ids, block_list=self.retrieval_heads, attn_mode="torch"
+                input_ids, block_list=self.retrieval_heads, attn_mode=self.attn_mode
             )[0]
 
             base_logits = base_outputs[0, prefix_ids.shape[-1] - 1 : -1, :]
@@ -364,9 +370,11 @@ class DeCoReEntropy(BaseModel):
                 tokenizer=self.amateur_tokenizer,
             ).to(self.amateur_model.device)
 
-            expert_outputs = self.model(expert_input_ids, attn_mode="torch")[0]
+            expert_outputs = self.model(expert_input_ids, attn_mode=self.attn_mode)[0]
             amateur_outputs = self.amateur_model(
-                amateur_input_ids, block_list=self.retrieval_heads, attn_mode="torch"
+                amateur_input_ids,
+                block_list=self.retrieval_heads,
+                attn_mode=self.amateur_attn_mode,
             )[0]
 
             expert_logits = expert_outputs[0, expert_prefix_ids.shape[-1] - 1 : -1, :]

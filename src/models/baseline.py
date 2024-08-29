@@ -48,7 +48,7 @@ class Baseline(BaseModel):
             ).to(self.model.device)
             continue_ids = input_ids[0, prefix_ids.shape[-1] :]
 
-            outputs = self.model(input_ids, attn_mode="torch")[0].squeeze(0)
+            outputs = self.model(input_ids, attn_mode=self.attn_mode)[0].squeeze(0)
             outputs = outputs.log_softmax(-1)  # logits to log probs
 
             # skip tokens in the prompt -- we only care about the answer
