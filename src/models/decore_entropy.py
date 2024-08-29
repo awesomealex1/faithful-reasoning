@@ -21,11 +21,6 @@ class DeCoReEntropy(BaseModel):
     ):
         super().__init__(model_configs, decoder_configs)
 
-        if "llama" in model_configs.configs.model_name_or_path:
-            self.attn_mode = "flash"
-        else:
-            self.attn_mode = "torch"
-
         if decoder_configs.configs.amateur_model_name_or_path is not None:
             if "llama" in decoder_configs.configs.amateur_model_name_or_path.lower():
                 self.amateur_model = LlamaForCausalLM.from_pretrained(
