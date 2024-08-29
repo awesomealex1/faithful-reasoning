@@ -469,6 +469,21 @@ class MistralFlashAttention2(MistralAttention):
 
             # overwrite attention_mask with padding_mask
             attention_mask = kwargs.pop("padding_mask")
+
+        if output_attentions:
+            _, inspect, attn_weights, _ = self.forward_torch(
+                hidden_states,
+                attention_mask,
+                position_ids,
+                past_key_value,
+                output_attentions,
+                use_cache=False,
+                **kwargs,
+            )
+        else:
+            attn_weights = None
+            inspect = None
+
         bsz, q_len, _ = hidden_states.size()
 
         query_states = self.q_proj(hidden_states)
