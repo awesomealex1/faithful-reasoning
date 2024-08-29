@@ -168,3 +168,8 @@ artifacts/
 *.DS_Store
 
 *.env
+
+predictions/*
+outputs/*.pt
+attention_maps/*.pt
+*.pdf
