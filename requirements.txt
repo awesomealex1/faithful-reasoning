@@ -121,3 +121,8 @@ wandb==0.17.3
 xxhash==3.4.1
 yarl==1.9.4
 zipp==3.19.0
+langdetect
+immutabledict
+sacrebleu
+rouge_score
+bert-score
