@@ -483,7 +483,17 @@ class Qwen2FlashAttention2(Qwen2Attention):
             query_states = query_states.to(target_dtype)
             key_states = key_states.to(target_dtype)
             value_states = value_states.to(target_dtype)
-
+    
+        if 'block_list' in kwargs:
+            if len(kwargs['block_list'][0]) > 2:
+                for batch_idx, bh in enumerate(kwargs['block_list']):
+                    for h in bh:
+                        if self.layer_idx==h[0]:
+                            query_states[batch_idx, h[1], :, :] = 0
+            else:
+                for h in kwargs['block_list']:
+                    if self.layer_idx==h[0]:
+                        query_states[:,h[1], :, :] = 0
         # Reashape to the expected shape for Flash Attention
         query_states = query_states.transpose(1, 2)
         key_states = key_states.transpose(1, 2)
