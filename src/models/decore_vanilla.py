@@ -92,13 +92,15 @@ class DeCoReVanilla(BaseModel):
                 base_past_kv = base_outputs.past_key_values
                 hallucinated_past_kv = hallucinated_outputs.past_key_values
 
+                base_logits = base_outputs.logits[0, -1]
+                base_logits = base_logits.log_softmax(dim=-1)
+                hallucinated_logits = hallucinated_outputs.logits[0, -1]
+                hallucinated_logits = hallucinated_logits.log_softmax(dim=-1)
+
                 next_token_logits = (
-                    1 + self.decoder_configs.configs.alpha
-                ) * base_outputs.logits[
-                    0, -1
-                ] - self.decoder_configs.configs.alpha * hallucinated_outputs.logits[
-                    0, -1
-                ]
+                    (1 + self.decoder_configs.configs.alpha) * base_logits
+                    - self.decoder_configs.configs.alpha * hallucinated_logits
+                )
 
                 last_input_token = next_token_logits.argmax()
                 generated_ids.append(last_input_token.item())
