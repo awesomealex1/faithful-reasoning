@@ -53,6 +53,7 @@ class DeCoReEntropy(BaseModel):
         self.scale_alpha = decoder_configs.configs.get("scale_alpha", False)
 
     def _load_retrieval_heads(self, model_name_or_path):
+        print(f"Loading retrieval heads {model_name_or_path}")
         self.num_retrieval_heads = self.decoder_configs.configs.num_retrieval_heads
 
         model_base_name = model_name_or_path.split("/")[1]
