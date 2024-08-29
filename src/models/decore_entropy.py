@@ -10,6 +10,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 from src.configs import DecoderConfigs, ModelConfigs
 
 from src.models.base_model import BaseModel
+from src.utils.modelling_llama import LlamaForCausalLM
 
 
 class DeCoReEntropy(BaseModel):
@@ -20,17 +21,41 @@ class DeCoReEntropy(BaseModel):
     ):
         super().__init__(model_configs, decoder_configs)
 
-        self._load_retrieval_heads()
+        if decoder_configs.configs.amateur_model_name_or_path is not None:
+            if "llama" in decoder_configs.configs.amateur_model_name_or_path.lower():
+                self.amateur_model = LlamaForCausalLM.from_pretrained(
+                    decoder_configs.configs.amateur_model_name_or_path,
+                    use_flash_attention_2="flash_attention_2",
+                    attn_implementation="flash_attention_2",
+                    torch_dtype=torch.bfloat16,
+                    device_map="auto",
+                ).eval()
+            else:
+                raise NotImplementedError(
+                    "Amateur model other than Llama3-8b-Instruct is not supported yet"
+                )
+
+            self.amateur_tokenizer = AutoTokenizer.from_pretrained(
+                decoder_configs.configs.amateur_model_name_or_path
+            )
+
+            self._load_retrieval_heads(
+                decoder_configs.configs.amateur_model_name_or_path
+            )
+        else:
+            self.amateur_model = None
+            self._load_retrieval_heads(model_configs.configs.model_name_or_path)
+
         print("Retrieval heads: ", self.retrieval_heads)
 
         self.alpha_cap = decoder_configs.configs.get("alpha_cap", None)
 
         self.scale_alpha = decoder_configs.configs.get("scale_alpha", False)
 
-    def _load_retrieval_heads(self):
+    def _load_retrieval_heads(self, model_name_or_path):
         self.num_retrieval_heads = self.decoder_configs.configs.num_retrieval_heads
 
-        model_base_name = self.model_configs.configs.model_name_or_path.split("/")[1]
+        model_base_name = model_name_or_path.split("/")[1]
 
         with open(
             os.path.join(
@@ -55,11 +80,7 @@ class DeCoReEntropy(BaseModel):
 
         return entropy
 
-    def generate(
-        self,
-        inputs,
-        return_attentions: bool = False,
-    ) -> dict:
+    def generate_self_contrast(self, inputs, return_attentions: bool = False) -> dict:
         assert (
             not return_attentions
         ), "Return attentions not supported for DeCoReEntropy"
@@ -129,6 +150,106 @@ class DeCoReEntropy(BaseModel):
             )
 
         return {"decoded_text": decoded_text, "attentions": {}, "alphas": alphas}
+
+    def generate_amateur_contrast(
+        self, inputs, return_attentions: bool = False
+    ) -> dict:
+        assert (
+            not return_attentions
+        ), "Return attentions not supported for DeCoReEntropy"
+
+        assert self.amateur_model is not None, "Amateur model not loaded"
+
+        self.model.eval()
+        self.amateur_model.eval()
+
+        prompt = inputs["prompted_question"][0]
+
+        if len(inputs["verbalised_instruction"][0]):
+            use_system_prompt = True
+        else:
+            use_system_prompt = False
+
+        expert_tokenised_inputs = self._verbalise_input(
+            prompt, use_system_prompt=use_system_prompt
+        ).to(self.model.device)
+
+        amateur_tokenised_inputs = self._verbalise_input(
+            prompt,
+            use_system_prompt=use_system_prompt,
+            tokenizer=self.amateur_tokenizer,
+        ).to(self.model.device)
+
+        # Predict
+        with torch.inference_mode():
+            expert_input_logits = self.model(
+                input_ids=expert_tokenised_inputs[:, :-1],
+                use_cache=True,
+                return_dict=True,
+            )
+            amateur_input_logits = self.amateur_model(
+                input_ids=amateur_tokenised_inputs[:, :-1],
+                use_cache=True,
+                return_dict=True,
+            )
+            generated_ids = []
+            last_input_token = expert_tokenised_inputs[:, -1]
+            expert_past_kv = copy.deepcopy(expert_input_logits.past_key_values)
+            amateur_past_kv = copy.deepcopy(amateur_input_logits.past_key_values)
+            alphas = []
+            for _ in range(self.max_new_tokens):
+                last_input_token = last_input_token.view(1, 1)
+
+                expert_outputs = self.model(
+                    input_ids=last_input_token,
+                    past_key_values=expert_past_kv,
+                    use_cache=True,
+                    attn_mode="torch",
+                )
+                amateur_outputs = self.amateur_model(
+                    input_ids=last_input_token,
+                    past_key_values=amateur_past_kv,
+                    use_cache=True,
+                    attn_mode="torch",
+                    block_list=self.retrieval_heads,
+                )
+
+                expert_past_kv = expert_outputs.past_key_values
+                amateur_past_kv = amateur_outputs.past_key_values
+
+                alpha = self._calculate_entropy(expert_outputs.logits[0, -1])
+
+                alphas += [alpha.item()]
+
+                if self.alpha_cap:
+                    # If the entropy is too high, cap the alpha with the entropy cap
+                    alpha = torch.min(
+                        alpha, torch.tensor(self.alpha_cap).to(alpha.device)
+                    )
+
+                next_token_logits = (1 + alpha) * expert_outputs.logits[
+                    0, -1
+                ] - alpha * amateur_outputs.logits[0, -1]
+
+                last_input_token = next_token_logits.argmax()
+                generated_ids.append(last_input_token.item())
+                if last_input_token.item() == self.tokenizer.eos_token_id:
+                    break
+            decoded_text = self.tokenizer.decode(
+                generated_ids, skip_special_tokens=True
+            )
+
+        return {"decoded_text": decoded_text, "attentions": {}, "alphas": alphas}
+
+    def generate(
+        self,
+        inputs,
+        return_attentions: bool = False,
+    ) -> dict:
+        if self.amateur_model is not None:
+            return self.generate_amateur_contrast(inputs, return_attentions)
+        else:
+            return self.generate_self_contrast(inputs, return_attentions)
 
     def lm_score(
         self,
