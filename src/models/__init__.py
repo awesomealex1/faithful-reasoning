@@ -6,4 +6,3 @@ from .decore_vanilla import DeCoReVanilla
 from .decore_entropy import DeCoReEntropy
 from .dola import DoLa
 from .decore_random_entropy import DeCoReRandomEntropy
-from .activation_decoding import ActivationDecoding
