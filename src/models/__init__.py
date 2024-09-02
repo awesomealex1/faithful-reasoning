@@ -4,5 +4,6 @@ from .baseline_masked_non_retrieval_head import BaselineMaskedNonRetrievalHead
 from .contrastive_decoding import ContrastiveDecoding
 from .decore_vanilla import DeCoReVanilla
 from .decore_entropy import DeCoReEntropy
+from .decore_entropy_gain import DeCoReEntropyGain
 from .dola import DoLa
 from .decore_random_entropy import DeCoReRandomEntropy
