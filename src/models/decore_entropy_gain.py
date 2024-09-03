@@ -392,7 +392,7 @@ class DeCoReEntropyGain(BaseModel):
             ]
 
             entropies = []
-            for i in range(base_logits.shape[0]):
+            for i in range(expert_logits.shape[0]):
                 expert_entropy = self._calculate_entropy(expert_logits[i, :])
                 hallucinated_entropy = self._calculate_entropy(amateur_logits[i, :])
                 entropies += [hallucinated_entropy - expert_entropy]
