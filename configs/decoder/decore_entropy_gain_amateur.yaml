@@ -1,7 +1,7 @@
 defaults:
   - base_decoder_config
 
-name: DeCoReEntropyGain
+name: DeCoReEntropyGainAmateur
 method: DeCoReEntropyGain
 configs:
   retrieval_heads_dir: ./retrieval_heads/
