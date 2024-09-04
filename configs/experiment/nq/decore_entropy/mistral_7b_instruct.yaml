@@ -4,6 +4,3 @@ defaults:
   - override /data: nq
   - override /decoder: decore_entropy
 
-model:
-  configs:
-    max_new_tokens: 64

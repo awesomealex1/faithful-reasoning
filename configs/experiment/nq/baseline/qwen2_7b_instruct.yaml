@@ -4,6 +4,3 @@ defaults:
   - override /data: nq
   - override /decoder: baseline
 
-model:
-  configs:
-    max_new_tokens: 64

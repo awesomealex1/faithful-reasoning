@@ -4,6 +4,3 @@ defaults:
   - override /data: popqa
   - override /decoder: decore_vanilla
 
-model:
-  configs:
-    max_new_tokens: 64

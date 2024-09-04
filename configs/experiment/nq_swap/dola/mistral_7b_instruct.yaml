@@ -4,6 +4,3 @@ defaults:
   - override /data: nq_swap
   - override /decoder: dola
 
-model:
-  configs:
-    max_new_tokens: 64
