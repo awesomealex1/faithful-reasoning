@@ -18,6 +18,8 @@ class BaselineMaskedNonRetrievalHead(BaseModel):
     ):
         super().__init__(model_configs, decoder_configs)
 
+        self.num_layers = len(self.model.model.layers)
+
         self._load_retrieval_heads()
         self.num_retrieval_heads = self.decoder_configs.configs.num_retrieval_heads
         assert (
@@ -45,9 +47,7 @@ class BaselineMaskedNonRetrievalHead(BaseModel):
 
     def _construct_random_head(self, n):
         results = []
-        seed_list = [
-            i for i in range(32)
-        ]  # FIXME: 32 is hardcoded, copied from Retrieval_Head repo
+        seed_list = [i for i in range(self.num_layers)]
         random.shuffle(seed_list)
         while len(results) < n:
             l, h = random.choices(seed_list, k=2)
