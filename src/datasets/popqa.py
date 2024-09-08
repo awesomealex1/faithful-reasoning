@@ -96,20 +96,15 @@ class PopQA(BaseDataset):
             _ = questions.pop()
             _ = answers.pop()
 
+        demo_texts = []
         if self.kwargs["use_chat_template"]:
-            demo_texts = [
-                "Answer the following question based on the provided context:"
-            ]
             for i in range(len(questions)):
                 demo_texts += [
                     f"Question: {questions[i]}\nAnswer:",
                     answers[i],
                 ]
         else:
-            # Concatenate demonstration examples ...
-            demo_texts = [
-                "Answer the following question based on the provided context:"
-            ]
+            # Concatenate demonstration examples
             for i in range(len(questions)):
                 demo_texts += [f"Question: {questions[i]}\nAnswer: {answers[i]}"]
         return demo_texts
