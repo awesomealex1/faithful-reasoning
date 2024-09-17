@@ -100,8 +100,6 @@ class NQ(BaseDataset):
         questions.append("who's hosting the super bowl in 2019")
         answers.append("Atlanta, Georgia")
 
-        "Question: example question\nAnswer: march 2018"
-
         # Verbalise the demos
         if self.kwargs["use_chat_template"]:
             demo_text = []
@@ -143,13 +141,15 @@ class NQ(BaseDataset):
         return demo_text
 
     def build_prompt(self, contexts, question):
-        instruction = [
-            "Write a high-quality answer for the given question using only the provided search results (some of which might be irrelevant). Provide the answer in 5 words or less without any explanation."
-        ]
-
         if self.variation == "closed_book":
+            instruction = [
+                "Write a high-quality answer for the given question. Provide the answer in 5 words or less without any explanation."
+            ]
             icl_demo = self.create_closed_book_demo_text()
         else:
+            instruction = [
+                "Write a high-quality answer for the given question using only the provided search results (some of which might be irrelevant). Provide the answer in 5 words or less without any explanation."
+            ]
             icl_demo = self.create_open_book_demo_text()
 
         prompted_contexts = "\n".join(
