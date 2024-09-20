@@ -27,7 +27,13 @@ class IFEval:
                     for instruction_id in prediction["instruction_id_list"]
                 ],
                 "prompt": prediction["prompt"],
-                "kwargs": prediction["kwargs"],
+                "kwargs": [
+                    {
+                        k: v[0] if type(v) in [list, tuple] else v
+                        for k, v in kwargs_.items()
+                    }
+                    for kwargs_ in prediction["kwargs"]
+                ],
             }
             metric = process_results(doc, prediction["predicted_answer"])
 
@@ -43,3 +49,21 @@ class IFEval:
             "inst_level_loose_acc": agg_inst_level_acc(inst_level_loose_accs),
         }
         return metrics
+
+
+if __name__ == "__main__":
+    import argparse
+    import json
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--predictions_filepath", type=str)
+    args = parser.parse_args()
+
+    print(f"Reading predictions: {args.predictions_filepath}")
+
+    with open(args.predictions_filepath, "r") as f:
+        predictions = [json.loads(line) for line in f]
+
+    metric = IFEval()
+    metrics = metric(predictions)
+    print(metrics)
