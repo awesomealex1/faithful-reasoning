@@ -115,7 +115,7 @@ def process_results(doc, results):
         prompt=doc["prompt"],
         kwargs=doc["kwargs"],
     )
-    response = results[0]
+    response = results
 
     out_strict = test_instruction_following_strict(inp, response)
     out_loose = test_instruction_following_loose(inp, response)
