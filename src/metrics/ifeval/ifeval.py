@@ -1,9 +1,9 @@
 from typing import Dict, List
 
-import regex as re
 import numpy as np
+import regex as re
 
-from src.metrics.ifeval.utils import process_results, agg_inst_level_acc
+from src.metrics.ifeval.utils import agg_inst_level_acc, process_results
 
 
 class IFEval:
