@@ -7,7 +7,16 @@ class MemoTrap:
     def __init__(self):
         pass
 
-    def __call__(self, predictions) -> Dict[str, float]:
+    def __call__(self, predictions: dict) -> Dict[str, float]:
+        """
+        Compute macro and micro accuracy for MemoTrap.
+
+        Args:
+            predictions (dict): Predictions from the model.
+
+        Returns:
+            Dict[str, float]: Macro and micro accuracy.
+        """
         scores = {
             "all": [],
             "proverb_ending": [],

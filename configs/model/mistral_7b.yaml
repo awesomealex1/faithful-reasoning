@@ -1,9 +1,0 @@
-defaults:
-  - base_model_config
-
-name: Mistral-7b
-model_type: base
-configs:
-  model_name_or_path: mistralai/Mistral-7B-v0.3
-  max_seq_len: 4096
-  max_new_tokens: 12

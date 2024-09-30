@@ -66,6 +66,9 @@ class Run:
         )
 
     def test(self):
+        """
+        Test the model on the dataset and log the predictions and metrics to WandB
+        """
         predictions = []
 
         prediction_filename = f"pred_{self.configs.data.name}_{self.wandb_run_name}"
@@ -80,8 +83,6 @@ class Run:
         # To save WandB space, just return attentions for the Baseline model
         # Mainly for Logistic Regression purposes
         return_attentions = False
-        # if self.configs.decoder.name == "Baseline":
-        #     return_attentions = True
 
         attentions_list = []
         for step, batch in enumerate(tqdm(self.dataloaders)):

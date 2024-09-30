@@ -3,12 +3,11 @@ Original code from:
 https://github.com/voidism/DoLa/blob/main/tfqa_gpt3_rating.py
 """
 
+from time import sleep
 from typing import Dict
 
-import openai
-from tqdm import tqdm
-from time import sleep
 import numpy as np
+from tqdm import tqdm
 
 
 class TruthfulQAGeneration:
@@ -48,7 +47,7 @@ class TruthfulQAGeneration:
             answer = answer.strip()
             prompt = self.format_end2end_prompt(question, answer, info=info)
 
-            response = openai.Completion.create(
+            response = client.completions.create(
                 model=engine,
                 prompt=prompt,
                 temperature=0,
@@ -58,9 +57,9 @@ class TruthfulQAGeneration:
                 logprobs=2,
             )
             sleep(0.1)  # avoid OpenAI's max calls limit
-            logprobs = response["choices"][0]["logprobs"]
-            output_str = logprobs["tokens"][0]
-            output_dict = logprobs["top_logprobs"][0]
+            logprobs = response.choices[0].logprobs
+            output_str = logprobs.tokens[0]
+            output_dict = logprobs.top_logprobs[0]
 
             if " yes" in output_dict:
                 score = np.exp(output_dict[" yes"])
@@ -168,19 +167,21 @@ class TruthfulQAGeneration:
 
 
 if __name__ == "__main__":
-    import os
     import argparse
     import json
+    import os
+
     from dotenv import load_dotenv
 
     load_dotenv(".env")
+    from openai import OpenAI
+
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--pred_filepath", type=str, required=True)
     parser.add_argument("--debug", action="store_true")
     args = parser.parse_args()
-
-    openai.api_key = os.getenv("OPENAI_API_KEY")
 
     tfqa_metrics = TruthfulQAGeneration(
         judge_name=os.getenv("GPT_JUDGE_NAME"), info_name=os.getenv("GPT_INFO_NAME")

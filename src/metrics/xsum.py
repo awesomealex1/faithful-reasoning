@@ -1,7 +1,6 @@
 import numpy as np
-
-import torch
 import sacrebleu
+import torch
 from rouge_score import rouge_scorer, scoring
 
 
@@ -63,7 +62,7 @@ class XSum:
 
     def maybe_init_factkb(self):
         if self.factkb_tokenizer is None or self.factkb_model is None:
-            from transformers import AutoTokenizer, AutoModelForSequenceClassification
+            from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
             self.factkb_tokenizer = AutoTokenizer.from_pretrained(
                 "roberta-base", padding="max_length", truncation=True
@@ -78,7 +77,16 @@ class XSum:
 
             self.bert_score = load("bertscore")
 
-    def __call__(self, predictions):
+    def __call__(self, predictions: dict) -> Dict[str, float]:
+        """
+        Compute BLEU, ROUGE, FactKB, and BERTScore for XSum.
+
+        Args:
+            predictions (dict): Predictions of the model along with the references.
+
+        Returns:
+            Dict[str, float]: metrics
+        """
         all_results = []
         for prediction in predictions:
             completion = prediction["predicted_answer"]

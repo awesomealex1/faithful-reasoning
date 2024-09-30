@@ -43,6 +43,44 @@ python retrieval_head_detection.py  --model_path mistralai/Mistral-7B-Instruct-v
 CUDA_VISIBLE_DEVICES=0 python retrieval_head_detection.py  --model_path Qwen/Qwen2-7B-Instruct --s 0 --e 5000
 ```
 
+## Directory Structure
+
+```
+.
+├── README.md
+├── environment.yaml
+├── requirements.txt
+├── .env.example                     # Example environment file
+├── .env                             # Your environment file
+├── configs/                         # Hydra configs
+│   ├── config.yaml                  # Default config values that will be replaced by experiment config
+│   ├── data/                        # Directory containing dataset config files, that will be used in the experiment config files
+│   ├── data_loader/                 # Directory containing one default data loader config file
+│   ├── decoder/                     # Directory containing decoder config files (e.g., DeCoRe, Baseline, DoLa, ITI), that will be used in the experiment config files
+│   ├── experiment/                  # Directory containing experiment config files per decoder
+│   └── model/                       # Directory containing model config files, that will be used in the experiment config files
+├── data/                            # Directory containing dataset files
+├── docs/                            # Directory containing assets for documentation
+├── notebooks/                       # Jupyter notebooks directory, only for creating plots
+├── retrieval_heads/                 # Directory containing pre-computed retrieval heads
+├── scripts/
+│   ├── main.py                      # The main script for evaluating the runs
+└── src
+│   ├── __init__.py
+│   ├── configs.py                   # Handle hydra configs
+│   ├── datasets/                    # Dataset classes
+│   ├── factories.py                 # Factory functions to help with instantiating dataset, model, and metric classes. Called in the run.py
+│   ├── metrics/                     # Metrics classes (the name has to be the same as the dataset classes)
+│   ├── models/                      # Model classes, instatiating the selected models and decoder method
+│   ├── run.py                       # The run manager, handling the selection of dataset, model, and metric classes, initialising WandB, etc.
+│   └── utils
+│   │   ├── __init__.py
+│   │   ├── common_utils.py          # Common utility functions
+│   │   ├── modelling_llama.py       # Minimally modified from the Retrieval head repository 
+│   │   ├── modelling_mistral.py     # Minimally modified from the Retrieval head repository
+│   │   └── modelling_qwen2.py       # Minimally modified from the Retrieval head repository
+```
+
 ## Evaluation
 
 ### TruthfulQA Gen Evaluation
