@@ -39,7 +39,7 @@ For development, we use `black` and `isort`. If you wish to proceed without them
 
 ### 🍄 Retrieval Heads
 
-The retrieval heads for the models can be found in the [`retriever_heads`](retriever_heads/) folder.
+The retrieval heads for the models can be found in the [`retrieval_heads`](retrieval_heads/) folder.
 
 To reproduce these (or if you just want to play around with newer models or you just wish to try this step yourself), you may go to the [Retrieval_Head](https://github.com/nightdessert/Retrieval_Head) repository to detect the retrieval heads for each model.
 
