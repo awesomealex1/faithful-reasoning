@@ -1,9 +1,10 @@
 # DeCoRe: Decoding by Contrasting Retrieval Heads to Mitigate Hallucination
 
-![Overview of the DeCoRe workflow](docs/assets/DeCoRe_entropy.gif "DeCoRe")
+![Overview of the DeCoRe workflow](docs/assets/DeCoRe_overview.png "DeCoRe")
 
-Paper: TBA
-Authors: [Aryo Pradipta Gema](https://aryopg.github.io)$^{Q,K}$, [Chen Jin](https://chenjin.netlify.app/)$^{K}$, [Ahmed Abdulaal](https://uk.linkedin.com/in/ahmed-abdulaal-5b8b6a295)$^{K,V}$, [Tom Diethe](https://tomdiethe.com/)$^{K}$, [Philip Teare](https://uk.linkedin.com/in/philteare)$^{K}$, [Beatrice Alex](https://www.ed.ac.uk/profile/dr-beatrice-alex)$^{Q}$, [Pasquale Minervini](http://www.neuralnoise.com/)$^{Q}$, [Amrutha Saseendran](https://uk.linkedin.com/in/amrutha-saseendran)$^{K}$
+**Paper:** TBA
+
+**Authors:** [Aryo Pradipta Gema](https://aryopg.github.io)$^{Q,K}$, [Chen Jin](https://chenjin.netlify.app/)$^{K}$, [Ahmed Abdulaal](https://uk.linkedin.com/in/ahmed-abdulaal-5b8b6a295)$^{K,V}$, [Tom Diethe](https://tomdiethe.com/)$^{K}$, [Philip Teare](https://uk.linkedin.com/in/philteare)$^{K}$, [Beatrice Alex](https://www.ed.ac.uk/profile/dr-beatrice-alex)$^{Q}$, [Pasquale Minervini](http://www.neuralnoise.com/)$^{Q}$, [Amrutha Saseendran](https://uk.linkedin.com/in/amrutha-saseendran)$^{K}$
 $^{Q}$University of Edinburgh, United Kingdom
 $^{K}$Centre for AI, Data Science \& Artificial Intelligence, R\&D, AstraZeneca, United Kingdom
 $^{V}$University College London, United Kingdom
