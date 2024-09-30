@@ -29,8 +29,7 @@ class Run:
         self._load_pipeline()
         self._load_metrics()
 
-        if not configs.debug:
-            self._setup_run()
+        self._setup_run()
 
     def _load_dataloaders(self) -> None:
         self.dataloaders = {}
@@ -52,18 +51,18 @@ class Run:
         self.metrics = get_metrics(self.configs.data)
 
     def _setup_run(self):
-        self.wandb_group_name = self.configs.data.name
-
         # Naming by model name
-        self.wandb_run_name = f"{self.configs.model.name}__{self.configs.decoder.name}"
+        self.run_name = f"{self.configs.model.name}__{self.configs.decoder.name}"
 
-        wandb.init(
-            project=self.configs.wandb_project,
-            entity=self.configs.wandb_entity,
-            name=self.wandb_run_name,
-            group=self.wandb_group_name,
-            config=OmegaConf.to_container(self.configs),
-        )
+        if not configs.debug:
+            self.group_name = self.configs.data.name
+            wandb.init(
+                project=self.configs.wandb_project,
+                entity=self.configs.wandb_entity,
+                name=self.run_name,
+                group=self.group_name,
+                config=OmegaConf.to_container(self.configs),
+            )
 
     def test(self):
         """
@@ -71,7 +70,7 @@ class Run:
         """
         predictions = []
 
-        prediction_filename = f"pred_{self.configs.data.name}_{self.wandb_run_name}"
+        prediction_filename = f"pred_{self.configs.data.name}_{self.run_name}"
 
         prediction_filepath = os.path.join(
             self.output_dir, f"{prediction_filename}.json"
@@ -82,12 +81,10 @@ class Run:
 
         # To save WandB space, just return attentions for the Baseline model
         # Mainly for Logistic Regression purposes
-        return_attentions = False
 
-        attentions_list = []
         for step, batch in enumerate(tqdm(self.dataloaders)):
             # Predict
-            prediction = self.model.generate(batch, return_attentions=return_attentions)
+            prediction = self.model.generate(batch)
             batch["predicted_answer"] = prediction["decoded_text"]
             if "alphas" in prediction:
                 # Handle for DeCoRe guided, to analyse the changes in alpha value throughout generation steps
@@ -140,25 +137,15 @@ class Run:
             with open(prediction_filepath, "a") as f:
                 f.write(json.dumps(batch) + "\n")
 
-            if "attentions" in prediction and return_attentions:
-                batch["attentions"] = prediction["attentions"]
-                attentions_list += [batch]
-
         # Evaluate
         metrics = self.metrics(predictions)
 
         # Log
-        wandb.log(metrics)
+        if not configs.debug:
+            wandb.log(metrics)
 
-        pred_artifact = wandb.Artifact(prediction_filename, type="prediction")
-        pred_artifact.add_file(prediction_filepath)
-        wandb.log_artifact(pred_artifact)
-
-        if return_attentions:
-            torch.save(attentions_list, attentions_filepath)
-            attn_artifact = wandb.Artifact(
-                f"attn_{self.configs.data.name}_{self.wandb_run_name}",
-                type="attention_weights",
-            )
-            attn_artifact.add_file(attentions_filepath)
-            wandb.log_artifact(attn_artifact)
+            pred_artifact = wandb.Artifact(prediction_filename, type="prediction")
+            pred_artifact.add_file(prediction_filepath)
+            wandb.log_artifact(pred_artifact)
+        else:
+            print(metrics)
