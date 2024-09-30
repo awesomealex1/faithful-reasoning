@@ -35,13 +35,13 @@ conda activate decore
 pip install -r requirements.txt
 ```
 
-For development, we use `black` and `isort`. If you wish to proceed without them and if you use VSCode, update `.vscode/settings.json` accordingly.
+For development, we use `black` and `isort`. If you wish to proceed without them and if you are using VSCode, update `.vscode/settings.json` accordingly.
 
 ### 🍄 Retrieval Heads
 
 The retrieval heads for the models can be found in the [`retrieval_heads`](retrieval_heads/) folder.
 
-To reproduce these (or if you just want to play around with newer models or you just wish to try this step yourself), you may go to the [Retrieval_Head](https://github.com/nightdessert/Retrieval_Head) repository to detect the retrieval heads for each model.
+To reproduce these (or if you just want to experiment with newer models or try this step yourself), visit the [Retrieval_Head](https://github.com/nightdessert/Retrieval_Head) repository to detect the retrieval heads for each model. For instance:
 
 ```bash
 # Llama3-8B-Instruct
@@ -62,7 +62,7 @@ python retrieval_head_detection.py  --model_path Qwen/Qwen2-7B-Instruct --s 0 --
 ### 🪄 To WandB or not to WandB
 
 If you wish to use WandB, please update the `configs/config.yaml`, specifically the values of `wandb_project` and `wandb_entity`.
-We would generally suggest you to use WandB, but if you are just simply against it, you can still run the script using the flag `debug` or by updating the value of `debug` in `configs/config.yaml` into `true`. This will bypass the wandb initialisation and logging.
+We generally recommend using WandB, but if you prefer not to, you can still run the script using the `debug` flag or by setting the value of `debug` in `configs/config.yaml` into `true`. This will bypass the wandb initialisation and logging.
 
 ## 🌲 Directory Structure
 
@@ -74,30 +74,30 @@ We would generally suggest you to use WandB, but if you are just simply against 
 ├── .env.example                     # Example environment file
 ├── .env                             # Your environment file
 ├── configs/                         # Hydra configs
-│   ├── config.yaml                  # Default config values that will be replaced by experiment config
-│   ├── data/                        # Directory containing dataset config files, that will be used in the experiment config files
-│   ├── data_loader/                 # Directory containing one default data loader config file
-│   ├── decoder/                     # Directory containing decoder config files (e.g., DeCoRe, Baseline, DoLa, ITI), that will be used in the experiment config files
-│   ├── experiment/                  # Directory containing experiment config files per decoder
-│   └── model/                       # Directory containing model config files, that will be used in the experiment config files
+│   ├── config.yaml                  # Default config values that will be replaced by experiment config
+│   ├── data/                        # Directory containing dataset config files, that will be used in the experiment config files
+│   ├── data_loader/                 # Directory containing one default data loader config file
+│   ├── decoder/                     # Directory containing decoder config files (e.g., DeCoRe, Baseline, DoLa, ITI), that will be used in the experiment config files
+│   ├── experiment/                  # Directory containing experiment config files per decoder
+│   └── model/                       # Directory containing model config files, that will be used in the experiment config files
 ├── data/                            # Directory containing dataset files
 ├── docs/                            # Directory containing assets for documentation
 ├── notebooks/                       # Jupyter notebooks directory, only for creating plots
 ├── retrieval_heads/                 # Directory containing pre-computed retrieval heads
 ├── scripts/
-│   ├── main.py                      # The main script for evaluating the runs
+│   ├── main.py                      # The main script for evaluating the runs
 └── src/
     ├── __init__.py
-    ├── configs.py                   # Handle hydra configs
+    ├── configs.py                   # Handle Hydra configs
     ├── datasets/                    # Dataset classes
     ├── factories.py                 # Factory functions to help with instantiating dataset, model, and metric classes. Called in the run.py
-    ├── metrics/                     # Metrics classes (the name has to be the same as the dataset classes)
-    ├── models/                      # Model classes, instatiating the selected models and decoder method
-    ├── run.py                       # The run manager, handling the selection of dataset, model, and metric classes, initialising WandB, etc.
-    └── utils
+    ├── metrics/                     # Metrics classes (the name must match the dataset classes)
+    ├── models/                      # Model classes, instantiating the selected models and decoder method
+    ├── run.py                       # The run manager, handling the selection of dataset, model, and metric classes, initializing WandB, etc.
+    └── utils/
         ├── __init__.py
         ├── common_utils.py          # Common utility functions
-        ├── modelling_llama.py       # Minimally modified from the Retrieval head repository 
+        ├── modelling_llama.py       # Minimally modified from the Retrieval head repository
         ├── modelling_mistral.py     # Minimally modified from the Retrieval head repository
         └── modelling_qwen2.py       # Minimally modified from the Retrieval head repository
 ```
@@ -106,13 +106,13 @@ We would generally suggest you to use WandB, but if you are just simply against 
 
 ### General evaluation
 
-The evaluation uses the `scripts/main.py` and a hydra config file from the `configs/experiment` folder. For instance:
+The evaluation uses the `scripts/main.py` and a Hydra config file from the `configs/experiment` folder. For instance:
 
 ```bash
 python scripts/main.py experiment=memotrap/decore_entropy/llama3_8b_instruct decoder.configs.num_retrieval_heads=100
 ```
 
-Notice that the hydra configs are structure based on the `dataset_name > decoder_name > model_name.yaml`. It is then followed with custom hyperparameters (e.g., `decoder.configs.num_retrieval_heads`).
+Notice that the hydra configs are structured based on `dataset_name > decoder_name > model_name.yaml`. It is then followed with custom hyperparameters (e.g., `decoder.configs.num_retrieval_heads`).
 
 Some dataset can be further modified depending on the variation that you want to evaluate the model against. The options are:
 
