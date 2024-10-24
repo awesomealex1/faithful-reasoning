@@ -52,7 +52,7 @@
               <a href="https://www.ed.ac.uk/profile/dr-beatrice-alex">Beatrice Alex</a><sup>Q</sup>,
             </span>
             <span class="author-block">
-              <a href="http://www.neuralnoise.com/">Pasquale Minervini</a><sup>Q</sup>,
+              <a href="http://www.neuralnoise.com/">Pasquale Minervini</a><sup>Q, A</sup>,
             </span>
             <span class="author-block">
               <a href="https://uk.linkedin.com/in/amrutha-saseendran">Amrutha Saseendran</a><sup>K</sup>
@@ -60,9 +60,10 @@
           </div>
 
           <div class="is-size-5 publication-authors">
-            <span class="author-block"><sup>Q</sup>University of Edinburgh, United Kingdom,</span>
-            <span class="author-block"><sup>K</sup>Centre for AI, Data Science & Artificial Intelligence, R&D, AstraZeneca, United Kingdom,</span>
+            <span class="author-block"><sup>Q</sup>University of Edinburgh, United Kingdom</span>
+            <span class="author-block"><sup>K</sup>Centre for AI, Data Science & Artificial Intelligence, R&D, AstraZeneca, United Kingdom</span>
             <span class="author-block"><sup>V</sup>University College London, United Kingdom</span>
+            <span class="author-block"><sup>A</sup>Miniml.AI, United Kingdom</span>
           </div>
 
           <div class="column has-text-centered">
@@ -108,7 +109,7 @@
 <section class="hero teaser">
   <div class="container is-max-desktop">
     <div class="hero-body">
-      <img id="teaser" src="docs/assets/decore_entropy_2sec.gif" alt="DeCoRe reduces hallucinations in LLMs" height="100%" />
+      <img id="teaser" src="docs/assets/decore_entropy_final.gif" alt="DeCoRe reduces hallucinations in LLMs" height="100%" />
       <h2 class="subtitle has-text-centered">
         <span class="dnerf">DeCoRe</span> reduces hallucinations in LLMs by contrasting outputs from the base model and a variant without retrieval heads, using predictive entropy to dynamically reject unfaithful responses
       </h2>
@@ -168,7 +169,7 @@
             Conditional entropy provides a natural way to quantify the uncertainty of the base model’s predictions.
         </p>
         <div class="columns is-centered">
-            <img src="./docs/assets/conditional_entropy.png" alt="Conditional entropy to control contrastive decoding" height="100%" />
+            <img src="./docs/assets/conditional_entropy.png" alt="Conditional entropy to control contrastive decoding" height="100%"/>
         </div>
         <p>
             <span class="dnerf">DeCoRe</span> incorporates conditional entropy into the contrastive decoding process to dynamically adjust the strength of the penalty based on the conditional entropy of the base model.
