@@ -160,5 +160,13 @@ python src/metrics/truthfulqa_gen.py --pred_filepath=path/to/truthfulqa_model_pr
 ## 🙏 Citation
 
 ```
-TBA
+@article{gema2024decore,
+      title={DeCoRe: Decoding by Contrasting Retrieval Heads to Mitigate Hallucinations}, 
+      author={Aryo Pradipta Gema and Chen Jin and Ahmed Abdulaal and Tom Diethe and Philip Teare and Beatrice Alex and Pasquale Minervini and Amrutha Saseendran},
+      year={2024},
+      eprint={2410.18860},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2410.18860}, 
+}
 ```
