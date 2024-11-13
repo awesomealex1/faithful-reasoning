@@ -141,7 +141,7 @@ class Run:
         metrics = self.metrics(predictions)
 
         # Log
-        if not configs.debug:
+        if not self.configs.debug:
             wandb.log(metrics)
 
             pred_artifact = wandb.Artifact(prediction_filename, type="prediction")
