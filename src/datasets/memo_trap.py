@@ -79,9 +79,9 @@ class MemoTrap(BaseDataset):
             if self.kwargs["use_chat_template"]  # Use list for chat template
             else sample["question"]
         )
-        sample["prompted_question_wo_context"] = (
-            sample["question"].split(":")[-1].strip()
-        )
+        sample["prompted_question_wo_context"] = [
+            [sample["question"].split(":")[-1].strip()]
+        ]
         sample["prompted_ref_true"] = sample["classes"][true_idx]
         sample["prompted_ref_false"] = sample["classes"][false_idx]
 
