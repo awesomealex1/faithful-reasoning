@@ -54,7 +54,7 @@ class Run:
         # Naming by model name
         self.run_name = f"{self.configs.model.name}__{self.configs.decoder.name}"
 
-        if not configs.debug:
+        if not self.configs.debug:
             self.group_name = self.configs.data.name
             wandb.init(
                 project=self.configs.wandb_project,
