@@ -1,14 +1,13 @@
+import copy
+import json
+import os
 from typing import List, Optional, Tuple
 
-import copy
-import os
-import json
-import torch
 import numpy as np
+import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from src.configs import DecoderConfigs, ModelConfigs
-
 from src.models.base_model import BaseModel
 
 
@@ -104,4 +103,63 @@ class ContextAwareDecoding(BaseModel):
         prompt,
         answer,
     ):
-        raise NotImplementedError("Context Aware Decoding does not support LM scoring")
+        prompted_question = prompt["prompted_question"][0]
+        prompted_question_wo_context = prompt["prompted_question_wo_context"][0]
+
+        # Only relevant for instruct model
+        if len(prompt["verbalised_instruction"][0]):
+            use_system_prompt = True
+        else:
+            use_system_prompt = False
+
+        with torch.no_grad():
+            if type(prompted_question) == list:
+                input_text = prompted_question + [answer]
+                input_text_wo_context = prompted_question_wo_context + [answer]
+            else:
+                input_text = prompted_question + answer
+                input_text_wo_context = prompted_question_wo_context + answer
+
+            input_ids = self._verbalise_input(
+                input_text,
+                use_system_prompt=use_system_prompt,
+                add_generation_prompt=False,
+            ).to(self.model.device)
+            prefix_ids = self._verbalise_input(
+                prompted_question, use_system_prompt=use_system_prompt
+            ).to(self.model.device)
+
+            input_ids_wo_context = self._verbalise_input(
+                input_text_wo_context,
+                use_system_prompt=use_system_prompt,
+                add_generation_prompt=False,
+            ).to(self.model.device)
+            prefix_ids_wo_context = self._verbalise_input(
+                prompted_question_wo_context, use_system_prompt=use_system_prompt
+            ).to(self.model.device)
+
+            continue_ids = input_ids[0, prefix_ids.shape[-1] :]
+
+            lm_output = self.model(input_ids, attn_mode=self.attn_mode)[0]
+            hallucinated_output = self.model(
+                input_ids_wo_context, attn_mode=self.attn_mode
+            )[0]
+
+            base_logits = lm_output[0, prefix_ids.shape[-1] - 1 : -1, :]
+            hallucinated_logits = hallucinated_output[
+                0, prefix_ids_wo_context.shape[-1] - 1 : -1, :
+            ]
+
+            diff_logits = (
+                (1 + self.decoder_configs.configs.alpha) * base_logits
+                - self.decoder_configs.configs.alpha * hallucinated_logits
+            )
+
+            if self.decoder_configs.configs.post_softmax:
+                diff_logits = diff_logits.log_softmax(dim=-1)
+
+            log_probs = (
+                diff_logits[range(diff_logits.shape[0]), continue_ids].sum().item()
+            )
+
+        return log_probs
