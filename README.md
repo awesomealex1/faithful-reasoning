@@ -152,11 +152,63 @@ The ids of both fine-tuned models would usually be prefixed by `ft:davinci-002:.
 
 Download the predictions from WandB (if you follow this codebase, it will be in a json format). Amd pass it on to the evaluation script.
 
+
 ```
 # Evaluate!
 
 python src/metrics/truthfulqa_gen.py --pred_filepath=path/to/truthfulqa_model_prediction.json
 ```
+
+# ReAct
+
+To run ReAct and evaluate it on `HotpotQA`, `MuSiQue` and `2WikiMultihopQA` you need to do the following things.
+
+First download the data needed by running:
+
+```bash
+sh scripts/download_react_data.sh
+```
+
+Then go to `src/utils` and install ElasticSearch:
+
+### Install on Mac
+```bash
+# source: https://www.elastic.co/guide/en/elasticsearch/reference/current/targz.html
+wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.10.2-darwin-x86_64.tar.gz
+wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.10.2-darwin-x86_64.tar.gz.sha512
+shasum -a 512 -c elasticsearch-7.10.2-darwin-x86_64.tar.gz.sha512
+tar -xzf elasticsearch-7.10.2-darwin-x86_64.tar.gz
+cd elasticsearch-7.10.2/
+./bin/elasticsearch # start the server
+pkill -f elasticsearch # to stop the server
+```
+
+### Install on Linux
+
+```bash
+# source: https://www.elastic.co/guide/en/elasticsearch/reference/8.1/targz.html
+wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.10.2-linux-x86_64.tar.gz
+wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.10.2-linux-x86_64.tar.gz.sha512
+shasum -a 512 -c elasticsearch-7.10.2-linux-x86_64.tar.gz.sha512
+tar -xzf elasticsearch-7.10.2-linux-x86_64.tar.gz
+cd elasticsearch-7.10.2/
+./bin/elasticsearch # start the server
+pkill -f elasticsearch # to stop the server
+```
+
+After starting the elasticsearch server you need to index the wikipedia corpuses, for which data is downloaded into the corresponding folder in `data`. (Make sure to have run `download_react_data.sh`). First start the retriever server:
+
+```bash
+uvicorn serve:app --port 8000 --app-dir retriever_server
+```
+
+Then index the corpuses (need to do this only once):
+
+```bash
+python retriever_server/build_index.py {dataset_name} # hotpotqa, 2wikimultihopqa, musique
+```
+
+Once this is done you can run the scripts to run ReAct!
 
 ## 🙏 Citation
 
