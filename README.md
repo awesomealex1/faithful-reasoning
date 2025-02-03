@@ -89,6 +89,7 @@ We generally recommend using WandB, but if you prefer not to, you can still run 
 ├── notebooks/                       # Jupyter notebooks directory, only for creating plots
 ├── retrieval_heads/                 # Directory containing pre-computed retrieval heads
 ├── scripts/
+│   ├── download_react_data.sh       # Script to download (large) datasets for ReAct
 │   ├── main.py                      # The main script for evaluating the runs
 └── src/
     ├── __init__.py
