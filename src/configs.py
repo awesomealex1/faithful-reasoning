@@ -36,6 +36,12 @@ class DecoderConfigs:
 
 
 @dataclass
+class FrameworkConfigs:
+    name: str = MISSING
+    configs: Optional[dict] = None
+
+
+@dataclass
 class RunnerConfigs:
     data: DataConfigs = MISSING
     data_loader: DataLoaderConfigs = MISSING
@@ -57,4 +63,7 @@ def register_base_configs() -> None:
     configs_store.store(group="model", name="base_model_config", node=ModelConfigs)
     configs_store.store(
         group="decoder", name="base_decoder_config", node=DecoderConfigs
+    )
+    configs_store.store(
+        group="framework", name="base_framwork_config", node=FrameworkConfigs
     )
