@@ -182,7 +182,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="retrieve paragraphs or titles")
     parser.add_argument(
-        "dataset_name", type=str, help="dataset_name", choices={"hotpotqa", "2wikimultihopqa", "iirc", "musique"}
+        "dataset_name", type=str, help="dataset_name", choices={"hotpotqa", "2wikimultihopqa", "musique"}
     )
     parser.add_argument("--host", type=str, help="host", default="localhost")
     parser.add_argument("--port", type=int, help="port", default=9200)

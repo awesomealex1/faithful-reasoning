@@ -30,11 +30,7 @@ def main():
         query_text = input("Enter Query: ")
 
         params = {
-            # choices: "retrieve_from_elasticsearch", "retrieve_from_blink",
-            # "retrieve_from_blink_and_elasticsearch", "retrieve_from_dpr",
-            # retrieve_from_contriever
             "retrieval_method": args.retrieval_method,
-            ####
             "query_text": query_text,
             "max_hits_count": args.max_hits_count,
         }

@@ -30,7 +30,7 @@ def hash_object(o: Any) -> str:
 
 
 def make_hotpotqa_documents(elasticsearch_index: str, metadata: Dict = None):
-    raw_glob_filepath = os.path.join("raw_data", "hotpotqa", "wikpedia-paragraphs", "*", "wiki_*.bz2")
+    raw_glob_filepath = os.path.join("data", "HotpotQA", "wikpedia-paragraphs", "*", "wiki_*.bz2")
     metadata = metadata or {"idx": 1}
     assert "idx" in metadata
     for filepath in tqdm(glob.glob(raw_glob_filepath)):
@@ -63,58 +63,11 @@ def make_hotpotqa_documents(elasticsearch_index: str, metadata: Dict = None):
             metadata["idx"] += 1
 
 
-def make_iirc_documents(elasticsearch_index: str, metadata: Dict = None):
-    raw_filepath = os.path.join("raw_data", "iirc", "context_articles.json")
-
-    metadata = metadata or {"idx": 1}
-    assert "idx" in metadata
-
-    random.seed(13370)  # Don't change.
-
-    with open(raw_filepath, "r") as file:
-        full_data = json.load(file)
-
-        for title, page_html in tqdm(full_data.items()):
-            page_soup = BeautifulSoup(page_html, "html.parser")
-            paragraph_texts = [
-                text for text in page_soup.text.split("\n") if text.strip() and len(text.strip().split()) > 10
-            ]
-
-            # IIRC has a positional bias. 70% of the times, the first
-            # is the supporting one, and almost all are in 1st 20.
-            # So we scramble them to make it more challenging retrieval
-            # problem.
-            paragraph_indices_and_texts = [
-                (paragraph_index, paragraph_text) for paragraph_index, paragraph_text in enumerate(paragraph_texts)
-            ]
-            random.shuffle(paragraph_indices_and_texts)
-            for paragraph_index, paragraph_text in paragraph_indices_and_texts:
-                url = ""
-                id_ = hash_object(title + paragraph_text)
-                is_abstract = paragraph_index == 0
-                es_paragraph = {
-                    "id": id_,
-                    "title": title,
-                    "paragraph_index": paragraph_index,
-                    "paragraph_text": paragraph_text,
-                    "url": url,
-                    "is_abstract": is_abstract,
-                }
-                document = {
-                    "_op_type": "create",
-                    "_index": elasticsearch_index,
-                    "_id": metadata["idx"],
-                    "_source": es_paragraph,
-                }
-                yield (document)
-                metadata["idx"] += 1
-
-
 def make_2wikimultihopqa_documents(elasticsearch_index: str, metadata: Dict = None):
     raw_filepaths = [
-        os.path.join("raw_data", "2wikimultihopqa", "train.json"),
-        os.path.join("raw_data", "2wikimultihopqa", "dev.json"),
-        os.path.join("raw_data", "2wikimultihopqa", "test.json"),
+        os.path.join("data", "2WikiMultiHopQA", "train.json"),
+        os.path.join("data", "2WikiMultiHopQA", "dev.json"),
+        os.path.join("data", "2WikiMultiHopQA", "test.json"),
     ]
     metadata = metadata or {"idx": 1}
     assert "idx" in metadata
@@ -161,12 +114,12 @@ def make_2wikimultihopqa_documents(elasticsearch_index: str, metadata: Dict = No
 
 def make_musique_documents(elasticsearch_index: str, metadata: Dict = None):
     raw_filepaths = [
-        os.path.join("raw_data", "musique", "musique_ans_v1.0_dev.jsonl"),
-        os.path.join("raw_data", "musique", "musique_ans_v1.0_test.jsonl"),
-        os.path.join("raw_data", "musique", "musique_ans_v1.0_train.jsonl"),
-        os.path.join("raw_data", "musique", "musique_full_v1.0_dev.jsonl"),
-        os.path.join("raw_data", "musique", "musique_full_v1.0_test.jsonl"),
-        os.path.join("raw_data", "musique", "musique_full_v1.0_train.jsonl"),
+        os.path.join("data", "MuSiQue", "musique_ans_v1.0_dev.jsonl"),
+        os.path.join("data", "MuSiQue", "musique_ans_v1.0_test.jsonl"),
+        os.path.join("data", "MuSiQue", "musique_ans_v1.0_train.jsonl"),
+        os.path.join("data", "MuSiQue", "musique_full_v1.0_dev.jsonl"),
+        os.path.join("data", "MuSiQue", "musique_full_v1.0_test.jsonl"),
+        os.path.join("data", "MuSiQue", "musique_full_v1.0_train.jsonl"),
     ]
     metadata = metadata or {"idx": 1}
     assert "idx" in metadata
@@ -220,7 +173,7 @@ if __name__ == "__main__":
         "dataset_name",
         help="name of the dataset",
         type=str,
-        choices=("hotpotqa", "iirc", "2wikimultihopqa", "musique"),
+        choices=("hotpotqa", "2wikimultihopqa", "musique"),
     )
     parser.add_argument(
         "--force",
@@ -280,8 +233,6 @@ if __name__ == "__main__":
 
     if args.dataset_name == "hotpotqa":
         make_documents = make_hotpotqa_documents
-    elif args.dataset_name == "iirc":
-        make_documents = make_iirc_documents
     elif args.dataset_name == "2wikimultihopqa":
         make_documents = make_2wikimultihopqa_documents
     elif args.dataset_name == "musique":
