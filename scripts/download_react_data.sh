@@ -15,6 +15,13 @@ wget https://www.dropbox.com/s/7ep3h8unu2njfxv/data_ids.zip?dl=0 -O .temp/2WikiM
 unzip -jo .temp/2WikiMultiHopQA.zip -d data/2WikiMultiHopQA -x "*.DS_Store"
 rm data_ids.zip*
 
+echo "\n\nDownloading raw MuSiQue data\n"
+mkdir -p data/MuSiQue
+# URL: https://drive.google.com/file/d/1tGdADlNjWFaHLeZZGShh2IRcpO6Lv24h/view?usp=sharing
+gdown "1tGdADlNjWFaHLeZZGShh2IRcpO6Lv24h&confirm=t" -O .temp/musique_v1.0.zip
+unzip -jo .temp/musique_v1.0.zip -d data/MuSiQue -x "*.DS_Store"
+
+
 echo "\n\nDownloading hotpotqa wikipedia corpus (this will take ~5 mins)\n"
 wget https://nlp.stanford.edu/projects/hotpotqa/enwiki-20171001-pages-meta-current-withlinks-abstracts.tar.bz2 -O .temp/wikpedia-paragraphs.tar.bz2
 tar -xvf .temp/wikpedia-paragraphs.tar.bz2 -C data/HotpotQA
