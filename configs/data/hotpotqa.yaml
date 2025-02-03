@@ -1,0 +1,7 @@
+defaults:
+  - base_data_config
+
+name: HotpotQA
+data_dir: data/HotpotQA
+num_samples: -1
+variation: null
