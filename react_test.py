@@ -18,4 +18,4 @@ model = lambda x: pipe(
 )
 model("Hello llama")
 hp_react = HotpotReAct(model=model, max_steps=5)
-hp_react.do_react("Which dog's ancestors include Gordon and Irish Setters: the Manchester Terrier or the Scotch Collie?")
+hp_react.do_react("Musician and satirist Allie Goertz wrote a song about the \"The Simpsons\" character Milhouse, who Matt Groening named after who?")

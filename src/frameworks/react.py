@@ -59,11 +59,11 @@ class HotpotReAct(ReAct):
             if self.contains_answer(reasoning_action):
                 return self.extract_answer(reasoning_action)
 
-            observation, title = self.act(reasoning_action, title)   # observation is some retireved context\n
+            observation, title = self.act(reasoning_action, title)   # observation is some retrieved context\n
             print(observation)
             prompt += reasoning_action + f"Observation {step_i}: {observation}\n"
         
-        return None
+        return "No answer found"
 
     def reason(self, prompt, stop):
         output = self.model(prompt)[0]["generated_text"]
@@ -85,30 +85,38 @@ class HotpotReAct(ReAct):
                     corpus_name="hotpotqa",
                     query_text=action_value
                 )
-                print("Could find Title")
-                print(observation)
+                exact_title_matches = [obs for obs in observation if obs["title"] == action_value]
+                if len(exact_title_matches) > 0:
+                    title = exact_title_matches[0]["title"]
+                    observation_val = exact_title_matches[0]["paragraph_text"]
+                else:
+                    title = observation[0]["title"]
+                    observation_val = observation[0]["paragraph_text"]
             except NotFoundError:
-                print("Couldn't find Title")
                 observation = self.retriever.retrieve_paragraphs(
                     corpus_name="hotpotqa", 
-                    query_text=action_value
+                    query_text=action_value,
+                    max_hits_count=5
                 )
-                print(observation)
+                similar_titles = [doc["title"] for doc in observation]
+                prefix = f"Could not find [{action_value}]. "
+                if len(observation) > 0:
+                    observation_val = prefix + f"Similar: {similar_titles}"
+                else:
+                    observation_val = prefix + "No similar entries found."
         elif action_type == "Lookup":
             observation = self.retriever.retrieve_first_paragraph_with_keyword(
                 corpus_name="hotpotqa",
                 query_text=action_value,
                 page_title=title
             )
+            if len(observation) > 0:
+                title = observation[0]["title"]
+                observation_val = observation[0]["paragraph_text"]
+            else:
+                observation_val = f"Could not find [{action_value}]. "
 
-        print(observation)
-        if len(observation) > 0:
-            title = observation[0]["title"]
-            observation = observation[0]["paragraph_text"]
-        else:
-            observation = "Could not find anything that matched the request."
-
-        return observation, title
+        return observation_val, title
     
     def extract_action(self, reasoning_action):
         search_pattern = r'Search\[(.*?)\]'
