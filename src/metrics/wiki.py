@@ -1,4 +1,4 @@
-
+from typing import List
 
 class WikiMultihopQA:
     def __init__(self):
