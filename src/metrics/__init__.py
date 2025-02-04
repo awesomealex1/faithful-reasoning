@@ -7,3 +7,5 @@ from .popqa import PopQA
 from .triviaqa import TriviaQA
 from .truthfulqa import TruthfulQA
 from .xsum import XSum
+from .wiki import WikiMultihopQA
+from .hotpotqa import HotpotQA
