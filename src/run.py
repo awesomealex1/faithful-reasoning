@@ -15,7 +15,7 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 
 from src.configs import RunnerConfigs
-from src.factories import get_dataset, get_metrics, get_model
+from src.factories import get_dataset, get_metrics, get_model, get_framework
 
 
 class Run:
@@ -46,6 +46,9 @@ class Run:
 
     def _load_pipeline(self) -> None:
         self.model = get_model(self.configs.model, self.configs.decoder)
+
+        if self.configs.framework:
+            self.model = get_framework(self.configs.framework)
 
     def _load_metrics(self):
         self.metrics = get_metrics(self.configs.data)

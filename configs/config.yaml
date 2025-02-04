@@ -12,7 +12,7 @@ hydra:
   output_subdir: null
 random_seed: 1234
 
-wandb_project: AstraZeneca_DeCoRe
-wandb_entity: aryopg
+wandb_project: Faithful_Reasoning
+wandb_entity: alexmurphy-university-of-edinburgh
 
 debug: false
