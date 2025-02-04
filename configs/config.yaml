@@ -4,6 +4,7 @@ defaults:
   - data_loader: default
   - model: llama2_7b_chat
   - decoder: baseline
+  - framework: react
   - experiment: null
   - _self_
 

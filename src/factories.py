@@ -1,7 +1,6 @@
 from typing import Optional
-
-from src import datasets, metrics, models
-from src.configs import DataConfigs, DecoderConfigs, ModelConfigs
+from src import metrics, models, frameworks, datasets
+from src.configs import DataConfigs, DecoderConfigs, ModelConfigs, FrameworkConfigs
 
 
 def get_dataset(data_configs: DataConfigs, **kwargs):
@@ -23,3 +22,12 @@ def get_model(
 
 def get_metrics(data_configs: DataConfigs):
     return getattr(metrics, data_configs.name)()
+
+
+def get_framework(framework_configs: FrameworkConfigs, data_configs: DataConfigs, model, **kwargs):
+    return getattr(frameworks, framework_configs.name)(
+        framework_configs=framework_configs,
+        data_configs=data_configs,
+        model=model,
+        **kwargs,
+    )

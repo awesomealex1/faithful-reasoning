@@ -7,3 +7,5 @@ from .triviaqa import TriviaQA
 from .xsum import XSum
 from .musique import MuSiQue
 from .ifeval import IFEval
+from .hotpotqa import HotpotQA
+from .wiki import WikiMultihopQA

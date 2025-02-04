@@ -47,6 +47,7 @@ class RunnerConfigs:
     data_loader: DataLoaderConfigs = MISSING
     decoder: DecoderConfigs = MISSING
     model: ModelConfigs = MISSING
+    framework: FrameworkConfigs = MISSING
     wandb_project: str = MISSING
     wandb_entity: str = MISSING
     debug: bool = False
@@ -65,5 +66,5 @@ def register_base_configs() -> None:
         group="decoder", name="base_decoder_config", node=DecoderConfigs
     )
     configs_store.store(
-        group="framework", name="base_framwork_config", node=FrameworkConfigs
+        group="framework", name="base_framework_config", node=FrameworkConfigs
     )

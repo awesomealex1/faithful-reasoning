@@ -1,5 +1,5 @@
-from base_dataset import BaseDataset
-from configs import DataConfigs
+from src.datasets.base_dataset import BaseDataset
+from src.configs import DataConfigs
 from typing import List
 import os
 
