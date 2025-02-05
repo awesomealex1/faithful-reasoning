@@ -5,6 +5,7 @@ annotated-types==0.7.0
 antlr4-python3-runtime==4.9.3
 async-timeout==4.0.3
 attrs==23.2.0
+base58==2.1.1
 build==0.10.0
 CacheControl==0.13.1
 certifi==2024.2.2
@@ -23,6 +24,7 @@ docker-pycreds==0.4.0
 dulwich==0.21.7
 elasticsearch==7.9.1
 evaluate==0.4.2
+fastapi==0.115.8
 filelock==3.14.0
 fonttools==4.53.0
 frozenlist==1.4.1
@@ -87,7 +89,7 @@ pyrsistent==0.20.0
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
 pytz==2024.1
-PyYAML==5.4.1
+PyYAML==5.3.1
 rapidfuzz==3.9.1
 regex==2024.5.15
 requests==2.32.2
@@ -117,6 +119,7 @@ trove-classifiers==2024.5.22
 typing_extensions==4.12.2
 tzdata==2024.1
 urllib3==2.2.1
+uvicorn==0.34.0
 virtualenv==20.26.2
 wandb==0.17.3
 xxhash==3.4.1

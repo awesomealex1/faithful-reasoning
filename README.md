@@ -205,7 +205,7 @@ uvicorn serve:app --port 8000 --app-dir retriever_server
 Then index the corpuses (need to do this only once):
 
 ```bash
-python retriever_server/build_index.py {dataset_name} # hotpotqa, 2wikimultihopqa, musique
+python src/utils/retriever_server/build_index.py {dataset_name} # hotpotqa, 2wikimultihopqa, musique
 ```
 
 Once this is done you can run the scripts to run ReAct!

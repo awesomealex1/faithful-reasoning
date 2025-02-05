@@ -48,7 +48,7 @@ class Run:
         self.model = get_model(self.configs.model, self.configs.decoder)
 
         if self.configs.framework:
-            self.model = get_framework(self.configs.framework)
+            self.model = get_framework(self.configs.framework, self.configs.data, self.model)
 
     def _load_metrics(self):
         self.metrics = get_metrics(self.configs.data)
@@ -56,6 +56,9 @@ class Run:
     def _setup_run(self):
         # Naming by model name
         self.run_name = f"{self.configs.model.name}__{self.configs.decoder.name}"
+
+        if self.configs.framework:
+            self.run_name += f"__{self.configs.framework.name}"
 
         if not self.configs.debug:
             self.group_name = self.configs.data.name

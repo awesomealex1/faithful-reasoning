@@ -2,3 +2,5 @@ defaults:
   - base_framework_config
 
 name: ReAct
+configs:
+  max_steps: 7

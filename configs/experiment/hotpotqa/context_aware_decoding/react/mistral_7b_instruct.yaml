@@ -1,8 +1,8 @@
 # @package _global_
 defaults:
-  - override /model: llama3_8b_instruct
+  - override /model: mistral_7b_instruct
   - override /data: hotpotqa
-  - override /decoder: decore_entropy
+  - override /decoder: context_aware_decoding
   - override /framework: react
 
 model:

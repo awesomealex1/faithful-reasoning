@@ -1,4 +1,6 @@
-from typing import List
+from typing import List, Dict
+import re
+import numpy as np
 
 class HotpotQA:
     def __init__(self):
@@ -9,3 +11,43 @@ class HotpotQA:
         scores["Subspan_EM"] = self.unnormalised_best_subspan_em(prediction, refs)
 
         return scores
+
+    @staticmethod
+    def answer_extractor(answer):
+        pattern = r'Finish\[(.*?)\]'
+
+        match = re.search(pattern, answer)
+
+        if match:
+            answer = match.group(1)
+            return answer
+        
+        return answer
+    
+    @staticmethod
+    def unnormalised_best_subspan_em(
+        prediction: str, ground_truths: List[str]
+    ) -> float:
+        for ground_truth in ground_truths:
+            if ground_truth.lower() in prediction.lower():
+                return 1.0
+        return 0.0
+
+    def __call__(self, predictions) -> Dict[str, float]:
+        subspan_em_scores = []
+        for sample in predictions:
+            refs = [
+                ans[0] if type(ans) in [list, tuple] else ans
+                for ans in sample["answers"]
+            ]
+
+            prediction = self.answer_extractor(sample["predicted_answer"])
+
+            scores = self.compute_metrics(prediction, refs)
+
+            subspan_em_scores += [scores["Subspan_EM"]]
+
+        metrics = {
+            "Subspan_EM": np.mean(subspan_em_scores),
+        }
+        return metrics
