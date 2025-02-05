@@ -1,11 +1,13 @@
 from typing import Dict
 
 import numpy as np
+from src.metrics.base_metric import BaseMetric
+from src.configs import FrameworkConfigs
 
 
-class MemoTrap:
-    def __init__(self):
-        pass
+class MemoTrap(BaseMetric):
+    def __init__(self, framework_configs: FrameworkConfigs, **kwargs):
+        super().__init__(framework_configs, **kwargs)
 
     def __call__(self, predictions: dict) -> Dict[str, float]:
         """

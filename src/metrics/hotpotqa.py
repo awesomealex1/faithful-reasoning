@@ -1,28 +1,18 @@
 from typing import List, Dict
 import re
 import numpy as np
+from src.metrics.base_metric import BaseMetric
+from src.configs import FrameworkConfigs
 
-class HotpotQA:
-    def __init__(self):
-        pass
+class HotpotQA(BaseMetric):
+    def __init__(self, framework_configs: FrameworkConfigs, **kwargs):
+        super().__init__(framework_configs, **kwargs)
 
     def compute_metrics(self, prediction: str, refs: List[str]):
         scores = {}
         scores["Subspan_EM"] = self.unnormalised_best_subspan_em(prediction, refs)
 
         return scores
-
-    @staticmethod
-    def answer_extractor(answer):
-        pattern = r'Finish\[(.*?)\]'
-
-        match = re.search(pattern, answer)
-
-        if match:
-            answer = match.group(1)
-            return answer
-        
-        return answer
     
     @staticmethod
     def unnormalised_best_subspan_em(

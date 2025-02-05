@@ -1,7 +1,7 @@
 defaults:
   - base_data_config
 
-name: 2WikiMultiHopQA
+name: WikiMultihopQA
 data_dir: data/2WikiMultiHopQA
-num_samples: -1
+num_samples: 20
 variation: null

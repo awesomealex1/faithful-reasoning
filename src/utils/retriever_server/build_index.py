@@ -173,7 +173,7 @@ if __name__ == "__main__":
         "dataset_name",
         help="name of the dataset",
         type=str,
-        choices=("hotpotqa", "2wikimultihopqa", "musique"),
+        choices=("hotpotqa", "wikimultihopqa", "musique"),
     )
     parser.add_argument(
         "--force",
@@ -233,7 +233,7 @@ if __name__ == "__main__":
 
     if args.dataset_name == "hotpotqa":
         make_documents = make_hotpotqa_documents
-    elif args.dataset_name == "2wikimultihopqa":
+    elif args.dataset_name == "wikimultihopqa":
         make_documents = make_2wikimultihopqa_documents
     elif args.dataset_name == "musique":
         make_documents = make_musique_documents

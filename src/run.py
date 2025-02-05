@@ -38,6 +38,8 @@ class Run:
             self.configs.data,
             use_chat_template=self.configs.model.model_type == "instruct",
         )
+        print(dataset)
+        print(self.configs.data)
         self.dataloaders = DataLoader(
             dataset,
             shuffle=False,
@@ -51,7 +53,7 @@ class Run:
             self.model = get_framework(self.configs.framework, self.configs.data, self.model)
 
     def _load_metrics(self):
-        self.metrics = get_metrics(self.configs.data)
+        self.metrics = get_metrics(self.configs.data, self.configs.framework)
 
     def _setup_run(self):
         # Naming by model name

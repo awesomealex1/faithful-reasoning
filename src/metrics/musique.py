@@ -3,31 +3,19 @@ from typing import Dict, List
 import regex as re
 import numpy as np
 
+from src.metrics.base_metric import BaseMetric
+from src.configs import FrameworkConfigs
 
-class MuSiQue:
-    def __init__(self):
-        pass
+
+class MuSiQue(BaseMetric):
+    def __init__(self, framework_configs: FrameworkConfigs, **kwargs):
+        super().__init__(framework_configs, **kwargs)
 
     def compute_metrics(self, prediction: str, refs: List[str]):
         scores = {}
         scores["Subspan_EM"] = self.unnormalised_best_subspan_em(prediction, refs)
 
         return scores
-
-    @staticmethod
-    def answer_extractor(cot_answer: str) -> str:
-        # Adapted from https://github.com/StonyBrookNLP/ircot/blob/main/evaluate.py
-
-        cot_regex = re.compile(".* answer is:? (.*)\\.?")
-        match = cot_regex.match(cot_answer)
-        if match:
-            output = match.group(1)
-            if output.endswith("."):
-                output = output[:-1]
-        else:
-            output = cot_answer
-
-        return output
 
     @staticmethod
     def unnormalised_best_subspan_em(

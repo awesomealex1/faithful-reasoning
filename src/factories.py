@@ -20,8 +20,8 @@ def get_model(
     )
 
 
-def get_metrics(data_configs: DataConfigs):
-    return getattr(metrics, data_configs.name)()
+def get_metrics(data_configs: DataConfigs, framework_configs: FrameworkConfigs):
+    return getattr(metrics, data_configs.name)(framework_configs)
 
 
 def get_framework(framework_configs: FrameworkConfigs, data_configs: DataConfigs, model, **kwargs):

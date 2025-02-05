@@ -1,11 +1,14 @@
 from typing import Dict
 
 import numpy as np
+from src.metrics.base_metric import BaseMetric
+from src.configs import FrameworkConfigs
 
 
-class TruthfulQA:
-    def __init__(self):
-        pass
+class TruthfulQA(BaseMetric):
+    def __init__(self, framework_configs: FrameworkConfigs, **kwargs):
+        super().__init__(framework_configs, **kwargs)
+
 
     @staticmethod
     def compute_metrics(scores_true, scores_false, ref_true, ref_best):

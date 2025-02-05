@@ -4,11 +4,14 @@ import regex as re
 import numpy as np
 
 from src.metrics.utils import best_em, best_subspan_em
+from src.metrics.base_metric import BaseMetric
+from src.configs import FrameworkConfigs
 
 
-class TriviaQA:
-    def __init__(self):
-        pass
+class TriviaQA(BaseMetric):
+    def __init__(self, framework_configs: FrameworkConfigs, **kwargs):
+        super().__init__(framework_configs, **kwargs)
+
 
     @staticmethod
     def compute_metrics(prediction: str, refs: List[str]):
