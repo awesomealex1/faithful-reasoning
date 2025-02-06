@@ -1,10 +1,10 @@
 # @package _global_
 defaults:
   - override /model: iti_llama3_8b_instruct
-  - override /data: musique
+  - override /data: hotpotqa
   - override /decoder: baseline
   - override /framework: react
 
 model:
   configs:
-    max_new_tokens: 100
+    max_new_tokens: 1280

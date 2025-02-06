@@ -3,5 +3,5 @@ defaults:
 
 name: HotpotQA
 data_dir: data/HotpotQA
-num_samples: -1
+num_samples: 10
 variation: null
