@@ -1,0 +1,82 @@
+Question: Who is the founder of the company which published Big Picture (Magazine)?
+Thought 1: I need to search Big Picture (Magazine) to find out who founded the company that published it.
+Action 1: Search[Big Picture (Magazine)]
+Observation 1: The Big Picture series provides teachers and post-16 students with up-to-date information on research findings in biology and medicine, and the social and ethical implications of this research. Published by the Wellcome Trust as a free educational resource, each issue is available for free electronically. The website provides free resources for teachers and online activities for students, including lesson ideas, animations, image galleries and short videos. , the print subscription has been discontinued and replaced with online only.
+Thought 2: The Big Picture (Magazine) is published by the Wellcome Trust. I need to search the Wellcome Trust to find out who founded it.
+Action 2: Search[Wellcome Trust]
+Observation 2: The Wellcome Trust is a research charity based in London, United Kingdom. It was established in 1936 with legacies from the pharmaceutical magnate Sir Henry Wellcome to fund research to improve human and animal health. The aim of the Trust is to "achieve extraordinary improvements in health by supporting the brightest minds", and in addition to funding biomedical research it supports the public understanding of science. It had a financial endowment of £25.9 billion in 2018, making it the fourth wealthiest charitable foundation in the world, after the American Bill & Melinda Gates Foundation, the Danish Novo Nordisk Foundation and the Dutch INGKA Foundation (related to the IKEA company). The Trust has been described by the "Financial Times" as the United Kingdom's largest provider of non-governmental funding for scientific research, and one of the largest providers in the world.
+Thought 3: The Wellcome Trust was established by Sir Henry Wellcome in 1936. Therefore, the founder of the company which published Big Picture (Magazine) is Sir Henry Wellcome.
+Action 3: Finish[Sir Henry Wellcome]
+
+Question: Are Antoine Jean-Baptiste Thomas and Canardo (Rapper) of the same nationality?
+Thought 1: I need to search Antoine Jean-Baptiste Thomas and Canardo (Rapper) to find their nationalities and compare them.
+Action 1: Search[Antoine Jean-Baptiste Thomas]
+Observation 1: Antoine Jean- Baptiste Thomas( 1791–1833) was a French painter and lithographer. Thomas mentored under François- André Vincent, and later studied at the École des Beaux- Arts. Thomas lived and traveled around Italy, which inspired many of his works. He specialized in oil paintings, often depictions of Italian daily life or ancient rome. He was also commissioned to paint a number of religious works for various churches. In 1816 he won the Prix de Rome with his piece" Oenone Refusing to Help the Wounded Paris". He spent two years studying art in Rome and returned to Paris in 1818. Between 1819 and 1831 he exhibited his paintings at Salons, however today he is best known for his series of lithographs," One Year in Rome and Its Environs". Thomas' style is characterized as Romanticism.
+Thought 2: Antoine Jean-Baptiste Thomas is French. I need to search Canardo (Rapper) next to find its nationality.
+Action 2: Search[Canardo (Rapper)]
+Observation 2: Hakim Mouhid( born 22 September 1984 in Trappes, Yvelines), better known by his stage name Canardo, is a French rapper, singer, songwriter and music producer. After working with label" Banlieue Sale Music" since 2007, in 2011, he founded his own label" Henijai Music". He is the brother of fellow French rapper La Fouine.
+Thought 3: Canardo (Rapper) is French. Antoine Jean-Baptiste Thomas and Canardo (Rapper) are of the same nationality.
+Action 3: Finish[yes]
+
+Question: Who is Elizabeth Stuart, Countess Of Lennox's mother-in-law?
+Thought 1: I need to search Elizabeth Stuart, Countess Of Lennox to find her mother-in-law's name.
+Action 1: Search[Elizabeth Stuart, Countess Of Lennox]
+Observation 1: Elizabeth Stuart, Countess of Lennox née Cavendish (31 March 1555 – 16 January 1582) was an English noblewoman and the wife of Charles Stuart, 1st Earl of Lennox. She was the mother of Arbella Stuart, a close claimant to the English and Scottish thrones.
+Thought 2: The search result indicates that Elizabeth Stuart, Countess of Lennox was married to Charles Stuart, 1st Earl of Lennox. To find her mother-in-law's name, I need to search for Charles Stuart, 1st Earl of Lennox.
+Action 2: Search[Charles Stuart, 1st Earl of Lennox]
+Observation 2: Charles Stuart, 1st (or 5th) Earl of Lennox (April or May 1557 – April 1576), was the fourth son of Matthew Stewart, 4th Earl of Lennox and Margaret Douglas, daughter of Margaret Tudor and granddaughter of King Henry VII of England. His brother was Henry Stuart, Lord Darnley.
+Thought 3: The search result indicates that Charles Stuart, 1st Earl of Lennox was the fourth son of Matthew Stewart, 4th Earl of Lennox and Margaret Douglas. Therefore, his mother, Margaret Douglas, is Elizabeth Stuart, Countess of Lennox's mother-in-law.
+Action 3: Finish[Margaret Douglas]
+
+Question: When was Ludwig Gruno Of Hesse-Homburg's father born?
+Thought 1:I need to search Ludwig Gruno Of Hesse-Homburg to find information about his father and when he was born.
+Action 1: Search[Ludwig Gruno Of Hesse-Homburg]
+Observation 1: Ludwig Johann Wilhelm Gruno von Hessen-Homburg (15 January 1705 – 23 October 1745) was hereditary prince of Hesse-Homburg and an Imperial Russian field marshal. He was the eldest surviving son of Frederick III, Landgrave of Hesse-Homburg and his wife Elisabeth Dorothea of Hesse-Darmstadt, daughter of Louis VI, Landgrave of Hesse-Darmstadt. He studied at the University of Giessen and was sent by his father to Russia in 1723. He became Major-General in Riga and commander of the Narva-Regiment. As the grandson of Louise Elisabeth of Courland, he hoped in vain to succeed his cousin Ferdinand Kettler as Duke of Courland. Anna of Russia moved him to Saint Petersburg, where he was promoted to General-Lieutenant and commander of the Saint Petersburg garrison. In 1732, he led a successful campaign against the Crimean Tatars in the Caucasus. After operations in Eastern Poland in 1734-1735, he again fought against the Crimean Tatars and the Turks in 1736-1737, but now under command of von Münnich. He was awarded with the rank of General-Feldzeugmeister and was appointed Governor of Astrachan and the Persian provinces. Ludwig Gruno also had good relations with the new Tsarina Elizabeth of Russia. She gave him in 1742 the title of General-Fieldmarshal, a house in Moscow and an estate in Livonia. He died from illness on a travel in Berlin. He pre-deceased his father and was buried in the crypt of Bad Homburg Castle.
+Thought 2:Ludwig Gruno Of Hesse-Homburg's father was Frederick III, Landgrave of Hesse-Homburg. I need to search Frederick III, Landgrave of Hesse-Homburg to find when he was born.
+Action 2: Search[Frederick III, Landgrave of Hesse-Homburg]
+Observation 2: Frederick III James of Hesse-Homburg (born 19 May 1673 in Cölln; died: 8 June 1746 in 's-Hertogenbosch) was a Landgrave of Hesse-Homburg
+Thought 3: Frederick III, Landgrave of Hesse-Homburg was born on 19 May 1673. Therefore, the answer is 19 May 1673.
+Action 3: Finish[19 May 1673]
+
+Question: Who was born first, Heo Keon or Ljiljana Nanušević?
+Thought 1: I need to search Heo Keon and Ljiljana Nanušević, and find who was born first.
+Action 1: Search[Heo Keon]
+Observation 1: Heo Keon( born 3 January 1988) is a South Korean footballer who plays as midfielder for Bucheon FC 1995 in K League Challenge.
+Thought 2: Heo Keon was born in 1988. I need to search Ljiljana Nanušević next to find when they were born.
+Action 2: Search[Ljiljana Nanušević]
+Observation 2: Ljiljana Nanušević( born 2 August 1981) is a Serbian former professional tennis player who played in the Fed Cup for Yugoslavia. Nanušević made all of her Fed Cup appearances in the 1997 Fed Cup, while aged only 15. Playing in a total of five ties, she played doubles in each of them, as well as singles once, managing to win every rubber. She won an ITF singles tournament in Istanbul in 2001 and won a further two ITF titles in doubles.
+Thought 3: Ljiljana Nanušević was born in 1981, while Heo Keon was born in 1988. Therefore, Ljiljana Nanušević was born first.
+Action 3: Finish[Ljiljana Nanušević]
+
+Question: Which film was released more recently, The Black Duke or Avalalpam Vaikippoyi?
+Thought 1: I need to search The Black Duke and Avalalpam Vaikippoyi, and find which film was released more recently.
+Action 1: Search[The Black Duke]
+Observation 1: The Black Duke  is a 1963 Italian historical adventure film directed by Pino Mercanti.
+Thought 2: The Black Duke was released in 1963. I need to search Avalalpam Vaikippoyi next and find its release year.
+Action 2: Search[Avalalpam Vaikippoyi]
+Observation 2: Avalalpam Vaikippoyi is a 1971 Indian Malayalam film, directed by John Sankaramangalam and produced by United Producers. The film stars Prem Nazir, Sheela, Jayabharathi and Adoor Bhasi in the lead roles. The film had musical score by G. Devarajan.
+Thought 3: Avalalpam Vaikippoyi was released in 1971. Since 1971 is later than 1963, the film released more recently is Avalalpam Vaikippoyi.
+Action 3: Finish[Avalalpam Vaikippoyi]
+
+Question: Which film has the director who is older, King Of The Zombies or Mon Oncle Benjamin?
+Thought 1:I need to search King Of The Zombies and Mon Oncle Benjamin, and find the birth years of their directors to determine which film has the older director.
+Action 1: Search[King Of The Zombies]
+Observation 1: King of the Zombies is a 1941 American zombie comedy film directed by Jean Yarbrough and stars Dick Purcell, Joan Woodbury, and Mantan Moreland. The film was produced by Monogram Pictures, and was typical of its B films churned out by the Pine-Thomas team. Along with flying scenes, the use of zany characters and slapstick efforts were juxtaposed with a spy and zombie story.
+Thought 2:I need to search for the director Jean Yarbrough to find his birth year.
+Action 2: Search[Jean Yarbrough]
+Observation 2: Jean Yarbrough (August 22, 1901 – August 2, 1975) was an American film director.
+Thought 3:Jean Yarbrough was born in 1901. Now I need to search for Mon Oncle Benjamin to find the birth year of its director.
+Action 3: Search[Mon Oncle Benjamin]
+Observation 3: Mon oncle Benjamin ("My Uncle Benjamin") is a 1969 French film directed by Édouard Molinaro, starring Jacques Brel and Claude Jade. The film is based on a once-popular French comic novel "Mon oncle Benjamin" by (1842). The 1969 film "Don't Grieve", directed by the Georgian Georgi Daneliya, is also based on Tillier's novel as was Francis Bousquet's 1942 comic opera "Mon oncle Benjamin". The film was released on 28 November 1969.
+Thought 4: Édouard Molinaro was born in 1920. Comparing the birth years, Jean Yarbrough was born in 1901 and Édouard Molinaro was born in 1920. Therefore, Jean Yarbrough, the director of King Of The Zombies, is older than the director of Mon Oncle Benjamin.
+Action 4: Finish[King Of The Zombies]
+
+Question: Which film has the director who was born first, Dead Man'S Evidence or Creature Of The Walking Dead?
+Thought 1:I need to search Dead Man's Evidence and Creature Of The Walking Dead, and find which film has the director who was born first.
+Action 1: Search[Dead Man's Evidence]
+Observation 1: Dead Man's Evidence is a 1962 British crime thriller film directed by Francis Searle.
+Thought 2:Francis Searle was born on 12 January 1910. I need to search Creature Of The Walking Dead next and find its director's birth year.
+Action 2: Search[Creature Of The Walking Dead]
+Observation 2: Creature of the Walking Dead is a 1965 horror film adapted by Jerry Warren from a 1961 Mexican horror film "La Marca del Muerto", which translates as "Mark of the Dead Man". The original Mexican film was directed by Fernando Cortés, written by Alfredo Varela Jr., and released in Mexico on October 12, 1961. The special effects was handled by Nicholas Reye.
+Thought 3: Fernando Cortés was born on 12 October 1913. Comparing the birth years, Francis Searle was born in 1910, while Fernando Cortés was born in 1913. Therefore, the director of Dead Man's Evidence, Francis Searle, was born first.
+Action 3: Finish[Dead Man's Evidence]

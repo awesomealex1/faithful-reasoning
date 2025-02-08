@@ -17,21 +17,8 @@ class ReAct(BaseFramework):
     ):
         super().__init__(framework_configs, data_configs, model, **kwargs)
         self.max_steps = framework_configs.configs.max_steps
-        
-        instruction = "Solve a question answering task with interleaving Thought, Action, Observation steps. Thought can reason about the current situation, and Action can be three types: \
-                            (1) Search[entity], which searches the exact entity on Wikipedia and returns the first paragraph if it exists. If not, it will return some similar entities to search.\
-                            (2) Lookup[keyword], which returns the next sentence containing keyword in the current passage. \
-                            (3) Finish[answer], which returns the answer and finishes the task. \
-                            Here are some examples."
-        
-        data_prompt_path = os.path.join(data_configs.data_dir, "prompt.txt")  
         self.corpus_name = data_configs.name.lower()
-        with open(data_prompt_path, 'r') as f:
-            dataset_prompt = f.readline()
-        
-        self.original_prompt = instruction + dataset_prompt
         self.retriever = ElasticsearchRetriever()
-        
 
     def generate(self, _input):
         decoded_text = self.do_react(_input)

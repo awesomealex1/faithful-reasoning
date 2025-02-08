@@ -16,6 +16,10 @@ from tqdm import tqdm
 
 from src.configs import RunnerConfigs
 from src.factories import get_dataset, get_metrics, get_model, get_framework
+from transformers import DataCollatorWithPadding
+from peft import get_peft_config, get_peft_model, LoraConfig, TaskType
+from datasets import load_dataset
+from trl import SFTTrainer, SFTConfig
 
 
 class Run:
@@ -157,3 +161,48 @@ class Run:
             wandb.log_artifact(pred_artifact)
         else:
             print(metrics)
+    
+    def finetune(self):
+        training_args = TrainingArguments(
+            output_dir="test-trainer",
+            dataset_text_field='text',
+            report_to="wandb"
+        )
+        peft_config = LoraConfig(
+            task_type=TaskType.SEQ_2_SEQ_LM, inference_mode=False, r=8, lora_alpha=32, lora_dropout=0.1
+        )
+
+        if self.model.model.model:
+            model = self.model.model.model  # Framework -> Decoder -> Model
+            tokenizer = self.model.model.tokenizer
+        else:
+            model = self.model.model    # Decoder -> Model
+            tokenizer = self.model.tokenizer
+        
+        model = get_peft_model(model, peft_config)
+
+        data_collator = DataCollatorWithPadding(tokenizer=tokenizer)
+
+        prompt = """Solve a question answering task with interleaving Thought, Action, Observation steps. Thought can reason about the current situation, and Action can be three types: 
+        (1) Search[entity], which searches the exact entity on Wikipedia and returns the first paragraph if it exists. If not, it will return some similar entities to search.
+        (2) Lookup[keyword], which returns the next sentence containing keyword in the current passage.
+        (3) Finish[answer], which returns the answer and finishes the task."""
+
+        def prompt_format(example):
+            example['text'] = f"{prompt}\nQuestion: {example['question'].strip()}\n{example['trajectory']}"
+            return example
+
+        dataset = load_dataset("xz56/react-llama")['train']
+        dataset = dataset.remove_columns(['correct_answer', 'id'])
+        dataset = dataset.map(prompt_format)
+
+        trainer = SFTTrainer(
+            model=model,
+            args=training_args,
+            peft_config=peft_config,
+            train_dataset=dataset,
+            data_collator=data_collator,
+        )
+
+        trainer.train()
+

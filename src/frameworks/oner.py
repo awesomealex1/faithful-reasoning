@@ -13,15 +13,7 @@ class OneR(BaseFramework):
         **kwargs,
     ):
         super().__init__(framework_configs, data_configs, model, **kwargs)
-
-        instruction = "Solve a question answering task. You get 5 paragraphs of context to answer. When you have the answer, solve it with the following format: Finish[answer]"
-        
-        data_prompt_path = os.path.join(data_configs.data_dir, "prompt.txt")  
         self.corpus_name = data_configs.name.lower()
-        with open(data_prompt_path, 'r') as f:
-            dataset_prompt = f.readline()
-        
-        self.original_prompt = instruction + dataset_prompt
         self.retriever = ElasticsearchRetriever()
 
     def generate(self, _input):

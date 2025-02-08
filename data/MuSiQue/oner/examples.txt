@@ -1,0 +1,31 @@
+Question: Who is the founder of the company which published Big Picture (Magazine)?
+Context: The Wellcome Trust is a research charity based in London, United Kingdom. It was established in 1936 with legacies from the pharmaceutical magnate Sir Henry Wellcome to fund research to improve human and animal health. The aim of the Trust is to "achieve extraordinary improvements in health by supporting the brightest minds", and in addition to funding biomedical research it supports the public understanding of science. It had a financial endowment of £25.9 billion in 2018, making it the fourth wealthiest charitable foundation in the world, after the American Bill & Melinda Gates Foundation, the Danish Novo Nordisk Foundation and the Dutch INGKA Foundation (related to the IKEA company). The Trust has been described by the "Financial Times" as the United Kingdom's largest provider of non-governmental funding for scientific research, and one of the largest providers in the world.
+The answer is: Sir Henry Wellcome.
+
+Question: Are Antoine Jean-Baptiste Thomas and Canardo (Rapper) of the same nationality?
+Context: Hakim Mouhid( born 22 September 1984 in Trappes, Yvelines), better known by his stage name Canardo, is a French rapper, singer, songwriter and music producer. After working with label" Banlieue Sale Music" since 2007, in 2011, he founded his own label" Henijai Music". He is the brother of fellow French rapper La Fouine.
+The answer is: yes.
+
+Question: Who is Elizabeth Stuart, Countess Of Lennox's mother-in-law?
+Context: Charles Stuart, 1st (or 5th) Earl of Lennox (April or May 1557 – April 1576), was the fourth son of Matthew Stewart, 4th Earl of Lennox and Margaret Douglas, daughter of Margaret Tudor and granddaughter of King Henry VII of England. His brother was Henry Stuart, Lord Darnley.
+The answer is: Margaret Douglas.
+
+Question: When was Ludwig Gruno Of Hesse-Homburg's father born?
+Context: Frederick III James of Hesse-Homburg (born 19 May 1673 in Cölln; died: 8 June 1746 in 's-Hertogenbosch) was a Landgrave of Hesse-Homburg
+The answer is: 19 May 1673.
+
+Question: Who was born first, Heo Keon or Ljiljana Nanušević?
+Context: Ljiljana Nanušević( born 2 August 1981) is a Serbian former professional tennis player who played in the Fed Cup for Yugoslavia. Nanušević made all of her Fed Cup appearances in the 1997 Fed Cup, while aged only 15. Playing in a total of five ties, she played doubles in each of them, as well as singles once, managing to win every rubber. She won an ITF singles tournament in Istanbul in 2001 and won a further two ITF titles in doubles.
+The answer is: Ljiljana Nanušević.
+
+Question: Which film was released more recently, The Black Duke or Avalalpam Vaikippoyi?
+Context: Avalalpam Vaikippoyi is a 1971 Indian Malayalam film, directed by John Sankaramangalam and produced by United Producers. The film stars Prem Nazir, Sheela, Jayabharathi and Adoor Bhasi in the lead roles. The film had musical score by G. Devarajan.
+The answer is: Avalalpam Vaikippoyi.
+
+Question: Which film has the director who is older, King Of The Zombies or Mon Oncle Benjamin?
+Context: Mon oncle Benjamin ("My Uncle Benjamin") is a 1969 French film directed by Édouard Molinaro, starring Jacques Brel and Claude Jade. The film is based on a once-popular French comic novel "Mon oncle Benjamin" by (1842). The 1969 film "Don't Grieve", directed by the Georgian Georgi Daneliya, is also based on Tillier's novel as was Francis Bousquet's 1942 comic opera "Mon oncle Benjamin". The film was released on 28 November 1969.
+The answer is: King Of The Zombies.
+
+Question: Which film has the director who was born first, Dead Man'S Evidence or Creature Of The Walking Dead?
+Context: Creature of the Walking Dead is a 1965 horror film adapted by Jerry Warren from a 1961 Mexican horror film "La Marca del Muerto", which translates as "Mark of the Dead Man". The original Mexican film was directed by Fernando Cortés, written by Alfredo Varela Jr., and released in Mexico on October 12, 1961. The special effects was handled by Nicholas Reye.
+The answer is: Dead Man's Evidence.

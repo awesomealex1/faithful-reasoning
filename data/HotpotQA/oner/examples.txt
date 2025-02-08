@@ -1,0 +1,32 @@
+Question: Musician and satirist Allie Goertz wrote a song about the \"The Simpsons\" character Milhouse, who Matt Groening named after who?
+Context: Milhouse was designed by Matt Groening for a planned series on NBC, which was abandoned.[4] The design was then used for a Butterfinger commercial, and it was decided to use the character in the series.[5][6] Milhouse was named after U.S. president Richard Nixon, whose middle name was Milhous. The name was the most \"unfortunate name Matt Groening could think of for a kid\".[1] Years earlier, in a 1986 Life in Hell comic entitled \"What to Name the Baby\", Groening listed Milhouse as a name \"no longer recommended\".[7] Milhouse is a favorite among the staff as Al Jean noted \"most of the writers are more like Milhouse than Bart\".[1] His last name was given to him by Howard Gewirtz, a freelance writer who wrote the episode \"Homer Defined\". Gewirtz got the name from one of his wife's friends.[8] According to Arden Myrin and Dana Gould (former writer and co-executive producer of The Simpsons), Rob Cohen (Simpsons writer) inspired Milhouse's look.[2]
+The answer is: Richard Nixon.
+
+Question: Guitars for Wounded Warriors is an album that was recorded in the village in which New York county?
+Context: New Paltz is a village in Ulster County located in the U.S. state of New York. It is approximately 80 miles (130 km) north of New York City and 70 miles (110 km) south of Albany. The population was 7,324 at the 2020 census.[3]
+The answer is: Ulster County.
+
+Question: This American actor who starred in \"Veep\" was also in an action comedy film directed by Seth Rogen and Evan Goldberg heavily inspired by what?
+Context: The Interview is a 2014 action-adventure comedy film co-produced and directed by Seth Rogen and Evan Goldberg in their second directorial work, following This Is the End (2013). The screenplay was written by Dan Sterling, based on a story he co-wrote with Rogen and Goldberg. The film stars Rogen and James Franco as journalists who set up an interview with North Korean leader Kim Jong-un (Randall Park), and are then recruited by the CIA to assassinate him. The film is inspired by a 2012 Vice documentary.
+The answer is: a 2012 Vice documentary.
+
+Question: The head coach during the 1997\u201398 Indiana Pacers season retired as a player from what NBA team?
+Context: In the 1997\u00e2\u0080\u009398 NBA season, Indiana native and former Boston Celtics great Larry Bird was hired as head coach. He led the Pacers to a 19-game improvement over the previous season, finishing 58\u00e2\u0080\u009324 \u00e2\u0080\u0093 at the time, the most the franchise had ever won as an NBA team, and tying the 1970\u00e2\u0080\u009371 ABA Pacers for the franchise record. Chris Mullin joined the team in the off-season and immediately became a valuable part of the Pacers lineup\u00e2\u0080\u0094and starting small forward. Assistant coaches Rick Carlisle, in charge of the offense, and Dick Harter, who coached the defense, were key in getting the most out of the Pacers' role players such as Dale Davis, Derrick McKey and a young Antonio Davis. Miller and Rik Smits both made the All-Star team that year, and in the playoffs, the Pacers breezed past the Cleveland Cavaliers and New York Knicks before falling to the Chicago Bulls in a seven-game Eastern Conference Finals.
+The answer is: Boston Celtics.
+
+Question: What profession does Nicholas Ray and Elia Kazan have in common?
+Context: Elia Kazan (/\u02c8i\u02d0li\u0259 k\u0259\u02c8z\u00e6n/;[1][2] born Elias Kazantzoglou (Greek: \u0397\u03bb\u03af\u03b1\u03c2 \u039a\u03b1\u03b6\u03b1\u03bd\u03c4\u03b6\u03cc\u03b3\u03bb\u03bf\u03c5);[3] September 7, 1909 \u2013 September 28, 2003) was an American film and theatre director, producer, screenwriter and actor, described by The New York Times as \"one of the most honored and influential directors in Broadway and Hollywood history\".[4]
+The answer is: director, screenwriter, actor.
+
+Question: Which magazine was started first Arthur's Magazine or First for Women?
+Context: First for Women is a woman's magazine published by Bauer Media Group in the USA.[1] The magazine was started in 1989. It is based in Englewood Cliffs, New Jersey.[2] In 2011 the circulation of the magazine was 1,310,696 copies.[3]
+The answer is: Arthur's Magazine.
+
+Question: Were Pavel Urysohn and Leonid Levin known for the same type of work?
+Context: Leonid Anatolievich Levin (/le\u00c9\u00aa.o\u00ca\u008a\u00cb\u0088ni\u00cb\u0090d \u00cb\u0088l\u00c9\u009bv\u00c9\u00aan/ lay-oh-NEED LEV-in; Russian: \u00d0\u009b\u00d0\u00b5\u00d0\u00be\u00d0\u00bd\u00d0\u00b8\u00cc\u0081\u00d0\u00b4 \u00d0\u0090\u00d0\u00bd\u00d0\u00b0\u00d1\u0082\u00d0\u00be\u00cc\u0081\u00d0\u00bb\u00d1\u008c\u00d0\u00b5\u00d0\u00b2\u00d0\u00b8\u00d1\u0087 \u00d0\u009b\u00d0\u00b5\u00cc\u0081\u00d0\u00b2\u00d0\u00b8\u00d0\u00bd; Ukrainian: \u00d0\u009b\u00d0\u00b5\u00d0\u00be\u00d0\u00bd\u00d1\u0096\u00cc\u0081\u00d0\u00b4 \u00d0\u0090\u00d0\u00bd\u00d0\u00b0\u00d1\u0082\u00d0\u00be\u00cc\u0081\u00d0\u00bb\u00d1\u0096\u00d0\u00b9\u00d0\u00be\u00d0\u00b2\u00d0\u00b8\u00d1\u0087 \u00d0\u009b\u00d0\u00b5\u00cc\u0081\u00d0\u00b2\u00d1\u0096\u00d0\u00bd; born November 2, 1948) is a Soviet-American mathematician and computer scientist. 
+The answer is: yes.
+
+Question: Which documentary is about Finnish rock groups, Adam Clayton Powell or The Saimaa Gesture?
+Context: Adam Clayton Powell is a 1989 American documentary film directed by Richard Kilberg.
+The film is about the rise and fall of influential African-American politician Adam Clayton Powell Jr.[3][4] It was later aired as part of the PBS series The American Experience.
+The answer is: The Saimaa Gesture.

@@ -1,0 +1,1 @@
+Solve a question answering task with interleaving Thought, Action, Observation steps. Thought can reason about the current situation, and Action can be two types: (1) Search[entity], which searches Wikipedia and returns related paragraphs if they exist. (2) Finish[answer], which returns the answer and finishes the task. Here are some examples.

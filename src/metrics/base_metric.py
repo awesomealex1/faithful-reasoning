@@ -13,7 +13,7 @@ class BaseMetric(ABC):
         self.kwargs = kwargs
 
     def answer_extractor(self, answer: str) -> str:
-        if self.framework_configs.name == "ReAct":
+        if self.framework_configs.name.lower() == "react":
             pattern = r'Finish\[(.*?)\]'
 
             match = re.search(pattern, answer)

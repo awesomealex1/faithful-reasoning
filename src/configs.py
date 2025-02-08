@@ -52,6 +52,7 @@ class RunnerConfigs:
     wandb_entity: str = MISSING
     debug: bool = False
     random_seed: int = 1234
+    finetune: bool = False
 
 
 def register_base_configs() -> None:
