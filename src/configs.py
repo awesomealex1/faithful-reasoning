@@ -38,6 +38,7 @@ class DecoderConfigs:
 @dataclass
 class FrameworkConfigs:
     name: str = MISSING
+    max_steps: Optional[int] = None
     configs: Optional[dict] = None
 
 

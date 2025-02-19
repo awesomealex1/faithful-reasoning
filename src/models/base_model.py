@@ -7,6 +7,7 @@ from transformers import (
     AutoTokenizer,
     PreTrainedTokenizer,
     PreTrainedTokenizerFast,
+    BitsAndBytesConfig,
 )
 
 from src.configs import DecoderConfigs, ModelConfigs
@@ -22,12 +23,17 @@ class BaseModel(ABC):
         decoder_configs: DecoderConfigs,
     ):
         if "llama" in model_configs.name.lower():
+            if "70bbb" in model_configs.name.lower():
+                quantization_config = BitsAndBytesConfig(load_in_8bit=True)
+            else:
+                quantization_config = None
             self.model = LlamaForCausalLM.from_pretrained(
                 model_configs.configs.model_name_or_path,
                 use_flash_attention_2="flash_attention_2",
                 attn_implementation="flash_attention_2",
                 torch_dtype=torch.bfloat16,
                 device_map="auto",
+                quantization_config=quantization_config
             ).eval()
             self.attn_mode = "flash"
         elif "mistral" in model_configs.name.lower():
@@ -38,6 +44,12 @@ class BaseModel(ABC):
                 torch_dtype="auto",
                 device_map="auto",
                 trust_remote_code=True,
+            ).eval()
+            self.attn_mode = "flash"
+        elif "qwen2.5" in model_configs.name.lower():
+            self.model = AutoModelForCausalLM.from_pretrained(
+                model_configs.configs.model_name_or_path,
+                device_map="auto",
             ).eval()
             self.attn_mode = "flash"
         elif "qwen2" in model_configs.name.lower():

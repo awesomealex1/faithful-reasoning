@@ -14,12 +14,46 @@ class WikiMultihopQA(BaseDataset):
         super().__init__(data_configs, **kwargs)
         self.variation = data_configs.variation
 
-        self.data_filename = os.path.join(self.data_dir, "dev_subsampled.jsonl")
+        self.data_filename = os.path.join(self.data_dir, "train.json")
 
         # Prepare data
         self.data = self.parse_data()
-
+    
     def parse_data(self) -> List[dict]:
+        if "jsonl" in self.data_filename:
+            return self.parse_data_jsonl()
+        else:
+            return self.parse_data_json()
+
+    def parse_data_json(self) -> List[dict]:
+        data = []
+        skipped = 0
+
+        with open(self.data_filename, "r") as f:
+            raw_data = json.load(f)
+            i = 0
+
+            for _, instance in enumerate(raw_data):
+                if "answer" not in instance:
+                    skipped += 1
+                    continue
+                data.append({
+                        "idx": i,
+                        "question": instance["question"],
+                        "answers": [instance["answer"]],
+                        "question_id": instance["_id"]
+                    }
+                )
+                i += 1
+        
+        print(f"Skipped {skipped} unanswerable questions.")
+        if self.num_samples > 0:
+            data = data[: self.num_samples]
+        data = data[167:]   # Temporary while creating ft dataset
+
+        return data
+
+    def parse_data_jsonl(self) -> List[dict]:
         data = []
 
         with open(self.data_filename, "r") as f:

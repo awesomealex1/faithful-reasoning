@@ -3,5 +3,5 @@ defaults:
 
 name: WikiMultihopQA
 data_dir: data/2WikiMultiHopQA
-num_samples: 20
+num_samples: -1
 variation: null

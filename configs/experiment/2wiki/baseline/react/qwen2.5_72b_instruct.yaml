@@ -1,0 +1,11 @@
+# @package _global_
+defaults:
+  - override /model: qwen2.5_72b_instruct
+  - override /data: 2wiki
+  - override /decoder: baseline
+  - override /framework: react
+
+
+model:
+  configs:
+    max_new_tokens: 400

@@ -17,13 +17,16 @@ class BaseFramework(ABC):
         self.kwargs = kwargs
 
         self.original_prompt = ""
-        data_examples_path = os.path.join(data_configs.data_dir, self.framework_configs.name.lower(), "examples.txt")  
-        with open(data_examples_path, 'r') as f:
+
+        data_instruction_path = os.path.join(data_configs.data_dir, self.framework_configs.name.lower(), "instruction.txt")  
+        with open(data_instruction_path, 'r') as f:
             for line in f.readlines():
                 self.original_prompt += line
         
-        data_instruction_path = os.path.join(data_configs.data_dir, self.framework_configs.name.lower(), "instruction.txt")  
-        with open(data_instruction_path, 'r') as f:
+        self.original_prompt += '\n'
+        
+        data_examples_path = os.path.join(data_configs.data_dir, self.framework_configs.name.lower(), "examples.txt")  
+        with open(data_examples_path, 'r') as f:
             for line in f.readlines():
                 self.original_prompt += line
         

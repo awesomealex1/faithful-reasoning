@@ -57,26 +57,3 @@ Action 2: Search[Avalalpam Vaikippoyi]
 Observation 2: Avalalpam Vaikippoyi is a 1971 Indian Malayalam film, directed by John Sankaramangalam and produced by United Producers. The film stars Prem Nazir, Sheela, Jayabharathi and Adoor Bhasi in the lead roles. The film had musical score by G. Devarajan.
 Thought 3: Avalalpam Vaikippoyi was released in 1971. Since 1971 is later than 1963, the film released more recently is Avalalpam Vaikippoyi.
 Action 3: Finish[Avalalpam Vaikippoyi]
-
-Question: Which film has the director who is older, King Of The Zombies or Mon Oncle Benjamin?
-Thought 1:I need to search King Of The Zombies and Mon Oncle Benjamin, and find the birth years of their directors to determine which film has the older director.
-Action 1: Search[King Of The Zombies]
-Observation 1: King of the Zombies is a 1941 American zombie comedy film directed by Jean Yarbrough and stars Dick Purcell, Joan Woodbury, and Mantan Moreland. The film was produced by Monogram Pictures, and was typical of its B films churned out by the Pine-Thomas team. Along with flying scenes, the use of zany characters and slapstick efforts were juxtaposed with a spy and zombie story.
-Thought 2:I need to search for the director Jean Yarbrough to find his birth year.
-Action 2: Search[Jean Yarbrough]
-Observation 2: Jean Yarbrough (August 22, 1901 – August 2, 1975) was an American film director.
-Thought 3:Jean Yarbrough was born in 1901. Now I need to search for Mon Oncle Benjamin to find the birth year of its director.
-Action 3: Search[Mon Oncle Benjamin]
-Observation 3: Mon oncle Benjamin ("My Uncle Benjamin") is a 1969 French film directed by Édouard Molinaro, starring Jacques Brel and Claude Jade. The film is based on a once-popular French comic novel "Mon oncle Benjamin" by (1842). The 1969 film "Don't Grieve", directed by the Georgian Georgi Daneliya, is also based on Tillier's novel as was Francis Bousquet's 1942 comic opera "Mon oncle Benjamin". The film was released on 28 November 1969.
-Thought 4: Édouard Molinaro was born in 1920. Comparing the birth years, Jean Yarbrough was born in 1901 and Édouard Molinaro was born in 1920. Therefore, Jean Yarbrough, the director of King Of The Zombies, is older than the director of Mon Oncle Benjamin.
-Action 4: Finish[King Of The Zombies]
-
-Question: Which film has the director who was born first, Dead Man'S Evidence or Creature Of The Walking Dead?
-Thought 1:I need to search Dead Man's Evidence and Creature Of The Walking Dead, and find which film has the director who was born first.
-Action 1: Search[Dead Man's Evidence]
-Observation 1: Dead Man's Evidence is a 1962 British crime thriller film directed by Francis Searle.
-Thought 2:Francis Searle was born on 12 January 1910. I need to search Creature Of The Walking Dead next and find its director's birth year.
-Action 2: Search[Creature Of The Walking Dead]
-Observation 2: Creature of the Walking Dead is a 1965 horror film adapted by Jerry Warren from a 1961 Mexican horror film "La Marca del Muerto", which translates as "Mark of the Dead Man". The original Mexican film was directed by Fernando Cortés, written by Alfredo Varela Jr., and released in Mexico on October 12, 1961. The special effects was handled by Nicholas Reye.
-Thought 3: Fernando Cortés was born on 12 October 1913. Comparing the birth years, Francis Searle was born in 1910, while Fernando Cortés was born in 1913. Therefore, the director of Dead Man's Evidence, Francis Searle, was born first.
-Action 3: Finish[Dead Man's Evidence]

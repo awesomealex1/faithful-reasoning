@@ -3,5 +3,5 @@ defaults:
 
 name: MuSiQue
 data_dir: data/MuSiQue
-num_samples: 1
+num_samples: 5
 variation: cot_closed_book

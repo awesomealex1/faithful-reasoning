@@ -41,16 +41,6 @@ Observation 3: In the 1997\u00e2\u0080\u009398 NBA season, Indiana native and fo
 Thought 4: In the 1997-98 season, former Boston Celtics great Larry Bird was hired as head coach. So the answer is Boston Celtics.
 Action 4: Finish[Boston Celtics]
 
-Question: What profession does Nicholas Ray and Elia Kazan have in common?
-Thought 1: I need to search Nicholas Ray and Elia Kazan, find their professions, then find the profession they have in common.
-Action 1: Search[Nicholas Ray]
-Observation 1: Nicholas Ray (born Raymond Nicholas Kienzle Jr., August 7, 1911 \u2013 June 16, 1979) was an American film director, screenwriter, and actor best known for the 1955 film Rebel Without a Cause. He is appreciated for many narrative features produced between 1947 and 1963 including They Live By Night, In A Lonely Place, Johnny Guitar, and Bigger Than Life, as well as an experimental work produced throughout the 1970s titled We Can't Go Home Again, which was unfinished at the time of Ray's death.
-Thought 2: Professions of Nicholas Ray are director, screenwriter, and actor. I need to search Elia Kazan next and find his professions.
-Action 2: Search[Elia Kazan]
-Observation 2: Elia Kazan (/\u02c8i\u02d0li\u0259 k\u0259\u02c8z\u00e6n/;[1][2] born Elias Kazantzoglou (Greek: \u0397\u03bb\u03af\u03b1\u03c2 \u039a\u03b1\u03b6\u03b1\u03bd\u03c4\u03b6\u03cc\u03b3\u03bb\u03bf\u03c5);[3] September 7, 1909 \u2013 September 28, 2003) was an American film and theatre director, producer, screenwriter and actor, described by The New York Times as \"one of the most honored and influential directors in Broadway and Hollywood history\".[4]
-Thought 3: Professions of Elia Kazan are director, producer, screenwriter, and actor. So profession Nicholas Ray and Elia Kazan have in common is director, screenwriter, and actor.
-Action 3: Finish[director, screenwriter, actor]
-
 Question: Which magazine was started first Arthur's Magazine or First for Women?
 Thought 1: I need to search Arthur's Magazine and First for Women, and find which was started first.
 Action 1: Search[Arthur's Magazine]
@@ -70,14 +60,3 @@ Action 2: Search[Leonid Levin]
 Observation 2: Leonid Anatolievich Levin (/le\u00c9\u00aa.o\u00ca\u008a\u00cb\u0088ni\u00cb\u0090d \u00cb\u0088l\u00c9\u009bv\u00c9\u00aan/ lay-oh-NEED LEV-in; Russian: \u00d0\u009b\u00d0\u00b5\u00d0\u00be\u00d0\u00bd\u00d0\u00b8\u00cc\u0081\u00d0\u00b4 \u00d0\u0090\u00d0\u00bd\u00d0\u00b0\u00d1\u0082\u00d0\u00be\u00cc\u0081\u00d0\u00bb\u00d1\u008c\u00d0\u00b5\u00d0\u00b2\u00d0\u00b8\u00d1\u0087 \u00d0\u009b\u00d0\u00b5\u00cc\u0081\u00d0\u00b2\u00d0\u00b8\u00d0\u00bd; Ukrainian: \u00d0\u009b\u00d0\u00b5\u00d0\u00be\u00d0\u00bd\u00d1\u0096\u00cc\u0081\u00d0\u00b4 \u00d0\u0090\u00d0\u00bd\u00d0\u00b0\u00d1\u0082\u00d0\u00be\u00cc\u0081\u00d0\u00bb\u00d1\u0096\u00d0\u00b9\u00d0\u00be\u00d0\u00b2\u00d0\u00b8\u00d1\u0087 \u00d0\u009b\u00d0\u00b5\u00cc\u0081\u00d0\u00b2\u00d1\u0096\u00d0\u00bd; born November 2, 1948) is a Soviet-American mathematician and computer scientist. 
 Thought 3: Leonid Levin is a mathematician and computer scientist. So Pavel Urysohn and Leonid Levin have the same type of work. 
 Action 3: Finish[yes]
-
-Question: Which documentary is about Finnish rock groups, Adam Clayton Powell or The Saimaa Gesture?
-Thought 1: I need to search Adam Clayton Powell and The Saimaa Gesture, and find which documentary is about Finnish rock groups.
-Action 1: Search[Adam Clayton Powell]
-Observation 1: Could not find [Adam Clayton Powell]. Similar: ['Adam Clayton Powell Jr.', 'Adam Clayton Powell Sr.', 'Adam Clayton Powell IV', 'Adam Clayton Powell III', 'Seventh Avenue (Manhattan) (redirect from Adam Clayton Powell Jr. Boulevard)', 'Adam Clayton Powell Jr. State Office Building', 'Isabel Washington Powell', 'Adam Powell', 'Adam Clayton Powell (film)', 'Giancarlo Esposito', 'Harlem', 'St. Nicholas Historic District', 'Abyssinian Baptist Church', 'Powell (surname)', 'Adam (musical)', 'Statue of Adam Clayton Powell Jr.', 'List of people from Harlem', 'Adam (given name)', 'Five-Percent Nation', 'List of American liberals'].
-Thought 2: I can search Adam Clayton Powell (film) to find the documentary.
-Action 2: Search[Adam Clayton Powell (film)]
-Observation 2: Adam Clayton Powell is a 1989 American documentary film directed by Richard Kilberg.
-The film is about the rise and fall of influential African-American politician Adam Clayton Powell Jr.[3][4] It was later aired as part of the PBS series The American Experience.
-Thought 3: Adam Clayton Powell (film) is a documentary about an African-American politician, not Finnish rock groups. So the documentary about Finnish rock groups must instead be The Saimaa Gesture.
-Action 3: Finish[The Saimaa Gesture]

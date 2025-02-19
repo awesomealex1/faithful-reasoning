@@ -26,7 +26,6 @@ def main(configs: RunnerConfigs) -> None:
     print(configs)
 
     common_utils.setup_random_seed(configs.random_seed)
-
     huggingface_hub.login(token=os.getenv("HF_TOKEN", ""))
 
     runner = Run(configs)
