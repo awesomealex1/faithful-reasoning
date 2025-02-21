@@ -196,10 +196,22 @@ cd elasticsearch-7.10.2/
 pkill -f elasticsearch # to stop the server
 ```
 
+To run the server (from root directory):
+
+```bash
+./src/utils/elasticsearch-7.10.2/bin/elasticsearch
+```
+
+To kill the server: 
+
+```bash
+pkill -f elasticsearch
+```
+
 After starting the elasticsearch server you need to index the wikipedia corpuses, for which data is downloaded into the corresponding folder in `data`. (Make sure to have run `download_react_data.sh`). First start the retriever server:
 
 ```bash
-uvicorn serve:app --port 8000 --app-dir retriever_server
+uvicorn serve:app --port 8000 --app-dir src/utils/retriever_server
 ```
 
 Then index the corpuses (need to do this only once):
@@ -208,7 +220,11 @@ Then index the corpuses (need to do this only once):
 python src/utils/retriever_server/build_index.py {dataset_name} # hotpotqa, 2wikimultihopqa, musique
 ```
 
-Once this is done you can run the scripts to run ReAct!
+Once this is done you can run the scripts to run ReAct! This is an example, just adjust the dataset/decoder/framework/model to your needs:
+
+```bash
+python scripts/main.py experiment=musique/baseline/react/qwen2_7b_instruct
+```
 
 ## 🙏 Citation
 
