@@ -14,7 +14,7 @@ class WikiMultihopQA(BaseDataset):
         super().__init__(data_configs, **kwargs)
         self.variation = data_configs.variation
 
-        self.data_filename = os.path.join(self.data_dir, "train.json")
+        self.data_filename = os.path.join(self.data_dir, "test_subsampled.jsonl")
 
         # Prepare data
         self.data = self.parse_data()

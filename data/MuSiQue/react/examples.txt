@@ -1,59 +1,62 @@
-Question: Who is the founder of the company which published Big Picture (Magazine)?
-Thought 1: I need to search Big Picture (Magazine) to find out who founded the company that published it.
-Action 1: Search[Big Picture (Magazine)]
-Observation 1: The Big Picture series provides teachers and post-16 students with up-to-date information on research findings in biology and medicine, and the social and ethical implications of this research. Published by the Wellcome Trust as a free educational resource, each issue is available for free electronically. The website provides free resources for teachers and online activities for students, including lesson ideas, animations, image galleries and short videos. , the print subscription has been discontinued and replaced with online only.
-Thought 2: The Big Picture (Magazine) is published by the Wellcome Trust. I need to search the Wellcome Trust to find out who founded it.
-Action 2: Search[Wellcome Trust]
-Observation 2: The Wellcome Trust is a research charity based in London, United Kingdom. It was established in 1936 with legacies from the pharmaceutical magnate Sir Henry Wellcome to fund research to improve human and animal health. The aim of the Trust is to "achieve extraordinary improvements in health by supporting the brightest minds", and in addition to funding biomedical research it supports the public understanding of science. It had a financial endowment of £25.9 billion in 2018, making it the fourth wealthiest charitable foundation in the world, after the American Bill & Melinda Gates Foundation, the Danish Novo Nordisk Foundation and the Dutch INGKA Foundation (related to the IKEA company). The Trust has been described by the "Financial Times" as the United Kingdom's largest provider of non-governmental funding for scientific research, and one of the largest providers in the world.
-Thought 3: The Wellcome Trust was established by Sir Henry Wellcome in 1936. Therefore, the founder of the company which published Big Picture (Magazine) is Sir Henry Wellcome.
-Action 3: Finish[Sir Henry Wellcome]
+Question: The city where WOCA is located is in which part of Florida?
+Thought 1: I need to search WOCA to find the location of the city it is in, and then determine which part of Florida it is in.
+Action 1: Search[WOCA]
+Observation 1: WOCA is a commercial radio station in Ocala, Florida, broadcasting to the Ocala area on 1370 AM. WOCA broadcasts a variety of syndicated and conservative-leaning programs, including \"The Glenn Beck Program\" and \"The Clark Howard Show\" each weekday, and Fox Sports Radio on weekends. The station also produces shows for a number of local commentators. WOCA signed on on November 19, 1957 as WHYS. In 1959, the call letters were changed to WKOS. In 1965, the station adopted a Top 40 format as WWKE. The station then switched to the current calls, WOCA in 1983.
+Thought 2: The search result indicates that WOCA is located in Ocala, Florida. I need to search for Ocala, Florida to determine which part of Florida it is in.
+Action 2: Search[Ocala, Florida]
+Observation 2: Ocala (/ o\u028a \u02c8k\u00e6l\u0259 / oh - KAL - \u0259) is a city located in Northern Florida. As of the 2013 census, its population, estimated by the United States Census Bureau, was 57,468, making it the 45th most populated city in Florida.
+Thought 3: Ocala, Florida is located in Northern Florida. Therefore, the city where WOCA is located is in Northern Florida.
+Action 3: Finish[Northern Florida]
 
-Question: Are Antoine Jean-Baptiste Thomas and Canardo (Rapper) of the same nationality?
-Thought 1: I need to search Antoine Jean-Baptiste Thomas and Canardo (Rapper) to find their nationalities and compare them.
-Action 1: Search[Antoine Jean-Baptiste Thomas]
-Observation 1: Antoine Jean- Baptiste Thomas( 1791–1833) was a French painter and lithographer. Thomas mentored under François- André Vincent, and later studied at the École des Beaux- Arts. Thomas lived and traveled around Italy, which inspired many of his works. He specialized in oil paintings, often depictions of Italian daily life or ancient rome. He was also commissioned to paint a number of religious works for various churches. In 1816 he won the Prix de Rome with his piece" Oenone Refusing to Help the Wounded Paris". He spent two years studying art in Rome and returned to Paris in 1818. Between 1819 and 1831 he exhibited his paintings at Salons, however today he is best known for his series of lithographs," One Year in Rome and Its Environs". Thomas' style is characterized as Romanticism.
-Thought 2: Antoine Jean-Baptiste Thomas is French. I need to search Canardo (Rapper) next to find its nationality.
-Action 2: Search[Canardo (Rapper)]
-Observation 2: Hakim Mouhid( born 22 September 1984 in Trappes, Yvelines), better known by his stage name Canardo, is a French rapper, singer, songwriter and music producer. After working with label" Banlieue Sale Music" since 2007, in 2011, he founded his own label" Henijai Music". He is the brother of fellow French rapper La Fouine.
-Thought 3: Canardo (Rapper) is French. Antoine Jean-Baptiste Thomas and Canardo (Rapper) are of the same nationality.
-Action 3: Finish[yes]
+Question: What is the parent company of the record label releasing Cold Turkey?
+Thought 1: I need to search Cold Turkey to find out which record label is releasing it and then search for the parent company of that record label.
+Action 1: Search[Cold Turkey]
+Observation 1: \"Cold Turkey\" is a song written by John Lennon, released as a single in 1969 by the Plastic Ono Band on Apple Records, catalogue Apples 1001 in the United Kingdom, Apple 1813 in the United States. It is the second solo single issued by Lennon, and it peaked at number 30 on the \"Billboard\" Hot 100 and number 14 on the UK Singles Chart. The song's first appearance on an album was \"Live Peace in Toronto 1969\" where the song had been performed live on 13 September 1969 with Lennon reading the lyrics off a clip-board.
+Thought 2: The record label releasing \"Cold Turkey\" is Apple Records. I need to search Apple Records next to find its parent company.
+Action 2: Search[Apple Records]
+Observation 2: Apple Records is a record label founded by the Beatles in 1968 as a division of Apple Corps Ltd. It was initially intended as a creative outlet for the Beatles, both as a group and individually, plus a selection of other artists including Mary Hopkin, James Taylor, Badfinger, and Billy Preston. In practice, the roster had become dominated by the mid-1970s with releases of the former Beatles as solo artists. Allen Klein managed the label from 1969 to 1973, then it was managed by Neil Aspinall on behalf of the Beatles and their heirs. Aspinall retired in 2007 and was replaced by Jeff Jones.
+Thought 3: Apple Records is a division of Apple Corps Ltd. Therefore, the parent company of the record label releasing \"Cold Turkey\" is Apple Corps Ltd.
+Action 3: Finish[Apple Corps Ltd]
 
-Question: Who is Elizabeth Stuart, Countess Of Lennox's mother-in-law?
-Thought 1: I need to search Elizabeth Stuart, Countess Of Lennox to find her mother-in-law's name.
-Action 1: Search[Elizabeth Stuart, Countess Of Lennox]
-Observation 1: Elizabeth Stuart, Countess of Lennox née Cavendish (31 March 1555 – 16 January 1582) was an English noblewoman and the wife of Charles Stuart, 1st Earl of Lennox. She was the mother of Arbella Stuart, a close claimant to the English and Scottish thrones.
-Thought 2: The search result indicates that Elizabeth Stuart, Countess of Lennox was married to Charles Stuart, 1st Earl of Lennox. To find her mother-in-law's name, I need to search for Charles Stuart, 1st Earl of Lennox.
-Action 2: Search[Charles Stuart, 1st Earl of Lennox]
-Observation 2: Charles Stuart, 1st (or 5th) Earl of Lennox (April or May 1557 – April 1576), was the fourth son of Matthew Stewart, 4th Earl of Lennox and Margaret Douglas, daughter of Margaret Tudor and granddaughter of King Henry VII of England. His brother was Henry Stuart, Lord Darnley.
-Thought 3: The search result indicates that Charles Stuart, 1st Earl of Lennox was the fourth son of Matthew Stewart, 4th Earl of Lennox and Margaret Douglas. Therefore, his mother, Margaret Douglas, is Elizabeth Stuart, Countess of Lennox's mother-in-law.
-Action 3: Finish[Margaret Douglas]
+Question: What date did the creator of The Blind Girl Die?
+Thought 1: I need to search the creator of \"The Blind Girl\" to find out when they died.
+Action 1: Search[\"The Blind Girl\" creator]
+Observation 1: The Blind Girl (1856) is a painting by John Everett Millais which depicts two itinerant beggars, presumed to be sisters, one of whom is a blind musician, her concertina on her lap. They are resting by the roadside after a rainstorm, before travelling to the town of Winchelsea, visible in the background.
+Thought 2: The search result indicates that \"The Blind Girl\" is a painting by John Everett Millais. I need to search John Everett Millais to find out when he died.
+Action 2: Search[John Everett Millais]
+Observation 2: Sir John Everett Millais, 1st Baronet ( , ; 8 June 1829 \u2013 13 August 1896) was an English painter and illustrator who was one of the founders of the Pre-Raphaelite Brotherhood. He was a child prodigy who, aged eleven, became the youngest student to enter the Royal Academy Schools. The Pre-Raphaelite Brotherhood was founded at his family home in London, at 83 Gower Street (now number 7). Millais became the most famous exponent of the style, his painting \"Christ in the House of His Parents\" (1850) generating considerable controversy, and painting perhaps the embodiment of the school, \"Ophelia\", in 1850-51.
+Thought 3: John Everett Millais died on 13 August 1896. Therefore, the answer is 13 August 1896.
+Action 3: Finish[13 August 1896]
 
-Question: When was Ludwig Gruno Of Hesse-Homburg's father born?
-Thought 1:I need to search Ludwig Gruno Of Hesse-Homburg to find information about his father and when he was born.
-Action 1: Search[Ludwig Gruno Of Hesse-Homburg]
-Observation 1: Ludwig Johann Wilhelm Gruno von Hessen-Homburg (15 January 1705 – 23 October 1745) was hereditary prince of Hesse-Homburg and an Imperial Russian field marshal. He was the eldest surviving son of Frederick III, Landgrave of Hesse-Homburg and his wife Elisabeth Dorothea of Hesse-Darmstadt, daughter of Louis VI, Landgrave of Hesse-Darmstadt. He studied at the University of Giessen and was sent by his father to Russia in 1723. He became Major-General in Riga and commander of the Narva-Regiment. As the grandson of Louise Elisabeth of Courland, he hoped in vain to succeed his cousin Ferdinand Kettler as Duke of Courland. Anna of Russia moved him to Saint Petersburg, where he was promoted to General-Lieutenant and commander of the Saint Petersburg garrison. In 1732, he led a successful campaign against the Crimean Tatars in the Caucasus. After operations in Eastern Poland in 1734-1735, he again fought against the Crimean Tatars and the Turks in 1736-1737, but now under command of von Münnich. He was awarded with the rank of General-Feldzeugmeister and was appointed Governor of Astrachan and the Persian provinces. Ludwig Gruno also had good relations with the new Tsarina Elizabeth of Russia. She gave him in 1742 the title of General-Fieldmarshal, a house in Moscow and an estate in Livonia. He died from illness on a travel in Berlin. He pre-deceased his father and was buried in the crypt of Bad Homburg Castle.
-Thought 2:Ludwig Gruno Of Hesse-Homburg's father was Frederick III, Landgrave of Hesse-Homburg. I need to search Frederick III, Landgrave of Hesse-Homburg to find when he was born.
-Action 2: Search[Frederick III, Landgrave of Hesse-Homburg]
-Observation 2: Frederick III James of Hesse-Homburg (born 19 May 1673 in Cölln; died: 8 June 1746 in 's-Hertogenbosch) was a Landgrave of Hesse-Homburg
-Thought 3: Frederick III, Landgrave of Hesse-Homburg was born on 19 May 1673. Therefore, the answer is 19 May 1673.
-Action 3: Finish[19 May 1673]
+Question: What college did the 2011 Australian Open - Men's Doubles winner go to?
+Thought 1: I need to search the 2011 Australian Open - Men's Doubles winner to find out which college they attended.
+Action 1: Search[2011 Australian Open - Men's Doubles winner]
+Observation 1: Bob and Mike Bryan, the two-time defending champions in this event, successfully defended their title. They defeated Mahesh Bhupathi and Leander Paes 6\u20133, 6\u20134 in the final.
+Thought 2: The 2011 Australian Open - Men's Doubles winners were Bob and Mike Bryan. I need to search for each of their educational backgrounds to find out which college they attended.
+Action 2: Search[Bob Bryan college]
+Observation 2: Bryan Lee Cranston (born March 7, 1956) is an American actor, voice actor, producer, director, and screenwriter. He is best known for portraying Walter White on the AMC crime drama series Breaking Bad, Hal on the Fox comedy series Malcolm in the Middle, and Dr. Tim Whatley on the NBC comedy series Seinfeld.
+Thought 3: The search result for \"Bob Bryan college\" does not provide information about the college Bob Bryan attended. I need to search for Mike Bryan's educational background to find out which college he attended.
+Action 3: Search[Mike Bryan college]
+Observation 3: Mike Bryan played for Stanford University in 1997 and 1998, where he helped the Cardinal win back-to-back NCAA team championships. In 1998, he won the NCAA doubles title with his twin brother Bob.
+Thought 4: Mike Bryan attended Stanford University. Therefore, the answer is Stanford University.
+Action 4: Finish[Stanford University]
 
-Question: Who was born first, Heo Keon or Ljiljana Nanušević?
-Thought 1: I need to search Heo Keon and Ljiljana Nanušević, and find who was born first.
-Action 1: Search[Heo Keon]
-Observation 1: Heo Keon( born 3 January 1988) is a South Korean footballer who plays as midfielder for Bucheon FC 1995 in K League Challenge.
-Thought 2: Heo Keon was born in 1988. I need to search Ljiljana Nanušević next to find when they were born.
-Action 2: Search[Ljiljana Nanušević]
-Observation 2: Ljiljana Nanušević( born 2 August 1981) is a Serbian former professional tennis player who played in the Fed Cup for Yugoslavia. Nanušević made all of her Fed Cup appearances in the 1997 Fed Cup, while aged only 15. Playing in a total of five ties, she played doubles in each of them, as well as singles once, managing to win every rubber. She won an ITF singles tournament in Istanbul in 2001 and won a further two ITF titles in doubles.
-Thought 3: Ljiljana Nanušević was born in 1981, while Heo Keon was born in 1988. Therefore, Ljiljana Nanušević was born first.
-Action 3: Finish[Ljiljana Nanušević]
+Question: What is the name of the famous bridge in the birthplace of Bajazet's composer?
+Thought 1: I need to search Bajazet's composer to find their birthplace and then search for the famous bridge in that location.
+Action 1: Search[Bajazet's composer]
+Observation 1: Bajazet (; also called \"Il Tamerlano\") is an Italian opera composed by Antonio Vivaldi in 1735. Its libretto was written by Agostino Piovene. It was premiered in Verona, during the Carnival season of that year. This opera (catalog number RV 703) is presented in 3 acts, with a three-movement sinfonia as an introduction. The story is about the fate of Bajazet (known as Beyazid I) after being captured by Tamerlane (Timur Lenk). The famous aria, \"Sposa son disprezzata\" is from this opera.
+Thought 2: Bajazet's composer, Antonio Vivaldi, was born in Venice, Italy. I need to search for the famous bridge in Venice.
+Action 2: Search[famous bridge in Venice]
+Observation 2: Venice Italian: Venezia Comune Comune di Venezia A collage of Venice: at the top left is the Piazza San Marco, followed by a view of the city, then the Grand Canal, and (smaller) the interior of La Fenice and, finally, the Island of San Giorgio Maggiore. Flag Venice Location of Venice in Veneto Venice Venice (Italy) Venice Venice (Europe) Show map of Veneto Show map of Italy Show map of Europe Show all Coordinates: 45 \u00b0 26 \u2032 15 ''N 12 \u00b0 20 \u2032 9'' E \ufeff / \ufeff 45.43750 \u00b0 N 12.33583 \u00b0 E \ufeff / 45.43750; 12.33583 Coordinates: 45 \u00b0 26 \u2032 15 ''N 12 \u00b0 20 \u2032 9'' E \ufeff / \ufeff 45.43750 \u00b0 N 12.33583 \u00b0 E \ufeff / 45.43750; 12.33583 Country Italy Region Veneto Metropolitan city Venice (VE) Frazioni Chirignago, Favaro Veneto, Mestre, Marghera, Murano, Burano, Giudecca, Lido, Zelarino Government Mayor Luigi Brugnaro (independent) Area Total 414.57 km (160.07 sq mi) Elevation 1 m (3 ft) Population (2014) Total 264,557 Density 640 / km (1,700 / sq mi) Demonym (s) (it) Veneziano, pl. Veneziani (en) Venetian, pl. Venetians Time zone CET (UTC + 1) Summer (DST) CEST (UTC + 2) Postal code 30100 Dialing code 041 ISTAT code 027042 Patron saint St. Mark the Evangelist Saint day 25 April Website Official website
+Thought 3: The famous bridge in Venice is the Rialto Bridge. Therefore, the answer is Rialto Bridge.
+Action 3: Finish[Rialto Bridge]
 
-Question: Which film was released more recently, The Black Duke or Avalalpam Vaikippoyi?
-Thought 1: I need to search The Black Duke and Avalalpam Vaikippoyi, and find which film was released more recently.
-Action 1: Search[The Black Duke]
-Observation 1: The Black Duke  is a 1963 Italian historical adventure film directed by Pino Mercanti.
-Thought 2: The Black Duke was released in 1963. I need to search Avalalpam Vaikippoyi next and find its release year.
-Action 2: Search[Avalalpam Vaikippoyi]
-Observation 2: Avalalpam Vaikippoyi is a 1971 Indian Malayalam film, directed by John Sankaramangalam and produced by United Producers. The film stars Prem Nazir, Sheela, Jayabharathi and Adoor Bhasi in the lead roles. The film had musical score by G. Devarajan.
-Thought 3: Avalalpam Vaikippoyi was released in 1971. Since 1971 is later than 1963, the film released more recently is Avalalpam Vaikippoyi.
-Action 3: Finish[Avalalpam Vaikippoyi]
+Question: Which county does Lloyd Dane's birthplace belong to?
+Thought 1: I need to search Lloyd Dane to find his birthplace and then determine which county it belongs to.
+Action 1: Search[Lloyd Dane]
+Observation 1: Lloyd Dane (August 19, 1925 \u2013 December 11, 2015) was a NASCAR Grand National Series driver from Eldon, Missouri. He participated part-time in the 1951 and 1954 to 1964 seasons, capturing four wins, all in his own car. Two of Dane's wins came during the 1956 season, when he finished a career best 23rd in points.
+Thought 2: Lloyd Dane was born in Eldon, Missouri. I need to search Eldon, Missouri to find out which county it belongs to.
+Action 2: Search[Eldon, Missouri]
+Observation 2: Eldon is a city in Miller County, Missouri, United States, located thirty miles southwest of Jefferson City. The population was 4,567 at the 2010 census.
+Thought 3: Eldon, Missouri is located in Miller County. Therefore, Lloyd Dane's birthplace belongs to Miller County.
+Action 3: Finish[Miller County]
