@@ -1,10 +1,10 @@
 # @package _global_
 defaults:
   - override /model: qwen2_7b_instruct
-  - override /data: musique
-  - override /decoder: context_aware_decoding
+  - override /data: 2wiki
+  - override /decoder: dola
   - override /framework: react
 
 model:
   configs:
-    max_new_tokens: 100
+    max_new_tokens: 1280
