@@ -1,0 +1,7 @@
+defaults:
+  - base_decoder_config
+
+name: ContextAwareDecoding
+method: ContextAwareDecoding
+configs:
+  post_softmax: True
