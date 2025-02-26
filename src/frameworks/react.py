@@ -58,7 +58,7 @@ class ReAct(BaseFramework):
             print(e)
         
         print(prompt[len(self.original_prompt)+2:])
-        return "No answer found"
+        return f"No answer found. Generated text: {prompt[len(self.original_prompt)+2:].rstrip()}"
     
     def reason(self, prompt, prompt_wo_context, stop):
         _input = {"prompted_question": [prompt], "verbalised_instruction": [""], "prompted_question_wo_context": [prompt_wo_context]}

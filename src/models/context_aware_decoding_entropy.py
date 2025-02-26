@@ -18,6 +18,8 @@ class ContextAwareDecodingEntropy(BaseModel):
         decoder_configs: DecoderConfigs,
     ):
         super().__init__(model_configs, decoder_configs)
+        self.scale_alpha = decoder_configs.configs.get("scale_alpha", False)
+        self.alpha_cap = decoder_configs.configs.get("alpha_cap", None)
 
     def generate(
         self,

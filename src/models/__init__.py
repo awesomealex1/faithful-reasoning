@@ -9,3 +9,4 @@ from .dola import DoLa
 from .decore_random_entropy import DeCoReRandomEntropy
 from .activation_decoding import ActivationDecoding
 from .context_aware_decoding import ContextAwareDecoding
+from .context_aware_decoding_entropy import ContextAwareDecodingEntropy

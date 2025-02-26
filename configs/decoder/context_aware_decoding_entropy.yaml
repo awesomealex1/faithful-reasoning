@@ -1,7 +1,9 @@
 defaults:
   - base_decoder_config
 
-name: ContextAwareDecoding
-method: ContextAwareDecoding
+name: ContextAwareDecodingEntropy
+method: ContextAwareDecodingEntropy
 configs:
   post_softmax: True
+  scale_alpha: False
+  alpha_cap: null
