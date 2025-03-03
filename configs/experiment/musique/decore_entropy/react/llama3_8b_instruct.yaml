@@ -2,7 +2,7 @@
 defaults:
   - override /model: llama3_8b_instruct
   - override /data: musique
-  - override /decoder: baseline
+  - override /decoder: decore_entropy
   - override /framework: react
 
 model:
