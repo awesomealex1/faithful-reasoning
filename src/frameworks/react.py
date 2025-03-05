@@ -5,6 +5,7 @@ from elasticsearch.exceptions import NotFoundError
 from src.frameworks.base_framework import BaseFramework
 from src.configs import FrameworkConfigs, DataConfigs
 import os
+import torch
 
 class ReAct(BaseFramework):
 
@@ -62,7 +63,9 @@ class ReAct(BaseFramework):
     
     def reason(self, prompt, prompt_wo_context, stop):
         _input = {"prompted_question": [prompt], "verbalised_instruction": [""], "prompted_question_wo_context": [prompt_wo_context]}
-        output = self.model.generate(_input)
+        with torch.no_grad():
+            output = self.model.generate(_input)
+        torch.cuda.empty_cache()
         output = output["decoded_text"]
         print(output)
 

@@ -31,12 +31,12 @@ class OneR(BaseFramework):
         for par in observation:
             par_text = par["paragraph_text"]
             prompted_question += par_text + " "
-        
-        print(prompted_question)
-        
+                
         model_input = {"prompted_question": [prompted_question], "verbalised_instruction": [""], "prompted_question_wo_context": [prompted_question_wo_context]}
         output = self.model.generate(model_input)
-        return output
+        _input["decoded_text"] = output["decoded_text"]
+        print(output)
+        return _input
 
 
 

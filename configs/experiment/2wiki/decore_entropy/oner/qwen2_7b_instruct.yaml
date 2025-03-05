@@ -1,0 +1,11 @@
+# @package _global_
+defaults:
+  - override /model: qwen2_7b_instruct
+  - override /data: 2wiki
+  - override /decoder: decore_entropy
+  - override /framework: oner
+
+
+model:
+  configs:
+    max_new_tokens: 1280
