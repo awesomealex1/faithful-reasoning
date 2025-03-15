@@ -43,10 +43,32 @@ class DoLa(BaseModel):
 
         return entropy
 
+    def make_stopping_criteria(self, stop_sequences: List[str], tokenizer) -> "StoppingCriteriaList":
+        from transformers import StoppingCriteria, StoppingCriteriaList
+
+        class StopOnStrings(StoppingCriteria):
+            def __init__(self, stop_strings: List[str], tokenizer):
+                self.stop_strings = stop_strings
+                self.tokenizer = tokenizer
+                self.stream = ""
+
+            def reset(self):
+                self.stream = ""
+
+            def __call__(self, input_ids, scores, **kwargs):
+                generated = self.tokenizer.decode(input_ids[0][-1], skip_special_tokens=True)
+                self.stream += generated
+                if any([self.stream.endswith(stop_string) for stop_string in self.stop_strings]):
+                    return True
+                return False
+
+        return StoppingCriteriaList([StopOnStrings(stop_sequences, tokenizer)])
+
     def generate(
         self,
         inputs,
         return_attentions: bool = False,
+        stop_strings: list = [],
     ) -> dict:
         self.model.eval()
 
@@ -61,6 +83,13 @@ class DoLa(BaseModel):
             prompt, use_system_prompt=use_system_prompt
         ).to(self.model.device)
 
+        if stop_strings:
+            stopping_criteria = self.make_stopping_criteria(
+                stop_strings, tokenizer=self.tokenizer
+            )
+        else:
+            stopping_criteria = None
+
         with torch.inference_mode():
             outputs = self.model.generate(
                 tokenised_inputs,
@@ -69,6 +98,7 @@ class DoLa(BaseModel):
                 output_logits=True,
                 dola_layers=self.dola_layers,
                 return_dict_in_generate=True,
+                stopping_criteria=stopping_criteria,
             )
             decoded_text = self.tokenizer.decode(
                 outputs.sequences[0, tokenised_inputs.size(1) :],

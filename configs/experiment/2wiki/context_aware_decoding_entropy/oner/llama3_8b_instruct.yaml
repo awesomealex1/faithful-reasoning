@@ -2,7 +2,7 @@
 defaults:
   - override /model: llama3_8b_instruct
   - override /data: 2wiki
-  - override /decoder: context_aware_decoding
+  - override /decoder: context_aware_decoding_entropy
   - override /framework: oner
 
 model:

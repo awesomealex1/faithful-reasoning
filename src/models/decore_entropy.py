@@ -82,7 +82,7 @@ class DeCoReEntropy(BaseModel):
 
         return entropy
 
-    def generate_self_contrast(self, inputs, return_attentions: bool = False) -> dict:
+    def generate_self_contrast(self, inputs, return_attentions: bool = False, stop_strings: list = []) -> dict:
         assert (
             not return_attentions
         ), "Return attentions not supported for DeCoReEntropy"
@@ -151,6 +151,16 @@ class DeCoReEntropy(BaseModel):
                 last_input_token = next_token_logits.argmax()
                 generated_ids.append(last_input_token.item())
                 if last_input_token.item() == self.tokenizer.eos_token_id:
+                    break
+                
+                should_break = False
+                if stop_strings:
+                    current_text = self.tokenizer.decode(generated_ids, skip_special_tokens=True)
+                    for stop_string in stop_strings:
+                        if stop_string in current_text:
+                            should_break = True
+                            break
+                if should_break:
                     break
             decoded_text = self.tokenizer.decode(
                 generated_ids, skip_special_tokens=True
@@ -255,11 +265,12 @@ class DeCoReEntropy(BaseModel):
         self,
         inputs,
         return_attentions: bool = False,
+        stop_strings: list = [],
     ) -> dict:
         if self.amateur_model is not None:
             return self.generate_amateur_contrast(inputs, return_attentions)
         else:
-            return self.generate_self_contrast(inputs, return_attentions)
+            return self.generate_self_contrast(inputs, return_attentions, stop_strings)
 
     def lm_score_self_contrast(
         self,

@@ -14,7 +14,7 @@ from src.configs import DecoderConfigs, ModelConfigs
 from src.utils.modelling_llama import LlamaForCausalLM
 from src.utils.modelling_mistral import MistralForCausalLM
 from src.utils.modelling_qwen2 import Qwen2ForCausalLM
-
+import time
 
 class BaseModel(ABC):
     def __init__(
@@ -86,7 +86,7 @@ class BaseModel(ABC):
     ) -> torch.Tensor:
         if tokenizer is None:
             tokenizer = self.tokenizer
-
+        print(inputs)
         if self.model_configs.model_type == "instruct":
             if use_chat_template:
                 chat_inputs = []
@@ -142,6 +142,7 @@ class BaseModel(ABC):
                     if type(inputs) in [tuple, list]:
                         inputs = inputs[0]
                     chat_inputs += [{"role": "user", "content": inputs}]
+                print(chat_inputs)
                 inputs = tokenizer.apply_chat_template(
                     chat_inputs,
                     add_generation_prompt=add_generation_prompt,
@@ -383,6 +384,7 @@ class BaseModel(ABC):
         inputs,
         return_attentions: bool = False,
         block_list: Optional[list] = None,
+        stop_strings: list = [],
     ) -> dict:
         self.model.eval()
 
@@ -407,6 +409,7 @@ class BaseModel(ABC):
             entropies = []
             last_input_token = tokenised_inputs[:, -1]
             past_kv = input_logits.past_key_values
+            
             for _ in range(self.max_new_tokens):
                 last_input_token = last_input_token.view(1, 1)
                 outputs = self.model(
@@ -424,10 +427,21 @@ class BaseModel(ABC):
                 generated_ids.append(last_input_token.item())
                 if last_input_token.item() == self.tokenizer.eos_token_id:
                     break
+
+                should_break = False
+                if stop_strings:
+                    current_text = self.tokenizer.decode(generated_ids, skip_special_tokens=True)
+                    for stop_string in stop_strings:
+                        if stop_string in current_text:
+                            should_break = True
+                            break
+                if should_break:
+                    break
             decoded_text = self.tokenizer.decode(
                 generated_ids, skip_special_tokens=True
             )
-
+        #print(decoded_text)
+        #print(generated_ids)
         generation_output = {
             "decoded_text": decoded_text,
             "alphas": entropies,
@@ -438,7 +452,6 @@ class BaseModel(ABC):
             generation_output["attentions"] = self.get_lookback_ratios(
                 attentions, component_lengths, tokenised_inputs.size(1)
             )
-
         return generation_output
 
     @abstractmethod

@@ -35,9 +35,4 @@ class OneR(BaseFramework):
         model_input = {"prompted_question": [prompted_question], "verbalised_instruction": [""], "prompted_question_wo_context": [prompted_question_wo_context]}
         output = self.model.generate(model_input)
         _input["decoded_text"] = output["decoded_text"]
-        print(output)
         return _input
-
-
-
-

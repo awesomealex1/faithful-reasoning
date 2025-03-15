@@ -22,52 +22,44 @@ class ReAct(BaseFramework):
         self.retriever = ElasticsearchRetriever()
 
     def generate(self, _input):
-        decoded_text = self.do_react(_input)
+        reasoning_chain = self.do_react(_input)
+        decoded_text = "\n".join(reasoning_chain).rstrip()
+        _input["reasoning_chain"] = reasoning_chain
         _input["decoded_text"] = decoded_text
         return _input
     
     def do_react(self, input):
-        prompt = self.original_prompt + "\n\nQuestion: " + input["question"][0] + "\n"
+        prompt = [self.original_prompt, "Question: " + input["question"][0]]
         title = None
         i = 1
 
         try:
             while i <= self.max_steps:
-                prompt += f"Thought {i}: "
-
+                prompt.append(f"Thought {i}: ")
                 if i == 1:
-                    prompt_wo_context = prompt
+                    prompt_wo_context = prompt[:]
+                thought = self.reason(prompt, prompt_wo_context, f"Observation", [f"Observation", f"Thought {i+1}"])
+                prompt[-1] += thought
 
-                thought = self.reason(prompt, prompt_wo_context, f"Observation {i}:")
-                prompt += f"{thought}\n"
-                
-                if self.contains_answer(thought):
-                    print("###### START")
-                    print(prompt[len(self.original_prompt)+2:].rstrip())
-                    print("###### END")
-                    return prompt[len(self.original_prompt)+2:].rstrip()
+                if self.contains_answer(prompt[-1]):
+                    return prompt[1:]
                 
                 action_type, action_value = self.extract_action(thought)
                 observation, title = self.act(action_type, action_value, title)
-
-                prompt += f"Observation {i}: {observation}\n"
-                prompt_wo_context = thought + f"Observation {i}: Could not retrieve new context."
-
+                
+                prompt.append(f"Observation {i}: {observation}")
+                prompt_wo_context.append(f"Observation {i}: Could not retrieve new context.")
                 i += 1
 
         except Exception as e:
             print(e)
         
-        print(prompt[len(self.original_prompt)+2:])
-        return f"No answer found. Generated text: {prompt[len(self.original_prompt)+2:].rstrip()}"
+        return prompt[1:]
     
-    def reason(self, prompt, prompt_wo_context, stop):
-        _input = {"prompted_question": [prompt], "verbalised_instruction": [""], "prompted_question_wo_context": [prompt_wo_context]}
-        with torch.no_grad():
-            output = self.model.generate(_input)
-        torch.cuda.empty_cache()
+    def reason(self, prompt, prompt_wo_context, stop, stop_sequences):
+        _input = {"prompted_question": [prompt], "verbalised_instruction": [self.original_prompt], "prompted_question_wo_context": [prompt_wo_context]}
+        output = self.model.generate(_input, stop_strings=stop_sequences)
         output = output["decoded_text"]
-        print(output)
 
         if stop in output:
             output = output[:output.find(stop)]

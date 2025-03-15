@@ -144,10 +144,12 @@ class Run:
                     batch[key] = int(batch[key].cpu().numpy()[0])
                 except:
                     batch[key] = str(batch[key][0])
-
+            
             # Save the predictions to a JSONL file after each batch
             with open(prediction_filepath, "a") as f:
                 f.write(json.dumps(batch) + "\n")
+            torch.cuda.empty_cache()
+            wandb.log({"questions_answered": step})
 
         # Evaluate
         metrics = self.metrics(predictions)
@@ -215,4 +217,3 @@ class Run:
         )
 
         trainer.train()
-

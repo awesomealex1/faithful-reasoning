@@ -29,6 +29,7 @@ class BaseFramework(ABC):
         with open(data_examples_path, 'r') as f:
             for line in f.readlines():
                 self.original_prompt += line
+        
         if framework_configs.name == "ReAct" and self.model.model_configs.name == "LLaMA3-8b-Instruct":
             self.original_prompt += "\nExamples finished. Your thoughts should reason about the observations. Follow the exact format like shown in the examples. The following question is the one you need to answer:"
         
