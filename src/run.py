@@ -20,6 +20,7 @@ from transformers import DataCollatorForLanguageModeling, TrainingArguments
 from peft import get_peft_model, LoraConfig, TaskType
 from datasets import load_dataset
 from trl import SFTTrainer, SFTConfig
+from src.metrics.ircot_metrics.squad_answer_em_f1 import SquadAnswerEmF1Metric
 
 
 class Run:
@@ -94,6 +95,8 @@ class Run:
         # To save WandB space, just return attentions for the Baseline model
         # Mainly for Logistic Regression purposes
 
+        squad = SquadAnswerEmF1Metric()
+
         for step, batch in enumerate(tqdm(self.dataloaders)):
             # Predict
             prediction = self.model.generate(batch)
@@ -149,7 +152,14 @@ class Run:
             with open(prediction_filepath, "a") as f:
                 f.write(json.dumps(batch) + "\n")
             torch.cuda.empty_cache()
-            wandb.log({"questions_answered": step})
+            ground_truth_answers = [
+                ans[0] if type(ans) in [list, tuple] else ans
+                for ans in batch["answers"]
+            ]
+            print("#####")
+            print(batch["predicted_answer"])
+            squad(batch["predicted_answer"], ground_truth_answers)
+            wandb.log(squad.get_metric())
 
         # Evaluate
         metrics = self.metrics(predictions)
