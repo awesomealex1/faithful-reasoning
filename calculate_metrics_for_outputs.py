@@ -74,6 +74,9 @@ def extract_predicted_paragraphs(reasoning_chain: List[str]) -> List[str]:
             paragraphs.append(observation_text)
     return paragraphs
 
-output_path = "outputs/2025-03-17/01-55-08/pred_WikiMultihopQA_Qwen2-7b-Instruct__ContextAwareDecoding__ReAct.json"
-questions_path = "data/2WikiMultiHopQA/test_subsampled.jsonl"
-print(calculate_metrics(output_path, questions_path))
+#output_path = "outputs/2025-03-17/01-55-08/pred_WikiMultihopQA_Qwen2-7b-Instruct__ContextAwareDecoding__ReAct.json"
+output_path = "outputs/2025-03-05/11-51-57/pred_MuSiQue_LLaMA3-8b-Instruct__DoLa__ReAct.json"
+wiki_questions_path = "data/2WikiMultiHopQA/test_subsampled.jsonl"
+musique_questions_path = "data/MuSiQue/test_subsampled.jsonl"
+hotpot_questions_path = "data/HotpotQA/test_subsampled.jsonl"
+print(calculate_metrics(output_path, musique_questions_path))
