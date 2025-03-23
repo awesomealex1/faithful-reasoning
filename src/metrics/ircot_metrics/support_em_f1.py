@@ -5,8 +5,8 @@ from typing import Tuple, List, Dict
 import ftfy
 import re
 
-from metrics.metric import Metric
-from metrics.squad_answer_em_f1 import normalize_answer
+from src.metrics.ircot_metrics.metric import Metric
+from src.metrics.ircot_metrics.squad_answer_em_f1 import normalize_answer
 
 
 def compute_metrics(predicted_support: List[str], gold_support: List[str]) -> Dict:

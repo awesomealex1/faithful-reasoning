@@ -4,8 +4,8 @@ Answer support recall as a measure of retrieval performance.
 from typing import Tuple, List
 import re
 
-from metrics.metric import Metric
-from metrics.squad_answer_em_f1 import normalize_answer
+from src.metrics.ircot_metrics.metric import Metric
+from src.metrics.ircot_metrics.squad_answer_em_f1 import normalize_answer
 
 
 class AnswerSupportRecallMetric(Metric):
