@@ -1,4 +1,4 @@
-name: decore
+name: faithful
 channels:
   - pytorch
   - nvidia

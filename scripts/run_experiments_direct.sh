@@ -1,4 +1,4 @@
-conda activate ../env/faithful
+conda activate faithful
 
 python scripts/main.py experiment=2wiki/baseline/direct/llama3_8b_instruct random_seed=1234
 

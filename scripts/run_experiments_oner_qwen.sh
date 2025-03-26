@@ -1,4 +1,4 @@
-conda activate ../env/faithful
+conda activate faithful
 
 pkill -f elasticsearch
 pkill -f uvicorn
