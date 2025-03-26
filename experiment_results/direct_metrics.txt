@@ -1,0 +1,54 @@
+Model: llama, Dataset: hotpot, Decoder: baseline, Seed: 1234, Run: 2025-03-25/22-28-20
+{'em': 0.214, 'f1': 0.289, 'count': 0}
+--------------------------------------------------
+Model: llama, Dataset: hotpot, Decoder: baseline, Seed: 3782, Run: 2025-03-25/22-58-22
+{'em': 0.214, 'f1': 0.289, 'count': 0}
+--------------------------------------------------
+Model: llama, Dataset: hotpot, Decoder: baseline, Seed: 9539, Run: 2025-03-25/23-27-46
+{'em': 0.214, 'f1': 0.289, 'count': 0}
+--------------------------------------------------
+Model: llama, Dataset: wiki, Decoder: baseline, Seed: 1234, Run: 2025-03-25/22-25-25
+{'em': 0.288, 'f1': 0.335, 'count': 0}
+--------------------------------------------------
+Model: llama, Dataset: wiki, Decoder: baseline, Seed: 3782, Run: 2025-03-25/22-55-30
+{'em': 0.288, 'f1': 0.335, 'count': 0}
+--------------------------------------------------
+Model: llama, Dataset: wiki, Decoder: baseline, Seed: 9539, Run: 2025-03-25/23-24-56
+{'em': 0.288, 'f1': 0.335, 'count': 0}
+--------------------------------------------------
+Model: llama, Dataset: musique, Decoder: baseline, Seed: 1234, Run: 2025-03-25/22-31-00
+{'em': 0.042, 'f1': 0.123, 'count': 0}
+--------------------------------------------------
+Model: llama, Dataset: musique, Decoder: baseline, Seed: 3782, Run: 2025-03-25/23-01-04
+{'em': 0.042, 'f1': 0.123, 'count': 0}
+--------------------------------------------------
+Model: llama, Dataset: musique, Decoder: baseline, Seed: 9539, Run: 2025-03-25/23-30-32
+{'em': 0.042, 'f1': 0.123, 'count': 0}
+--------------------------------------------------
+Model: qwen, Dataset: hotpot, Decoder: baseline, Seed: 1234, Run: 2025-03-25/22-38-36
+{'em': 0.108, 'f1': 0.203, 'count': 0}
+--------------------------------------------------
+Model: qwen, Dataset: hotpot, Decoder: baseline, Seed: 3782, Run: 2025-03-25/23-08-18
+{'em': 0.108, 'f1': 0.203, 'count': 0}
+--------------------------------------------------
+Model: qwen, Dataset: hotpot, Decoder: baseline, Seed: 9539, Run: 2025-03-25/23-38-02
+{'em': 0.108, 'f1': 0.203, 'count': 0}
+--------------------------------------------------
+Model: qwen, Dataset: wiki, Decoder: baseline, Seed: 1234, Run: 2025-03-25/22-33-53
+{'em': 0.234, 'f1': 0.284, 'count': 0}
+--------------------------------------------------
+Model: qwen, Dataset: wiki, Decoder: baseline, Seed: 3782, Run: 2025-03-25/23-03-46
+{'em': 0.234, 'f1': 0.284, 'count': 0}
+--------------------------------------------------
+Model: qwen, Dataset: wiki, Decoder: baseline, Seed: 9539, Run: 2025-03-25/23-33-22
+{'em': 0.234, 'f1': 0.284, 'count': 0}
+--------------------------------------------------
+Model: qwen, Dataset: musique, Decoder: baseline, Seed: 1234, Run: 2025-03-25/22-45-33
+{'em': 0.022, 'f1': 0.089, 'count': 0}
+--------------------------------------------------
+Model: qwen, Dataset: musique, Decoder: baseline, Seed: 3782, Run: 2025-03-25/23-15-10
+{'em': 0.022, 'f1': 0.089, 'count': 0}
+--------------------------------------------------
+Model: qwen, Dataset: musique, Decoder: baseline, Seed: 9539, Run: 2025-03-25/23-44-55
+{'em': 0.022, 'f1': 0.089, 'count': 0}
+--------------------------------------------------

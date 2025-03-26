@@ -36,6 +36,9 @@ class BaseFramework(ABC):
         if framework_configs.name == "OneR" and self.model.model_configs.name == "LLaMA3-8b-Instruct":
             self.original_prompt += "\nExamples finished. Follow the exact format like shown in the examples. The following question is the one you need to answer:"
         
+        if framework_configs.name == "Direct" and self.model.model_configs.name == "LLaMA3-8b-Instruct":
+            self.original_prompt += "\nExamples finished. Follow the exact format like shown in the examples. The following question is the one you need to answer:"
+        
     @abstractmethod
     def generate(self):
         pass

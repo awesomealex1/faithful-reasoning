@@ -15,10 +15,13 @@ class Direct(BaseFramework):
 
     def generate(self, _input):
         question = _input["question"][0]
-        prompted_question = self.original_prompt + "\nQuestion: " + question
-        model_input = {"prompted_question": [prompted_question], "verbalised_instruction": [""], "prompted_question_wo_context": [""]}
+        prompt = [self.original_prompt, "Question: " + question]
+        
+        model_input = {"prompted_question": [prompt], "verbalised_instruction": [self.original_prompt], "prompted_question_wo_context": []}
         output = self.model.generate(model_input)
-        return output
+        _input["decoded_text"] = output["decoded_text"]
+        _input["prompted_question"] = prompt
+        return _input
 
 
 

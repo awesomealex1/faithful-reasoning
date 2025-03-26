@@ -1,9 +1,10 @@
 # @package _global_
 defaults:
-  - override /model: llama3_8b_instruct
-  - override /data: musique
+  - override /model: qwen2_7b_instruct
+  - override /data: hotpotqa
   - override /decoder: baseline
   - override /framework: direct
+
 
 model:
   configs:

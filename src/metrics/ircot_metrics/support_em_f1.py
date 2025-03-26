@@ -33,7 +33,6 @@ def compute_metrics(predicted_support: List[str], gold_support: List[str]) -> Di
     # Without this change, em gets 1 and f1 gets 0
     if not predicted_support and not gold_support:
         f1, em = 1.0, 1.0
-        f1, em = 1.0, 1.0
 
     return {"prec": prec, "recall": recall, "f1": f1, "em": em}
 
@@ -65,38 +64,23 @@ class SupportEmF1Metric(Metric):
         self._do_normalize_answer = do_normalize_answer
         self._count = 0
 
-    def __call__(self, predicted_support: List[str], gold_support: List[str]):
-
-        predicted_support = predicted_support or []
+    def __call__(self, predicted_support_titles: List[str], predicted_support_paras: List[str], gold_titles: List[str], gold_paragraphs: List[str]):
 
         if self._do_normalize_answer:
-            predicted_support = [normalize_answer(e) for e in predicted_support]
-            gold_support = [normalize_answer(e) for e in gold_support]
+            predicted_support_titles = [normalize_answer(e) for e in predicted_support_titles]
+            predicted_support_paras = [normalize_answer(e) for e in predicted_support_paras]
+            gold_titles = [normalize_answer(e) for e in gold_titles]
+            gold_paragraphs = [normalize_answer(e) for e in gold_paragraphs]
 
-        if not gold_support:
-            gold_support_titles = []
-            gold_support_paras = []
-            predicted_support_titles = predicted_support_paras = predicted_support
-
-        elif gold_support[0].startswith("pid"):
-            for e in gold_support + predicted_support:
-                assert e.startswith("pid")
-            predicted_support_titles = [e.split("___")[1] for e in predicted_support]
-            predicted_support_paras = predicted_support
-            gold_support_titles = [e.split("___")[1] for e in gold_support]
-            gold_support_paras = gold_support
-
-        else:
-            for e in gold_support + predicted_support:
-                assert not e.startswith("pid")
-            predicted_support_titles = predicted_support_paras = predicted_support
-            gold_support_titles = gold_support_paras = gold_support
+        
+        for e in gold_titles + gold_paragraphs + predicted_support_titles + predicted_support_paras:
+            assert not e.startswith("pid")
 
         predicted_support_titles = set(map(str, predicted_support_titles))
         predicted_support_paras = set(map(str, predicted_support_paras))
 
-        gold_support_titles = set(map(str, gold_support_titles))
-        gold_support_paras = set(map(str, gold_support_paras))
+        gold_support_titles = set(map(str, gold_titles))
+        gold_support_paras = set(map(str, gold_paragraphs))
 
         titles_metrics = compute_metrics(predicted_support_titles, gold_support_titles)
         paras_metrics = compute_metrics(predicted_support_paras, gold_support_paras)
@@ -106,8 +90,8 @@ class SupportEmF1Metric(Metric):
         self._min_predicted_titles = min(self._min_predicted_titles, len(predicted_support_titles))
 
         self._total_predicted_paras += len(predicted_support_paras)
-        self._max_predicted_paras = max(self._max_predicted_titles, len(predicted_support_paras))
-        self._min_predicted_paras = min(self._min_predicted_titles, len(predicted_support_paras))
+        self._max_predicted_paras = max(self._max_predicted_paras, len(predicted_support_paras))
+        self._min_predicted_paras = min(self._min_predicted_paras, len(predicted_support_paras))
 
         self._titles_total_em += float(titles_metrics["em"])
         self._titles_total_f1 += titles_metrics["f1"]

@@ -65,15 +65,21 @@ def metric_max_over_ground_truths(metric_fn, prediction, ground_truths):
 
 
 def answer_extractor(answer: str) -> str:
-    pattern = r'Finish\[(.*?)\]'
+    react = False
+    if react:
+        pattern = r'Finish\[(.*?)\]'
 
-    match = re.search(pattern, answer)
+        match = re.search(pattern, answer)
 
-    if match:
-        answer = match.group(1)
+        if match:
+            answer = match.group(1)
+            return answer
+        
         return answer
-    
-    return answer
+    else:
+        answer = answer.lower()
+        match = re.search(r'answer is: (.+)', answer)
+        return match.group(1) if match else answer
 
 
 class SquadAnswerEmF1Metric(Metric):
@@ -89,7 +95,6 @@ class SquadAnswerEmF1Metric(Metric):
     ):
 
         predicted_answer = ftfy.fix_text(answer_extractor(predicted_answer))
-        print(ground_truth_answers)
         ground_truth_answers = [ftfy.fix_text(e) for e in ground_truth_answers]
 
         assert isinstance(predicted_answer, str)

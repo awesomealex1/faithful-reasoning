@@ -22,17 +22,18 @@ class OneR(BaseFramework):
         observation = self.retriever.retrieve_paragraphs(
                     corpus_name=self.corpus_name, 
                     query_text=question,
-                    max_hits_count=5
+                    max_hits_count=1
         )
 
-        prompted_question_wo_context = self.original_prompt + "\nQuestion: " + question
-        prompted_question = prompted_question_wo_context + "\nContext: "
+        prompt_wo_context = [self.original_prompt, "Question: " + question]
+        prompt = [self.original_prompt, "Question: " + question + "\nContext: "]
 
         for par in observation:
             par_text = par["paragraph_text"]
-            prompted_question += par_text + " "
-                
-        model_input = {"prompted_question": [prompted_question], "verbalised_instruction": [""], "prompted_question_wo_context": [prompted_question_wo_context]}
+            prompt[1] += par_text + " "
+        
+        model_input = {"prompted_question": [prompt], "verbalised_instruction": [self.original_prompt], "prompted_question_wo_context": [prompt_wo_context]}
         output = self.model.generate(model_input)
         _input["decoded_text"] = output["decoded_text"]
+        _input["prompted_question"] = prompt
         return _input

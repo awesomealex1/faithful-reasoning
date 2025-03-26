@@ -2,8 +2,9 @@
 defaults:
   - override /model: qwen2_7b_instruct
   - override /data: musique
-  - override /decoder: dola
+  - override /decoder: baseline
   - override /framework: oner
+
 model:
   configs:
     max_new_tokens: 1280
