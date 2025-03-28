@@ -121,16 +121,17 @@ Our evaluation scripts are in ```/scripts``` and called ```run_experiments_[fram
 │   ├── config.yaml                  # Default config values that will be replaced by experiment config
 │   ├── data/                        # Directory containing dataset config files, that will be used in the experiment config files
 │   ├── data_loader/                 # Directory containing one default data loader config file
-│   ├── decoder/                     # Directory containing decoder config files (e.g., DeCoRe, Baseline, DoLa, ITI), that will be used in the experiment config files
+│   ├── decoder/                     # Directory containing decoder config files (e.g., DeCoRe, Baseline, DoLa, CAD), that will be used in the experiment config files
 │   ├── experiment/                  # Directory containing experiment config files per decoder
+|   ├── framework/                   # Directory containing frameowkr config files (e.g., ReAct,..) 
 │   └── model/                       # Directory containing model config files, that will be used in the experiment config files
 ├── data/                            # Directory containing dataset files
 ├── docs/                            # Directory containing assets for documentation
-├── notebooks/                       # Jupyter notebooks directory, only for creating plots
 ├── retrieval_heads/                 # Directory containing pre-computed retrieval heads
 ├── scripts/
 │   ├── download_react_data.sh       # Script to download (large) datasets for ReAct
 │   ├── main.py                      # The main script for evaluating the runs
+│   ├── run_experiments...           # Script to run experiments with seeds
 └── src/
     ├── __init__.py
     ├── configs.py                   # Handle Hydra configs
