@@ -2,6 +2,6 @@ defaults:
   - base_data_config
 
 name: ALFWorldDataset
-data_dir: ''  # Not used, but required by the config structure
+data_dir: data/2WikiMultiHopQA  # Not used, but required by the config structure
 num_samples: 10  # Number of episodes to generate
-variation: '' 
+variation: null 
