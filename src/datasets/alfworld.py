@@ -51,6 +51,7 @@ class ALFWorldDataset(Dataset):
                 })
                 obs = next_obs
             self.episodes.append(episode)
+            print(episode)
         print(self.episodes)
 
     def __getitem__(self, idx):
