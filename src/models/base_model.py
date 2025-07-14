@@ -23,14 +23,13 @@ class BaseModel(ABC):
         decoder_configs: DecoderConfigs,
     ):
         if "llama" in model_configs.name.lower():
-            if "70bbb" in model_configs.name.lower():
+            if "70b" in model_configs.name.lower():
                 quantization_config = BitsAndBytesConfig(load_in_8bit=True)
             else:
                 quantization_config = None
             self.model = LlamaForCausalLM.from_pretrained(
                 model_configs.configs.model_name_or_path,
-                use_flash_attention_2="flash_attention_2",
-                attn_implementation="flash_attention_2",
+                attn_implementation="eager",
                 torch_dtype=torch.bfloat16,
                 device_map="auto",
                 quantization_config=quantization_config
