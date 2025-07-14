@@ -15,7 +15,8 @@ dependencies:
   # - cudatoolkit=11.4
   - datasets
   - evaluate
-  - pip
+  - pip:
+      - alfworld[full]
   - python-dotenv
   - wandb
   - scikit-learn

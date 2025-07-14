@@ -130,3 +130,4 @@ immutabledict
 sacrebleu
 rouge_score
 bert-score
+alfworld[full]
