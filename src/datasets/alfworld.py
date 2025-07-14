@@ -7,6 +7,16 @@ import alfworld.agents.modules.generic as generic
 import numpy as np
 import os
 import sys
+from contextlib import contextmanager
+
+@contextmanager
+def patch_sys_argv(new_args):
+    old_argv = sys.argv
+    sys.argv = new_args
+    try:
+        yield
+    finally:
+        sys.argv = old_argv
 
 class ALFWorldDataset(Dataset):
     def __init__(self, data_configs: DataConfigs, **kwargs):
@@ -14,9 +24,8 @@ class ALFWorldDataset(Dataset):
         self.num_episodes = data_configs.num_samples if data_configs.num_samples > 0 else 100  # default
         self.batch_size = kwargs.get('batch_size', 1)
         config_file = os.path.expanduser("~/.cache/alfworld/configs/base_config.yaml")
-        sys.argv = [sys.argv[0], 'config_file', config_file]  # <-- This is the key line!
-        self.config = generic.load_config()
-
+        with patch_sys_argv([sys.argv[0], config_file]):
+            self.config = generic.load_config()
         self.env_type = 'AlfredTWEnv'  # text-based
         self.env = alf_env.get_environment(self.env_type)(self.config, train_eval='train')
         self.env = self.env.init_env(batch_size=self.batch_size)
