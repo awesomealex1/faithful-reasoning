@@ -5,13 +5,18 @@ from src.configs import DataConfigs
 import alfworld.agents.environment as alf_env
 import alfworld.agents.modules.generic as generic
 import numpy as np
+import os
 
 class ALFWorldDataset(Dataset):
     def __init__(self, data_configs: DataConfigs, **kwargs):
         self.data_configs = data_configs
         self.num_episodes = data_configs.num_samples if data_configs.num_samples > 0 else 100  # default
         self.batch_size = kwargs.get('batch_size', 1)
-        self.config = generic.load_config()
+        config_file = getattr(data_configs, 'alfworld_config_file', None)
+        if config_file is None:
+            config_file = os.path.expanduser("~/.cache/alfworld/configs/base_config.yaml")
+        self.config = generic.load_config(config_file=config_file)
+
         self.env_type = 'AlfredTWEnv'  # text-based
         self.env = alf_env.get_environment(self.env_type)(self.config, train_eval='train')
         self.env = self.env.init_env(batch_size=self.batch_size)
