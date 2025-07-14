@@ -27,7 +27,7 @@ class ALFWorldDataset(Dataset):
         with patch_sys_argv([sys.argv[0], config_file]):
             self.config = generic.load_config()
         self.env_type = 'AlfredTWEnv'  # text-based
-        self.env = alf_env.get_environment(self.env_type)(self.config, train_eval='train')
+        self.env = alf_env.get_environment(self.env_type)(self.config, train_eval='eval_out_of_distribution')
         self.env = self.env.init_env(batch_size=self.batch_size)
         self.episodes = []
         self._generate_episodes()
