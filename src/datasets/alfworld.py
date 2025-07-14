@@ -23,7 +23,7 @@ class ALFWorldDataset(Dataset):
         self.data_configs = data_configs
         self.num_episodes = data_configs.num_samples if data_configs.num_samples > 0 else 100  # default
         self.batch_size = kwargs.get('batch_size', 1)
-        config_file = os.path.expanduser("~/.cache/alfworld/configs/base_config.yaml")
+        config_file = os.path.expanduser("configs/alfworld_base_config.yaml")
         with patch_sys_argv([sys.argv[0], config_file]):
             self.config = generic.load_config()
         self.env_type = 'AlfredTWEnv'  # text-based
