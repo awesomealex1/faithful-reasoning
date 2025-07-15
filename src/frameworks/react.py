@@ -85,7 +85,7 @@ class ReAct(BaseFramework):
             print(ob)
             sys.stdout.flush()
         for i in range(1, 50):
-            action_dict = self.model.generate({"prompted_question": [init_prompt + prompt], "verbalised_instruction": [""]}, stop_strings=['\n'])
+            action_dict = self.model.generate({"prompted_question": [init_prompt, prompt], "verbalised_instruction": [""]}, stop_strings=['\n'])
             action = action_dict["decoded_text"].strip()            
             observation, reward, done, info = self.env.step([action])
             observation, reward, done = self.process_ob(observation[0]), info['won'][0], done[0]
