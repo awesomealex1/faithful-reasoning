@@ -94,7 +94,8 @@ class ReAct(BaseFramework):
                 sys.stdout.flush()
             reasoning_chain.append(f'Act {i}: {action}')
             reasoning_chain.append(f'\nObs {i}: {observation}')
-            prompt.append(f' {action}\n{observation}\n>')
+            prompt.append(f' {action}\n')
+            prompt.append(f' {observation}\n>')
             if done:
                 return reward, reasoning_chain
         return 0, reasoning_chain
