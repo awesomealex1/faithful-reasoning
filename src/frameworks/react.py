@@ -67,7 +67,7 @@ class ReAct(BaseFramework):
         print(name)
         for i, (k, v) in enumerate(self.prefixes.items()):
             if name.startswith(k):
-                prompt = 'Interact with a household to solve a task. Here are two examples.\n' + self.d[f'react_{v}_1'] + self.d[f'react_{v}_0'] + '\nHere is the task.\n'
+                prompt = 'Interact with a household to solve a task. Here are two examples.\n' + self.d[f'react_{v}_1'] + self.d[f'react_{v}_0']
                 print(k, v)
                 r, reasoning_chain = self.alfworld_run(prompt, ob=ob)
                 self.rs[i] += r
@@ -78,8 +78,8 @@ class ReAct(BaseFramework):
         return reasoning_chain
     
     def alfworld_run(self, prompt, to_print=True, ob=''):
-        init_prompt = prompt + ob + '\n>'
-        prompt = ''
+        init_prompt = prompt
+        prompt =  '\nHere is the task.\n' + ob + '\n>'
         reasoning_chain = []
         if to_print:
             print(ob)
