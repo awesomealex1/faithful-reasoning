@@ -85,7 +85,8 @@ class ReAct(BaseFramework):
             sys.stdout.flush()
         for i in range(1, 50):
             action_dict = self.model.generate({"prompted_question": [prompt], "verbalised_instruction": [original_prompt]}, stop_strings=['\n'])
-            action = action_dict["decoded_text"].removeprefix(' >').strip()            
+            action = action_dict["decoded_text"].removeprefix(' >').strip()
+            print("ACTION", action, "        ", action_dict["decoded_text"])    
             observation, reward, done, info = self.env.step([action])
             observation, reward, done = self.process_ob(observation[0]), info['won'][0], done[0]
             if action.startswith('think:'):
