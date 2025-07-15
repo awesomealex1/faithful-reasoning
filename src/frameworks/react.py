@@ -64,11 +64,9 @@ class ReAct(BaseFramework):
         ob = '\n'.join(ob[0].split('\n\n')[1:])
         name = '/'.join(info['extra.gamefile'][0].split('/')[-3:-1])
         reasoning_chain = []
-        print(name)
         for i, (k, v) in enumerate(self.prefixes.items()):
             if name.startswith(k):
                 prompt = 'Interact with a household to solve a task. Here are two examples.\n' + self.d[f'react_{v}_1'] + self.d[f'react_{v}_0']
-                print(k, v)
                 r, reasoning_chain = self.alfworld_run(prompt, ob=ob)
                 self.rs[i] += r
                 self.cnts[i] += 1
@@ -78,15 +76,14 @@ class ReAct(BaseFramework):
         return reasoning_chain
     
     def alfworld_run(self, prompt, to_print=True, ob=''):
-        init_prompt = prompt
-        prompt =  '\nHere is the task.\n' + ob + '\n>'
+        prompt = [prompt, '\nHere is the task.\n' + ob + '\n>']
         print("PROMPTTTTT", prompt)
         reasoning_chain = []
         if to_print:
             print(ob)
             sys.stdout.flush()
         for i in range(1, 50):
-            action_dict = self.model.generate({"prompted_question": [init_prompt, prompt], "verbalised_instruction": [""]}, stop_strings=['\n'])
+            action_dict = self.model.generate({"prompted_question": [prompt], "verbalised_instruction": [""]}, stop_strings=['\n'])
             action = action_dict["decoded_text"].strip()            
             observation, reward, done, info = self.env.step([action])
             observation, reward, done = self.process_ob(observation[0]), info['won'][0], done[0]
@@ -96,7 +93,7 @@ class ReAct(BaseFramework):
                 print(f'Act {i}: {action}\nObs {i}: {observation}')
                 sys.stdout.flush()
             reasoning_chain.append(f'Act {i}: {action}\nObs {i}: {observation}')
-            prompt += f' {action}\n{observation}\n>'
+            prompt.append(f' {action}\n{observation}\n>')
             if done:
                 return reward, reasoning_chain
         return 0, reasoning_chain
