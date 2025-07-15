@@ -96,7 +96,6 @@ class DoLa(BaseModel):
                 do_sample=False,
                 max_new_tokens=self.max_new_tokens,
                 output_logits=True,
-                dola_layers=self.dola_layers,
                 return_dict_in_generate=True,
                 stopping_criteria=stopping_criteria,
             )
