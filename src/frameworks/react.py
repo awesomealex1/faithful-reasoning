@@ -66,7 +66,7 @@ class ReAct(BaseFramework):
         reasoning_chain = []
         for i, (k, v) in enumerate(self.prefixes.items()):
             if name.startswith(k):
-                prompt = 'Interact with a household to solve a task. Here are two examples.\n<EXAMPLE START>\n' + self.d[f'react_{v}_1'] + self.d[f'react_{v}_0' + '\n<EXAMPLE END>']
+                prompt = 'Interact with a household to solve a task. Here are two examples.\n<EXAMPLE START>\n' + self.d[f'react_{v}_1'] + self.d[f'react_{v}_0'] + '\n<EXAMPLE END>'
                 r, reasoning_chain = self.alfworld_run(prompt, ob=ob)
                 self.rs[i] += r
                 self.cnts[i] += 1
