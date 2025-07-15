@@ -77,7 +77,7 @@ class ReAct(BaseFramework):
     
     def alfworld_run(self, prompt, to_print=True, ob=''):
         original_prompt = prompt
-        prompt = [original_prompt, '\nHere is the task.\n' + ob + '\n Follow the exact format like shown in the examples. Be concise and to the point. The problem is solvable and will only end once you solved it. You can do the following actions when you are not thinking: 1. go to, 2. open, 3. close, 4. put, 5. take, 6. cool, 7. heat, 8. use.\n>']
+        prompt = [original_prompt, 'If an action fails repeatedly (returns "Nothing happens"), try: 1. Alternative action syntax 2. Different target locations 3. Re-examine the environment description. Follow the exact format like shown in the examples. Be concise and to the point. The problem is solvable and will only end once you solved it. You can do the following actions when you are not thinking: 1. go to, 2. open, 3. close, 4. put, 5. take, 6. cool, 7. heat, 8. use.\nHere is the task.\n' + ob + '\n>']
         print("PROMPTTTTT", prompt)
         reasoning_chain = []
         if to_print:
