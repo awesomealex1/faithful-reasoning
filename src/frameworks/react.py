@@ -47,9 +47,8 @@ class ReAct(BaseFramework):
             'look_at_obj': 'examine',
             'pick_two_obj': 'puttwo'
         }
-        self.folder = './prompts/'
         self.prompt_file = 'alfworld_3prompts.json'
-        with open(self.folder + self.prompt_file, 'r') as f:
+        with open(self.prompt_file, 'r') as f:
             self.d = json.load(f)
     
     def generate(self, _input):
