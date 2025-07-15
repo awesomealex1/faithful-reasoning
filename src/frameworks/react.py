@@ -85,7 +85,7 @@ class ReAct(BaseFramework):
             print(ob)
             sys.stdout.flush()
         for i in range(1, 50):
-            action = self.model.generate(init_prompt + prompt, stop=['\n']).strip()
+            action = self.model.generate(init_prompt + prompt, stop_strings=['\n']).strip()
             observation, reward, done, info = self.env.step([action])
             observation, reward, done = self.process_ob(observation[0]), info['won'][0], done[0]
             if action.startswith('think:'):
