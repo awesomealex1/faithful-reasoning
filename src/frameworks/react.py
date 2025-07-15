@@ -76,7 +76,7 @@ class ReAct(BaseFramework):
         return reasoning_chain
     
     def alfworld_run(self, prompt, to_print=True, ob=''):
-        prompt = [prompt, '\nHere is the task.\n' + ob + '\n>']
+        prompt = [prompt, '\nHere is the task.\n' + ob + '\n Follow the exact format like shown in the examples. Be concise and to the point.\n>']
         print("PROMPTTTTT", prompt)
         reasoning_chain = []
         if to_print:
