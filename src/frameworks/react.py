@@ -92,7 +92,8 @@ class ReAct(BaseFramework):
             if to_print:
                 print(f'Act {i}: {action}\nObs {i}: {observation}')
                 sys.stdout.flush()
-            reasoning_chain.append(f'Act {i}: {action}\nObs {i}: {observation}')
+            reasoning_chain.append(f'Act {i}: {action}')
+            reasoning_chain.append(f'\nObs {i}: {observation}')
             prompt.append(f' {action}\n{observation}\n>')
             if done:
                 return reward, reasoning_chain
