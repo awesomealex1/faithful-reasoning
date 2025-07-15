@@ -76,14 +76,15 @@ class ReAct(BaseFramework):
         return reasoning_chain
     
     def alfworld_run(self, prompt, to_print=True, ob=''):
-        prompt = [prompt, '\nHere is the task.\n' + ob + '\n Follow the exact format like shown in the examples. Be concise and to the point.\n>']
+        original_prompt = prompt
+        prompt = ['\nHere is the task.\n' + ob + '\n Follow the exact format like shown in the examples. Be concise and to the point.\n>']
         print("PROMPTTTTT", prompt)
         reasoning_chain = []
         if to_print:
             print(ob)
             sys.stdout.flush()
         for i in range(1, 50):
-            action_dict = self.model.generate({"prompted_question": [prompt], "verbalised_instruction": [""]}, stop_strings=['\n'])
+            action_dict = self.model.generate({"prompted_question": [prompt], "verbalised_instruction": [original_prompt]}, stop_strings=['\n'])
             action = action_dict["decoded_text"].strip()            
             observation, reward, done, info = self.env.step([action])
             observation, reward, done = self.process_ob(observation[0]), info['won'][0], done[0]
