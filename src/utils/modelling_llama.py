@@ -1152,7 +1152,7 @@ class LlamaDecoderLayer(nn.Module):
         # print("#2", kwargs)
 
         if attn_mode == "flash":
-            hidden_states, inspect, self_attn_weights, present_key_value = (
+            hidden_states, self_attn_weights, present_key_value = (
                 self.self_attn(
                     hidden_states=hidden_states,
                     attention_mask=attention_mask,
@@ -1163,9 +1163,9 @@ class LlamaDecoderLayer(nn.Module):
                     **kwargs,
                 )
             )
+            inspect = None
         elif attn_mode == "torch":
-
-            hidden_states, inspect, self_attn_weights, present_key_value = (
+            hidden_states, self_attn_weights, present_key_value = (
                 self.self_attn.forward_torch(
                     hidden_states=hidden_states,
                     attention_mask=attention_mask,
@@ -1176,6 +1176,7 @@ class LlamaDecoderLayer(nn.Module):
                     **kwargs,
                 )
             )
+            inspect = None
         else:
             raise ValueError("attention mode %s invalid" % attn_mode)
         hidden_states = residual + hidden_states
