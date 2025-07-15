@@ -51,14 +51,15 @@ class ReAct(BaseFramework):
         with open(self.prompt_file, 'r') as f:
             self.d = json.load(f)
     
-    def generate(self, _input):
-        reasoning_chain = self.do_react(_input)
+    def generate(self):
+        _input = {}
+        reasoning_chain = self.do_react()
         decoded_text = "\n".join(reasoning_chain).rstrip()
         _input["reasoning_chain"] = reasoning_chain
         _input["decoded_text"] = decoded_text
         return _input
 
-    def do_react(self, input):
+    def do_react(self):
         ob, info = self.env.reset()
         ob = '\n'.join(ob[0].split('\n\n')[1:])
         name = '/'.join(info['extra.gamefile'][0].split('/')[-3:-1])
@@ -75,6 +76,7 @@ class ReAct(BaseFramework):
         print('r', r, 'rs', self.rs, 'cnts', self.cnts, 'sum(rs)/sum(cnts)', sum(self.rs) / sum(self.cnts))
         print('------------\n')
         return reasoning_chain
+    
     def alfworld_run(self, prompt, to_print=True, ob=''):
         init_prompt = prompt + ob + '\n>'
         prompt = ''

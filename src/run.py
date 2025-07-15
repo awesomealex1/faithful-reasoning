@@ -87,9 +87,11 @@ class Run:
 
         squad = SquadAnswerEmF1Metric()
 
-        for step, batch in enumerate(tqdm(self.dataloaders)):
+        for _ in tqdm(range(10)):
             # Predict
-            prediction = self.model.generate(batch)
+            prediction = self.model.generate()
+            print(prediction)
+            continue
             batch["predicted_answer"] = prediction["decoded_text"]
             if "alphas" in prediction:
                 # Handle for DeCoRe guided, to analyse the changes in alpha value throughout generation steps
