@@ -54,8 +54,7 @@ class BaseModel(ABC):
         elif "qwen2" in model_configs.name.lower():
             self.model = Qwen2ForCausalLM.from_pretrained(
                 model_configs.configs.model_name_or_path,
-                use_flash_attention_2="flash_attention_2",
-                attn_implementation="flash_attention_2",
+                attn_implementation="eager",
                 torch_dtype="auto",
                 device_map="auto",
             ).eval()
