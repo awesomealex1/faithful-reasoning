@@ -66,7 +66,7 @@ class ReAct(BaseFramework):
         reasoning_chain = []
         for i, (k, v) in enumerate(self.prefixes.items()):
             if name.startswith(k):
-                prompt = 'Interact with a household to solve a task. Here are two examples.\n' + self.d[f'react_{v}_1'] + self.d[f'react_{v}_0']
+                prompt = 'Interact with a household to solve a task. Here are two examples.\n<EXAMPLE START>\n' + self.d[f'react_{v}_1'] + self.d[f'react_{v}_0' + '\n<EXAMPLE END>']
                 r, reasoning_chain = self.alfworld_run(prompt, ob=ob)
                 self.rs[i] += r
                 self.cnts[i] += 1
@@ -77,7 +77,7 @@ class ReAct(BaseFramework):
     
     def alfworld_run(self, prompt, to_print=True, ob=''):
         original_prompt = prompt
-        prompt = [original_prompt, '\nHere is the task.\n' + ob + '\n Follow the exact format like shown in the examples. Be concise and to the point. The problem is solvable and will only end once you solved it.\n>']
+        prompt = [original_prompt, '\nHere is the task.\n' + ob + '\n Follow the exact format like shown in the examples. Be concise and to the point. The problem is solvable and will only end once you solved it. You can do the following actions when you are not thinking: 1. go to, 2. open, 3. close, 4. put, 5. take, 6. cool, 7. heat, 8. use.\n>']
         print("PROMPTTTTT", prompt)
         reasoning_chain = []
         if to_print:
