@@ -77,28 +77,47 @@ class ReAct(BaseFramework):
     def alfworld_run(self, ex1, ex2, to_print=True, ob=''):
         #prompt = [original_prompt, 'If an action fails repeatedly (returns "Nothing happens"), try: 1. Alternative action syntax 2. Different target locations 3. Re-examine the environment description. Follow the exact format like shown in the examples. Be concise and to the point. The problem is solvable and will only end once you solved it. You can do the following actions when you are not thinking: 1. go to, 2. open, 3. close, 4. put, 5. take, 6. cool, 7. heat, 8. use.\nHere is the task.\n' + ob + '\n>']
         p1 = '''
-You are an intelligent agent designed to solve household tasks in the ALFWorld environment. Your responses must strictly adhere to the format specified below.
+You are absolutely right. I apologize for the misunderstanding. The back-and-forth showed a fundamental misinterpretation of the interaction model.
 
-CRITICAL: Response Format
+Based on your correction, the agent should only output one thing at a time: either a think step OR an action step, but never both. The system's OK. is the cue to switch from thinking to acting.
 
-For EVERY turn, your response MUST contain both a think step and an action step in this exact format. Do not separate them into different turns.
-Code snippet
+This requires a completely different prompt structure. Let's discard the previous versions and use this corrected and simplified one, which strictly enforces the two-step process you described.
 
-> think: [Your reasoning about the current objective and why you are choosing the next action.]
-OK.
-> [action] [target]
+Final, Correct Prompt (Two-Step Interaction)
+
+You are an intelligent agent solving household tasks in ALFWorld. Your responses must follow an exact turn-based format to function.
+
+CRITICAL: Interaction Flow
+
+The process is a strict, alternating sequence.
+
+    Your 1st Turn (Thinking): After you see the environment state, you MUST respond with only your reasoning.
+
+        Format: > think: [Your reasoning about the objective and next action.]
+
+    System's Response: The system will reply with OK. and then prompt you.
+
+        Format: OK.
+
+        >
+
+    Your 2nd Turn (Acting): After the system's OK. and >, you MUST respond with only the action.
+
+        Format: [action] [target]
+
+This cycle repeats. You think, the system says OK, you act.
 
 RULES:
 
-    NEVER write conversational text like "I will..." or "My apologies...".
+    NEVER combine a think and an action in the same response.
 
-    ALWAYS start your response with > think:.
+    NEVER output OK. yourself; that is the system's job.
 
-    ALWAYS follow the think line with OK. on a new line.
+    NEVER start with conversational text like "I will..." or "I apologize...".
 
-    ALWAYS follow the OK. line with > [action] [target] on a new line.
+    If the prompt is (observation text), your response is > think: ...
 
-    NEVER output only a think step. Every response must be a complete think/OK/action block.
+    If the prompt is OK. and >, your response is [action] [target]
 
 Valid Actions
 
@@ -120,30 +139,11 @@ Valid Actions
 
 Task Solving Strategy
 
-1. Analyze the Task:
+    Plan: Analyze the task, identify the items and target, and form a step-by-step plan.
 
-    Identify the exact items and quantities needed.
+    Search: Use knowledge of common item locations (e.g., soapbar in sinkbasin or cabinet; pillow on sofa or bed).
 
-    Identify the target location for placement.
-
-    Form a plan: Find item 1 -> Place item 1 -> Find item 2 -> etc.
-
-2. Smart Search Strategy:
-Use your knowledge of typical item locations to search efficiently.
-
-    Bathroom items (e.g., soapbar, towel, toiletpaper): sinkbasin, cabinet, toilet, handtowelholder, towelholder
-
-    Kitchen items (e.g., plate, mug, knife, apple): countertop, cabinet, drawer, fridge, microwave
-
-    Bedroom/Living Room items (e.g., cellphone, book, remotecontrol, pillow): coffeetable, sidetable, sofa, bed, dresser, desk
-
-3. Systematic Execution:
-
-    Think before acting: Your think step must state your immediate goal and reasoning.
-
-    Check containers: Always open closed doors, drawers, and cabinets in promising locations.
-
-    Be efficient: Check all likely spots in one room before moving to another.
+    Execute: Systematically check locations. Always open closed containers.
     
 Here are two examples: \n''' + ex1 + '\n' + ex2
 
