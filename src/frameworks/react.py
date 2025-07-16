@@ -77,101 +77,74 @@ class ReAct(BaseFramework):
     def alfworld_run(self, ex1, ex2, to_print=True, ob=''):
         #prompt = [original_prompt, 'If an action fails repeatedly (returns "Nothing happens"), try: 1. Alternative action syntax 2. Different target locations 3. Re-examine the environment description. Follow the exact format like shown in the examples. Be concise and to the point. The problem is solvable and will only end once you solved it. You can do the following actions when you are not thinking: 1. go to, 2. open, 3. close, 4. put, 5. take, 6. cool, 7. heat, 8. use.\nHere is the task.\n' + ob + '\n>']
         p1 = '''
-You are an intelligent agent solving household tasks in ALFWorld. Follow this systematic approach:
+You are an intelligent agent designed to solve household tasks in the ALFWorld environment. Your responses must strictly adhere to the format specified below.
 
-### 1. Task Analysis & Planning
-- **Parse the task**: Extract the exact number of items needed and target location
-- **Create a plan**: Break down into clear steps (find item 1 → place → find item 2 → place)
-- **Prioritize efficiency**: Look for multiple items in the same location when possible
+CRITICAL: Response Format
 
-### 2. Smart Location Search Strategy
-Use domain knowledge to search efficiently:
+For EVERY turn, your response MUST contain both a think step and an action step in this exact format. Do not separate them into different turns.
+Code snippet
 
-**Common item locations:**
-- **Bathroom items** (soap, towel, toiletpaper): sinkbasin, cabinet, handtowelholder, towelholder
-- **Kitchen items** (plate, mug, knife, apple): countertop, cabinet, drawer, fridge, microwave
-- **Electronics** (cellphone, remotecontrol, laptop): coffeetable, sidetable, sofa, bed, dresser
-- **Personal items** (creditcard, keychain, watch): drawer, dresser, sidetable, countertop
-- **Books/papers**: sidetable, dresser, bed, sofa, desk
-- **Clothing**: dresser, bed, laundryhamper, armchair
-
-### 3. Systematic Search Protocol
-1. **Start with most likely locations** based on item type
-2. **Check containers systematically**: Open drawers/cabinets before moving on
-3. **Remember visited locations**: Track what you've already checked
-4. **Group nearby searches**: If checking cabinet 1, also check cabinet 2-4 in the same area
-
-### 4. Efficient Execution Rules
-- **Think before every action**: State your current objective and reasoning
-- **Be specific**: Use exact item names and numbers (e.g., "cellphone 3")
-- **Check thoroughly**: Open all closed containers in promising locations
-- **Collect smartly**: If you find multiple target items in one location, note them for later
-- **Navigate efficiently**: Minimize back-and-forth movement
-
-### 5. Action Format - CRITICAL
-You MUST use this exact format for EVERY response. Each response must contain BOTH thinking AND action.
-
-**ALWAYS use this complete format:**
-```
-> think: [Your reasoning about current objective and next action]
+> think: [Your reasoning about the current objective and why you are choosing the next action.]
 OK.
 > [action] [target]
-```
 
-**Valid actions only:** go to, open, close, put, take, cool, heat, use
-**You MUST include both the think step AND the action step in every response**
-**Never give just a think step without an action**
+RULES:
 
-### 6. Problem-Solving for Failures
-If an action fails repeatedly:
-1. **Re-examine environment**: Look for alternative item locations
-2. **Try different syntax**: "in/on" vs "in" vs "on"
-3. **Check item accessibility**: Ensure items aren't inside closed containers
-4. **Verify item existence**: Confirm you're using the correct item number
+    NEVER write conversational text like "I will..." or "My apologies...".
 
-### 7. Completion Criteria
-- Task is complete when specified number of items are placed in target location
-- Always verify final placement by going to target location if needed
+    ALWAYS start your response with > think:.
 
-## CRITICAL: Response Format Rules
-1. **NEVER start with conversational text** like "Let's break down..." or "I'll start again"
-2. **ALWAYS start with `> think:`** followed by your reasoning
-3. **ALWAYS follow with `OK.`** on the next line
-4. **ALWAYS follow with `> [action] [target]`** on the next line
-5. **Only use valid actions:** go to, open, close, put, take, cool, heat, use
-6. **NEVER give just a think step** - you must include both think AND action in every response
-7. **If task is complete, still use the format** but with a summary action
+    ALWAYS follow the think line with OK. on a new line.
 
-## Example First Response:
-```
-> think: Task is to find two pillow and put them in sofa. Pillows are most likely in bed, sofa, armchair, or dresser. I'll start by checking the sofa first to see if any pillows are already there.
-OK.
-> go to sofa 1
-```
+    ALWAYS follow the OK. line with > [action] [target] on a new line.
 
-## Example Second Response (after seeing sofa contents):
-```
-> think: I see the sofa has [items]. No pillows here. Next I'll check the armchair since pillows are commonly found there.
-OK.
-> go to armchair 1
-```
+    NEVER output only a think step. Every response must be a complete think/OK/action block.
 
-## Example Action Response:
-```
-> think: I found pillow 1 on the dresser. I need to take it first before placing it in the sofa.
-OK.
-> take pillow 1 from dresser 1
-```
+Valid Actions
 
-## Key Improvements:
-- **Domain knowledge**: Use item-location associations for faster search
-- **Systematic approach**: Don't randomly wander; have a search strategy
-- **Efficiency focus**: Group actions and minimize redundant movement
-- **Better failure handling**: Clear steps when actions don't work
-- **Thorough container checking**: Always open closed drawers/cabinets in promising areas
+    go to [target]
 
-Remember: Be methodical, use your knowledge of where items typically belong, and always think through your next action before executing it. 
+    open [target]
 
+    close [target]
+
+    take [item] from [location]
+
+    put [item] in/on [location]
+
+    cool [item] with [appliance]
+
+    heat [item] with [appliance]
+
+    use [item]
+
+Task Solving Strategy
+
+1. Analyze the Task:
+
+    Identify the exact items and quantities needed.
+
+    Identify the target location for placement.
+
+    Form a plan: Find item 1 -> Place item 1 -> Find item 2 -> etc.
+
+2. Smart Search Strategy:
+Use your knowledge of typical item locations to search efficiently.
+
+    Bathroom items (e.g., soapbar, towel, toiletpaper): sinkbasin, cabinet, toilet, handtowelholder, towelholder
+
+    Kitchen items (e.g., plate, mug, knife, apple): countertop, cabinet, drawer, fridge, microwave
+
+    Bedroom/Living Room items (e.g., cellphone, book, remotecontrol, pillow): coffeetable, sidetable, sofa, bed, dresser, desk
+
+3. Systematic Execution:
+
+    Think before acting: Your think step must state your immediate goal and reasoning.
+
+    Check containers: Always open closed doors, drawers, and cabinets in promising locations.
+
+    Be efficient: Check all likely spots in one room before moving to another.
+    
 Here are two examples: \n''' + ex1 + '\n' + ex2
 
         p2 = '\nHere is the task: \n' + ob + '\n'
