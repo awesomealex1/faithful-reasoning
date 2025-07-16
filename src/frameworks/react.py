@@ -77,8 +77,69 @@ class ReAct(BaseFramework):
     
     def alfworld_run(self, prompt, to_print=True, ob=''):
         original_prompt = prompt
-        prompt = [original_prompt, 'If an action fails repeatedly (returns "Nothing happens"), try: 1. Alternative action syntax 2. Different target locations 3. Re-examine the environment description. Follow the exact format like shown in the examples. Be concise and to the point. The problem is solvable and will only end once you solved it. You can do the following actions when you are not thinking: 1. go to, 2. open, 3. close, 4. put, 5. take, 6. cool, 7. heat, 8. use.\nHere is the task.\n' + ob + '\n>']
-        print("PROMPTTTTT", prompt)
+        #prompt = [original_prompt, 'If an action fails repeatedly (returns "Nothing happens"), try: 1. Alternative action syntax 2. Different target locations 3. Re-examine the environment description. Follow the exact format like shown in the examples. Be concise and to the point. The problem is solvable and will only end once you solved it. You can do the following actions when you are not thinking: 1. go to, 2. open, 3. close, 4. put, 5. take, 6. cool, 7. heat, 8. use.\nHere is the task.\n' + ob + '\n>']
+        p = '''
+## Core Strategy
+You are an intelligent agent solving household tasks in ALFWorld. Follow this systematic approach:
+
+### 1. Task Analysis & Planning
+- **Parse the task**: Extract the exact number of items needed and target location
+- **Create a plan**: Break down into clear steps (find item 1 → place → find item 2 → place)
+- **Prioritize efficiency**: Look for multiple items in the same location when possible
+
+### 2. Smart Location Search Strategy
+Use domain knowledge to search efficiently:
+
+**Common item locations:**
+- **Bathroom items** (soap, towel, toiletpaper): sinkbasin, cabinet, handtowelholder, towelholder
+- **Kitchen items** (plate, mug, knife, apple): countertop, cabinet, drawer, fridge, microwave
+- **Electronics** (cellphone, remotecontrol, laptop): coffeetable, sidetable, sofa, bed, dresser
+- **Personal items** (creditcard, keychain, watch): drawer, dresser, sidetable, countertop
+- **Books/papers**: sidetable, dresser, bed, sofa, desk
+- **Clothing**: dresser, bed, laundryhamper, armchair
+
+### 3. Systematic Search Protocol
+1. **Start with most likely locations** based on item type
+2. **Check containers systematically**: Open drawers/cabinets before moving on
+3. **Remember visited locations**: Track what you've already checked
+4. **Group nearby searches**: If checking cabinet 1, also check cabinet 2-4 in the same area
+
+### 4. Efficient Execution Rules
+- **Think before every action**: State your current objective and reasoning
+- **Be specific**: Use exact item names and numbers (e.g., "cellphone 3")
+- **Check thoroughly**: Open all closed containers in promising locations
+- **Collect smartly**: If you find multiple target items in one location, note them for later
+- **Navigate efficiently**: Minimize back-and-forth movement
+
+### 5. Action Format
+Always follow this exact format:
+```
+> think: [Your reasoning about current objective and next action]
+OK.
+> [action] [target]
+```
+
+### 6. Problem-Solving for Failures
+If an action fails repeatedly:
+1. **Re-examine environment**: Look for alternative item locations
+2. **Try different syntax**: "in/on" vs "in" vs "on"
+3. **Check item accessibility**: Ensure items aren't inside closed containers
+4. **Verify item existence**: Confirm you're using the correct item number
+
+### 7. Completion Criteria
+- Task is complete when specified number of items are placed in target location
+- Always verify final placement by going to target location if needed
+
+## Example Thinking Process:
+```
+> think: Task is to put two soapbar in garbagecan. I need to find 2 soapbars. In a bathroom setting, soapbars are most likely in sinkbasin (1-2), cabinet (1-4), or near handtowelholder. I'll start with sinkbasin 1.
+OK.
+> go to sinkbasin 1
+```
+
+Remember: Be methodical, use your knowledge of where items typically belong, and always think through your next action before executing it.\n
+        '''
+        prompt = [original_prompt, p]
         reasoning_chain = []
         if to_print:
             print(ob)
