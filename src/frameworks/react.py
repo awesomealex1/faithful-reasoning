@@ -66,8 +66,7 @@ class ReAct(BaseFramework):
         reasoning_chain = []
         for i, (k, v) in enumerate(self.prefixes.items()):
             if name.startswith(k):
-                prompt = 'Interact with a household to solve a task. Here are two examples.\n<EXAMPLE START>\n' + self.d[f'react_{v}_1'] + self.d[f'react_{v}_0'] + '\n<EXAMPLE END>'
-                r, reasoning_chain = self.alfworld_run(prompt, ob=ob)
+                r, reasoning_chain = self.alfworld_run(ex1=self.d[f'react_{v}_1'], ex2=self.d[f'react_{v}_0'], ob=ob)
                 self.rs[i] += r
                 self.cnts[i] += 1
                 break
@@ -75,8 +74,7 @@ class ReAct(BaseFramework):
         print('------------\n')
         return reasoning_chain
     
-    def alfworld_run(self, prompt, to_print=True, ob=''):
-        original_prompt = prompt
+    def alfworld_run(self, ex1, ex2, to_print=True, ob=''):
         #prompt = [original_prompt, 'If an action fails repeatedly (returns "Nothing happens"), try: 1. Alternative action syntax 2. Different target locations 3. Re-examine the environment description. Follow the exact format like shown in the examples. Be concise and to the point. The problem is solvable and will only end once you solved it. You can do the following actions when you are not thinking: 1. go to, 2. open, 3. close, 4. put, 5. take, 6. cool, 7. heat, 8. use.\nHere is the task.\n' + ob + '\n>']
         p = '''
 You are an intelligent agent solving household tasks in ALFWorld. Follow this systematic approach:
@@ -111,9 +109,9 @@ Use domain knowledge to search efficiently:
 - **Navigate efficiently**: Minimize back-and-forth movement
 
 ### 5. Action Format - CRITICAL
-You MUST start every response with the exact format below. Never start with conversational text.
+You MUST use this exact format for EVERY response. Each response must contain BOTH thinking AND action.
 
-**ALWAYS begin with:**
+**ALWAYS use this complete format:**
 ```
 > think: [Your reasoning about current objective and next action]
 OK.
@@ -121,7 +119,8 @@ OK.
 ```
 
 **Valid actions only:** go to, open, close, put, take, cool, heat, use
-**Never use conversational language** - only the think/action format above
+**You MUST include both the think step AND the action step in every response**
+**Never give just a think step without an action**
 
 ### 6. Problem-Solving for Failures
 If an action fails repeatedly:
@@ -140,6 +139,8 @@ If an action fails repeatedly:
 3. **ALWAYS follow with `OK.`** on the next line
 4. **ALWAYS follow with `> [action] [target]`** on the next line
 5. **Only use valid actions:** go to, open, close, put, take, cool, heat, use
+6. **NEVER give just a think step** - you must include both think AND action in every response
+7. **If task is complete, still use the format** but with a summary action
 
 ## Example First Response:
 ```
@@ -148,8 +149,30 @@ OK.
 > go to sofa 1
 ```
 
-Remember: Be methodical, use your knowledge of where items typically belong, and always think through your next action before executing it.
-        ''' +  'Here is the task.\n' + ob + '\n'
+## Example Second Response (after seeing sofa contents):
+```
+> think: I see the sofa has [items]. No pillows here. Next I'll check the armchair since pillows are commonly found there.
+OK.
+> go to armchair 1
+```
+
+## Example Action Response:
+```
+> think: I found pillow 1 on the dresser. I need to take it first before placing it in the sofa.
+OK.
+> take pillow 1 from dresser 1
+```
+
+## Key Improvements:
+- **Domain knowledge**: Use item-location associations for faster search
+- **Systematic approach**: Don't randomly wander; have a search strategy
+- **Efficiency focus**: Group actions and minimize redundant movement
+- **Better failure handling**: Clear steps when actions don't work
+- **Thorough container checking**: Always open closed drawers/cabinets in promising areas
+
+Remember: Be methodical, use your knowledge of where items typically belong, and always think through your next action before executing it. 
+
+Here are two examples: \n''' + ex1 + '\n' + ex2 + '\nHere is the task: \n' + ob + '\n'
         prompt = [original_prompt, p]
         reasoning_chain = []
         if to_print:
