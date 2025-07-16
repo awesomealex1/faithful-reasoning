@@ -76,7 +76,7 @@ class ReAct(BaseFramework):
     
     def alfworld_run(self, ex1, ex2, to_print=True, ob=''):
         #prompt = [original_prompt, 'If an action fails repeatedly (returns "Nothing happens"), try: 1. Alternative action syntax 2. Different target locations 3. Re-examine the environment description. Follow the exact format like shown in the examples. Be concise and to the point. The problem is solvable and will only end once you solved it. You can do the following actions when you are not thinking: 1. go to, 2. open, 3. close, 4. put, 5. take, 6. cool, 7. heat, 8. use.\nHere is the task.\n' + ob + '\n>']
-        p = '''
+        p1 = '''
 You are an intelligent agent solving household tasks in ALFWorld. Follow this systematic approach:
 
 ### 1. Task Analysis & Planning
@@ -172,14 +172,16 @@ OK.
 
 Remember: Be methodical, use your knowledge of where items typically belong, and always think through your next action before executing it. 
 
-Here are two examples: \n''' + ex1 + '\n' + ex2 + '\nHere is the task: \n' + ob + '\n'
-        prompt = [original_prompt, p]
+Here are two examples: \n''' + ex1 + '\n' + ex2
+
+        p2 = '\nHere is the task: \n' + ob + '\n'
+        prompt = [p1, p2]
         reasoning_chain = []
         if to_print:
             print(ob)
             sys.stdout.flush()
         for i in range(1, 50):
-            action_dict = self.model.generate({"prompted_question": [prompt], "verbalised_instruction": [original_prompt]}, stop_strings=['\n'])
+            action_dict = self.model.generate({"prompted_question": [prompt], "verbalised_instruction": [p1]}, stop_strings=['\n'])
             action = action_dict["decoded_text"].removeprefix('>').strip()
             print("ACTION", action, "        ", action_dict["decoded_text"])    
             observation, reward, done, info = self.env.step([action])
