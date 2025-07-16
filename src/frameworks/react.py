@@ -79,7 +79,6 @@ class ReAct(BaseFramework):
         original_prompt = prompt
         #prompt = [original_prompt, 'If an action fails repeatedly (returns "Nothing happens"), try: 1. Alternative action syntax 2. Different target locations 3. Re-examine the environment description. Follow the exact format like shown in the examples. Be concise and to the point. The problem is solvable and will only end once you solved it. You can do the following actions when you are not thinking: 1. go to, 2. open, 3. close, 4. put, 5. take, 6. cool, 7. heat, 8. use.\nHere is the task.\n' + ob + '\n>']
         p = '''
-## Core Strategy
 You are an intelligent agent solving household tasks in ALFWorld. Follow this systematic approach:
 
 ### 1. Task Analysis & Planning
@@ -111,13 +110,18 @@ Use domain knowledge to search efficiently:
 - **Collect smartly**: If you find multiple target items in one location, note them for later
 - **Navigate efficiently**: Minimize back-and-forth movement
 
-### 5. Action Format
-Always follow this exact format:
+### 5. Action Format - CRITICAL
+You MUST start every response with the exact format below. Never start with conversational text.
+
+**ALWAYS begin with:**
 ```
 > think: [Your reasoning about current objective and next action]
 OK.
 > [action] [target]
 ```
+
+**Valid actions only:** go to, open, close, put, take, cool, heat, use
+**Never use conversational language** - only the think/action format above
 
 ### 6. Problem-Solving for Failures
 If an action fails repeatedly:
@@ -130,14 +134,21 @@ If an action fails repeatedly:
 - Task is complete when specified number of items are placed in target location
 - Always verify final placement by going to target location if needed
 
-## Example Thinking Process:
+## CRITICAL: Response Format Rules
+1. **NEVER start with conversational text** like "Let's break down..." or "I'll start again"
+2. **ALWAYS start with `> think:`** followed by your reasoning
+3. **ALWAYS follow with `OK.`** on the next line
+4. **ALWAYS follow with `> [action] [target]`** on the next line
+5. **Only use valid actions:** go to, open, close, put, take, cool, heat, use
+
+## Example First Response:
 ```
-> think: Task is to put two soapbar in garbagecan. I need to find 2 soapbars. In a bathroom setting, soapbars are most likely in sinkbasin (1-2), cabinet (1-4), or near handtowelholder. I'll start with sinkbasin 1.
+> think: Task is to find two pillow and put them in sofa. Pillows are most likely in bed, sofa, armchair, or dresser. I'll start by checking the sofa first to see if any pillows are already there.
 OK.
-> go to sinkbasin 1
+> go to sofa 1
 ```
 
-Remember: Be methodical, use your knowledge of where items typically belong, and always think through your next action before executing it.\n
+Remember: Be methodical, use your knowledge of where items typically belong, and always think through your next action before executing it.
         ''' +  'Here is the task.\n' + ob + '\n'
         prompt = [original_prompt, p]
         reasoning_chain = []
