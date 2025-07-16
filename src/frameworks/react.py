@@ -138,7 +138,7 @@ OK.
 ```
 
 Remember: Be methodical, use your knowledge of where items typically belong, and always think through your next action before executing it.\n
-        '''
+        ''' +  'Here is the task.\n' + ob + '\n'
         prompt = [original_prompt, p]
         reasoning_chain = []
         if to_print:
