@@ -64,13 +64,7 @@ class ReAct(BaseFramework):
         ob, info = self.env.reset()
         reasoning_chain = []
         
-        try:
-            r, reasoning_chain = self.alfworld_run(ob=ob)
-        except Exception as e:
-            print("SOMETHING WENT WRONG")
-            print(e)
-            r = 0
-            reasoning_chain = ["SOMETHING WENT WRONG, NO REASONING CHAIN"]
+        r, reasoning_chain = self.alfworld_run(ob=ob)
 
         self.count += 1
         self.total_r += r
