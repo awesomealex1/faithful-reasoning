@@ -63,8 +63,14 @@ class ReAct(BaseFramework):
         self.env = textworld.gym.make(self.env_id)  # Start the environment.
         ob, info = self.env.reset()
         reasoning_chain = []
-
-        r, reasoning_chain = self.alfworld_run(ob=ob)
+        
+        try:
+            r, reasoning_chain = self.alfworld_run(ob=ob)
+        except Exception as e:
+            print("SOMETHING WENT WRONG")
+            print(e)
+            r = 0
+            reasoning_chain = ["SOMETHING WENT WRONG, NO REASONING CHAIN"]
 
         self.count += 1
         self.total_r += r
