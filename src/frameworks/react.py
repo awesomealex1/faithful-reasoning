@@ -35,28 +35,10 @@ class ReAct(BaseFramework):
         super().__init__(framework_configs, data_configs, model , **kwargs)
         self.data_configs = data_configs
 
-        # Create a temporary directory to hold the game
-        game_dir = tempfile.gettempdir()
+        self.env_id = textworld.gym.register_game("tw_games/custom_game.z8",
+                                     max_episode_steps=50)
 
-        # Generate a simple game: get a key and open a door
-        game_file, game_id = textworld.generation.make_game_with(
-            quest_length=1,
-            nb_rooms=5,
-            nb_objects=10,
-            quest_breadth=1,
-            grammar=None,
-            seed=42,
-            path=game_dir,
-            force_rebuild=True
-        )
-
-        # Register game
-        request_infos = textworld.EnvInfos(admissible_commands=True, won=True, lost=True, description=True, inventory=True)
-        env_id = textworld.gym.register_games([game_file], request_infos=request_infos, max_episode_steps=50)
-
-        # Create the environment
-        self.env = gym.make(env_id)
-        self.env.reset()  # Initial reset
+        self.env = textworld.gym.make(self.env_id)  # Start the environment.
     
     def generate(self):
         _input = {}
