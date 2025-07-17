@@ -77,14 +77,6 @@ class ReAct(BaseFramework):
     def alfworld_run(self, ex1, ex2, to_print=True, ob=''):
         #prompt = [original_prompt, 'If an action fails repeatedly (returns "Nothing happens"), try: 1. Alternative action syntax 2. Different target locations 3. Re-examine the environment description. Follow the exact format like shown in the examples. Be concise and to the point. The problem is solvable and will only end once you solved it. You can do the following actions when you are not thinking: 1. go to, 2. open, 3. close, 4. put, 5. take, 6. cool, 7. heat, 8. use.\nHere is the task.\n' + ob + '\n>']
         p1 = '''
-You are absolutely right. I apologize for the misunderstanding. The back-and-forth showed a fundamental misinterpretation of the interaction model.
-
-Based on your correction, the agent should only output one thing at a time: either a think step OR an action step, but never both. The system's OK. is the cue to switch from thinking to acting.
-
-This requires a completely different prompt structure. Let's discard the previous versions and use this corrected and simplified one, which strictly enforces the two-step process you described.
-
-Final, Correct Prompt (Two-Step Interaction)
-
 You are an intelligent agent solving household tasks in ALFWorld. Your responses must follow an exact turn-based format to function.
 
 CRITICAL: Interaction Flow
