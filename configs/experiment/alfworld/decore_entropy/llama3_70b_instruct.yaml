@@ -2,7 +2,7 @@
 defaults:
   - override /model: llama3_70b_instruct
   - override /data: alfworld
-  - override /decoder: baseline
+  - override /decoder: decore_entropy
 
 model:
   configs:
