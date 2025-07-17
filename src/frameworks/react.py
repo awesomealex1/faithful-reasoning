@@ -84,7 +84,7 @@ class ReAct(BaseFramework):
             sys.stdout.flush()
 
         for i in range(1, 50):
-            action_dict = self.model.generate({"prompted_question": [prompt], "verbalised_instruction": [p1]}, stop_strings=['\n'])
+            action_dict = self.model.generate({"prompted_question": [prompt], "verbalised_instruction": [p1], "prompted_question_wo_context": [p2]}, stop_strings=['\n'])
             action = action_dict["decoded_text"].removeprefix('>').strip()
 
             obs, reward, done, info = self.env.step(action)
