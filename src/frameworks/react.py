@@ -34,11 +34,8 @@ class ReAct(BaseFramework):
     ):
         super().__init__(framework_configs, data_configs, model , **kwargs)
         self.data_configs = data_configs
-
-        self.env_id = textworld.gym.register_game("tw_games/custom_game.z8",
-                                     max_episode_steps=50)
-
-        self.env = textworld.gym.make(self.env_id)  # Start the environment.
+        self.i = 0
+        
     
     def generate(self):
         _input = {}
@@ -49,6 +46,11 @@ class ReAct(BaseFramework):
         return _input
 
     def do_react(self):
+        self.i += 1
+        self.env_id = textworld.gym.register_game(f"tw_games/custom_game_{self.i}.z8",
+                                     max_episode_steps=50)
+
+        self.env = textworld.gym.make(self.env_id)  # Start the environment.
         ob, info = self.env.reset()
         reasoning_chain = []
 
