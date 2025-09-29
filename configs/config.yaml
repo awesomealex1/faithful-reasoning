@@ -13,6 +13,6 @@ hydra:
 random_seed: 1234
 
 wandb_project: Faithful_Reasoning
-wandb_entity: alexmurphy-university-of-edinburgh
+wandb_entity: your-wandb-entity
 
 debug: false
